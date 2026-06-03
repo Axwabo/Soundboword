@@ -9,7 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
@@ -24,11 +23,13 @@
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="SoundFlow" />
         <PackageReference Include="Tmds.DBus.Generator" />
+        <PackageReference Include="Tmds.DBus.Protocol" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="DBusXml/GlobalShortcuts.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxiy" />
+        <AdditionalFiles Include="DBusXml/GlobalShortcuts.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
     </ItemGroup>
 
 </Project>
