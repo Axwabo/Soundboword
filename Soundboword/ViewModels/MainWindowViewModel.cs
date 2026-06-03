@@ -70,8 +70,8 @@ public partial class MainWindowViewModel : ViewModelBase
         var sender = (connection.UniqueName ?? "").TrimStart(':').Replace(".", "_");
         var token = "Soundboword_" + Stopwatch.GetTimestamp();
         ObjectPath path = $"/org/freedesktop/portal/desktop/request/{sender}/{token}";
-        var proxy = new OrgFreedesktopImplPortalGlobalShortcutsProxy(connection.AsConnection(), "org.freedesktop.portal.GlobalShortcuts", "/org/greedesktop/portal/desktop");
-        var (sessionResponse, whatever) = await proxy.CreateSessionAsync(path, $"/org/freedesktop/portal/desktop/session/{sender}/{token}", "Soundboword", []);
+        var proxy = new OrgFreedesktopPortalGlobalShortcutsProxy(connection.AsConnection(), "org.freedesktop.portal.GlobalShortcuts", "/org/freedesktop/portal/desktop");
+        var sesionPath = await proxy.CreateSessionAsync([]);
         Console.WriteLine();
         // var session = await shortcuts.CreateSessionAsync(path, path, "Soundboword", []);
     }
