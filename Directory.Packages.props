@@ -8,14 +8,14 @@
     <ItemGroup>
         <PackageVersion Include="Avalonia" Version="12.0.4" />
         <PackageVersion Include="Avalonia.Desktop" Version="12.0.4" />
+        <PackageVersion Include="Avalonia.FreeDesktop" Version="12.0.4" />
         <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.0.4" />
         <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.4" />
         <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2" />
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.1" />
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
         <PackageVersion Include="SoundFlow" Version="1.4.1" />
-        <PackageVersion Include="Tmds.DBus.Protocol" Version="0.92.0" />
-        <PackageVersion Include="Tmds.DBus.Generator" Version="0.92.0" />
+        <PackageVersion Include="Tmds.DBus.SourceGenerator" Version="0.0.22" />
     </ItemGroup>
 
 </Project>
