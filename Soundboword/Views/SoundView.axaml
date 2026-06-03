@@ -11,6 +11,6 @@
              Padding="3">
     <Grid RowDefinitions="Auto,Auto">
         <TextBox Text="{Binding Name}" />
-        <Button Grid.Row="1">Play</Button>
+        <Button Grid.Row="1" Command="{Binding PlayCommand}">Play</Button>
     </Grid>
 </UserControl>
