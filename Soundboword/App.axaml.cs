@@ -1,30 +1,33 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
-using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
+using Soundboword.Services;
 using Soundboword.ViewModels;
 using Soundboword.Views;
 
 namespace Soundboword;
 
-public partial class App : Application
+public sealed class App : Application
 {
 
-    public override void Initialize()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    public required IServiceCollection Services { get; init; }
+
+    public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Services.AddSingleton<MainWindowViewModel>();
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
+            var window = new MainWindow();
+            Services.AddSingleton(new HostControl(window));
+
+            var provider = Services.BuildServiceProvider();
+
+            window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
+            desktop.MainWindow = window;
         }
 
         base.OnFrameworkInitializationCompleted();

@@ -24,6 +24,11 @@
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Tmds.DBus.Generator" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="DBusXml/GlobalShortcuts.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxiy" />
     </ItemGroup>
 
 </Project>

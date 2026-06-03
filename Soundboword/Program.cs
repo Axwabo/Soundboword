@@ -1,9 +1,10 @@
-﻿using Avalonia;
-using System;
+﻿using System;
+using Avalonia;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Soundboword;
 
-sealed class Program
+internal static class Program
 {
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
@@ -15,7 +16,7 @@ sealed class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+        => AppBuilder.Configure(() => new App {Services = new ServiceCollection()})
             .UsePlatformDetect()
 #if DEBUG
             .WithDeveloperTools()
