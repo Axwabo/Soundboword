@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Soundboword.Models;
+using Soundboword.ViewModels;
 
 namespace Soundboword;
 
@@ -34,11 +37,11 @@ public static class UserData
         }
     }
 
-    public static void SaveSounds(IEnumerable<SoundDto> sounds)
+    public static void SaveSounds(ObservableCollection<SoundViewModel> sounds)
     {
         EnsureDirectory();
         using var file = File.Create(Sounds);
-        JsonSerializer.Serialize(file, sounds, Options);
+        JsonSerializer.Serialize(file, sounds.Select(e => new SoundDto(e.Name, e.Path, e.Mode, e.Loop)), Options);
     }
 
 }

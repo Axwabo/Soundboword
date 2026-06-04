@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media;
-using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Soundboword.Inputs;
-using Soundboword.Models;
-using Soundboword.Services;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
@@ -20,63 +13,24 @@ namespace Soundboword.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
 
-    private static readonly FilePickerOpenOptions FileOptions = new()
-    {
-        Title = "Pick a sound",
-        FileTypeFilter =
-        [
-            new FilePickerFileType("Audio files")
-            {
-                Patterns = ["*.mp3", "*.wav"],
-                MimeTypes = ["audio/mpeg", "audio/wav"]
-            }
-        ]
-    };
-
-    private readonly HostControl? _host;
-    private readonly IFileManagerOpener? _opener;
-
     public InputsViewModel Inputs { get; }
 
-    public ObservableCollection<SoundViewModel> Sounds { get; } = [];
+    public Services.SoundList SoundList { get; }
 
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
 
-    public MainWindowViewModel() => Inputs = new InputsViewModel();
-
-    public MainWindowViewModel(HostControl host, IFileManagerOpener opener, IEnumerable<IInputFactory> factories)
+    public MainWindowViewModel()
     {
-        _host = host;
-        _opener = opener;
-        Inputs = new InputsViewModel(factories);
-        foreach (var sound in UserData.LoadSounds())
-            Sounds.Add(new SoundViewModel
-            {
-                Name = sound.Name,
-                Path = sound.Path,
-                Loop = sound.Loop,
-                Mode = sound.Mode,
-                Opener = opener
-            });
-        _ = TestDBus().ConfigureAwait(false);
+        Inputs = new InputsViewModel();
+        SoundList = new Services.SoundList();
     }
 
-    [RelayCommand]
-    private async Task AddSound()
+    public MainWindowViewModel(Services.SoundList list, InputsViewModel inputs)
     {
-        if (_host?.Host is not {StorageProvider: var provider})
-            return;
-        var files = await provider.OpenFilePickerAsync(FileOptions);
-        if (files.Count == 0)
-            return;
-        Sounds.Add(new SoundViewModel
-        {
-            Path = files[0].TryGetLocalPath()!,
-            Name = Path.GetFileNameWithoutExtension(files[0].TryGetLocalPath()!),
-            Opener = _opener
-        });
-        UserData.SaveSounds(Sounds.Select(e => new SoundDto(e.Name, e.Path, e.Mode, e.Loop)));
+        SoundList = list;
+        Inputs = inputs;
+        _ = TestDBus().ConfigureAwait(false);
     }
 
     [RelayCommand]

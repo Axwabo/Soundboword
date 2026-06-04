@@ -18,10 +18,10 @@
     <Grid ColumnDefinitions="*,Auto">
         <Grid RowDefinitions="Auto,*">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding AddSoundCommand}">Add Sound</Button>
+                <Button Command="{Binding SoundList.AddCommand}">Add Sound</Button>
                 <Button Command="{Binding StopAllCommand}">Stop All</Button>
             </StackPanel>
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Sounds}">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding SoundList.Sounds}">
 
             </ItemsControl>
         </Grid>
