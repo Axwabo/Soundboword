@@ -9,6 +9,7 @@ using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
 using SoundFlow.Components;
 using SoundFlow.Enums;
+using SoundFlow.Midi.PortMidi;
 using SoundFlow.Midi.Structs;
 using SoundFlow.Providers;
 using SoundFlow.Structs;
@@ -33,6 +34,7 @@ public static class AudioManager
     internal static void Init()
     {
         _engine = new MiniAudioEngine();
+        _engine.UsePortMidi();
         var defaultDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.IsDefault);
         _playback = _engine.InitializePlaybackDevice(defaultDevice, Format);
         _playback.Start();

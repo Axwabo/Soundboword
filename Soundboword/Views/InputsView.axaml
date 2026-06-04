@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
+             xmlns:inputs="clr-namespace:Soundboword.Inputs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Views.InputsView"
+             x:DataType="viewModels:InputsViewModel">
+    <Grid RowDefinitions="Auto,*">
+        <Button Command="{Binding RefreshCommand}">Refresh</Button>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Factories}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="inputs:IInputFactory">
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="\{0\} \{1\}">
+                                <Binding Path="Name" />
+                                <Binding Path="IsAvailable" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

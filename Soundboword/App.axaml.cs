@@ -17,10 +17,14 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Services.AddSingleton<MainWindowViewModel>();
+        Services.AddSingleton<MainWindowViewModel>()
+            .AddSingleton<InputsViewModel>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            AudioManager.Init();
+            desktop.Exit += (_, _) => AudioManager.Destroy();
+
             var window = new MainWindow();
             Services.AddSingleton(new HostControl(window));
 

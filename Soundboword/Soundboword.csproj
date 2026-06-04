@@ -24,6 +24,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="SoundFlow" />
+        <PackageReference Include="SoundFlow.Midi.PortMidi" />
         <PackageReference Include="Tmds.DBus.SourceGenerator" />
     </ItemGroup>
 

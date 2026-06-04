@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Soundboword.Inputs;
 using Soundboword.Services;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
@@ -33,18 +34,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private readonly HostControl? _host;
 
+    public InputsViewModel Inputs { get; }
+
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
 
-    public MainWindowViewModel()
-    {
-    }
+    public MainWindowViewModel() => Inputs = new InputsViewModel();
 
-    public MainWindowViewModel(HostControl host)
+    public MainWindowViewModel(HostControl host, IEnumerable<IInputFactory> factories)
     {
         _host = host;
+        Inputs = new InputsViewModel(factories);
         _ = TestDBus().ConfigureAwait(false);
     }
 

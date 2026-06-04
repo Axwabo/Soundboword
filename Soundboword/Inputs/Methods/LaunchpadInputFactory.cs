@@ -12,10 +12,8 @@ public sealed class LaunchpadInputFactory : IInputFactory
         get
         {
             foreach (var midi in AudioManager.RefreshMidiInputs())
-            {
-                Console.WriteLine(midi);
-            }
-
+                if (midi.Name.Contains("Launchpad Mini"))
+                    return true;
             return false;
         }
     }

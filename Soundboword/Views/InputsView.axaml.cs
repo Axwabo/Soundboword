@@ -2,10 +2,10 @@ using Avalonia.Controls;
 
 namespace Soundboword.Views;
 
-public partial class MainWindow : Window
+public partial class InputsView : UserControl
 {
 
-    public MainWindow()
+    public InputsView()
     {
         InitializeComponent();
     }

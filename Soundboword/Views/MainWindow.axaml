@@ -7,9 +7,7 @@
         x:Class="Soundboword.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Soundboword"
-        Loaded="Control_OnLoaded"
-        Closed="TopLevel_OnClosed">
+        Title="Soundboword">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -17,14 +15,17 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto,*">
-        <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding AddSoundCommand}">Add Sound</Button>
-            <Button Command="{Binding StopAllCommand}">Stop All</Button>
-        </StackPanel>
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Sounds}">
+    <Grid ColumnDefinitions="*,Auto">
+        <Grid RowDefinitions="Auto,*">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding AddSoundCommand}">Add Sound</Button>
+                <Button Command="{Binding StopAllCommand}">Stop All</Button>
+            </StackPanel>
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Sounds}">
 
-        </ItemsControl>
+            </ItemsControl>
+        </Grid>
+        <UserControl Grid.Column="1" Content="{Binding Inputs}" />
     </Grid>
 
 </Window>
