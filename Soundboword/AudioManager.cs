@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ public static class AudioManager
     private static MiniAudioEngine? _engine;
     private static AudioPlaybackDevice? _playback;
 
-    private static readonly List<Sound> Sounds = [];
+    private static readonly Dictionary<SoundViewModel, List<Sound>> Sounds = [];
 
     private static readonly AudioFormat Format = new()
     {
@@ -39,7 +40,8 @@ public static class AudioManager
     {
         _engine?.Dispose();
         _playback?.Dispose();
-        foreach (var sound in Sounds)
+        foreach (var list in Sounds.Values)
+        foreach (var sound in list)
         {
             sound.Player.Dispose();
             sound.Provider.Dispose();
@@ -55,9 +57,26 @@ public static class AudioManager
         var provider = new StreamDataProvider(_engine, Format, File.OpenRead(sound.Path));
         var player = new SoundPlayer(_engine, Format, provider);
         _playback.MasterMixer.AddComponent(player);
-        Sounds.Add(new Sound(provider, player));
+        if (!Sounds.TryGetValue(sound, out var list))
+            list = Sounds[sound] = [];
+        list.Add(new Sound(provider, player));
         player.Play();
-        player.PlaybackEnded += (sender, _) => Sounds.RemoveAll(e => e.Player == sender);
+        player.PlaybackEnded += RemoveSound;
+    }
+
+    internal static void StopAll()
+    {
+        if (_playback == null)
+            return;
+        foreach (var component in _playback.MasterMixer.Components.ToList())
+            _playback.MasterMixer.RemoveComponent(component);
+        Sounds.Clear();
+    }
+
+    private static void RemoveSound(object? sender, EventArgs _)
+    {
+        foreach (var list in Sounds.Values)
+            list.RemoveAll(e => e.Player == sender);
     }
 
 }

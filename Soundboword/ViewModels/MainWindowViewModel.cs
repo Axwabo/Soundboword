@@ -63,6 +63,9 @@ public partial class MainWindowViewModel : ViewModelBase
         });
     }
 
+    [RelayCommand]
+    private static void StopAll() => AudioManager.StopAll();
+
     // TODO: upgrade Tmds.DBus when a new Avalonia version is released (new version included in Avalonia master 2 days ago)
     private async Task TestDBus()
     {
