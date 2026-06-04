@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -22,13 +23,22 @@ public sealed partial class SoundViewModel : ViewModelBase
     public partial PlaybackMode Mode { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LoopBrush))]
     public partial bool Loop { get; set; }
 
     [ObservableProperty]
     public partial bool IsPlaying { get; private set; }
 
+    public IBrush LoopBrush => Loop ? Brushes.LawnGreen : Brushes.Red;
+
     [RelayCommand]
     private void Trigger() => AudioManager.Trigger(this);
+
+    [RelayCommand]
+    private void Stop() => AudioManager.StopAll(this);
+
+    [RelayCommand]
+    private void ToggleLoop() => Loop = !Loop;
 
     [RelayCommand]
     private void Reveal() => Opener?.Open(Path);

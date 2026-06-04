@@ -79,13 +79,7 @@ public static class AudioManager
                 break;
             }
             case PlaybackMode.StartStop when Sounds.TryGetValue(sound, out var list):
-                foreach (var (provider, player) in list)
-                {
-                    player.Stop();
-                    provider.Dispose();
-                    _playback.MasterMixer.RemoveComponent(player);
-                }
-
+                StopAll(list);
                 sound.PropertyChanged -= SoundOnPropertyChanged;
                 sound.UpdatePlaybackState(false);
                 Sounds.Remove(sound);
@@ -94,6 +88,16 @@ public static class AudioManager
                 foreach (var played in list)
                     played.Provider.Seek(0);
                 break;
+        }
+    }
+
+    private static void StopAll(List<SoundPlayback> list)
+    {
+        foreach (var (provider, player) in list)
+        {
+            player.Stop();
+            provider.Dispose();
+            _playback!.MasterMixer.RemoveComponent(player);
         }
     }
 
@@ -150,6 +154,15 @@ public static class AudioManager
             return;
         foreach (var played in list)
             played.Player.IsLooping = sound.Loop;
+    }
+
+    public static void StopAll(SoundViewModel sound)
+    {
+        if (!Sounds.Remove(sound, out var list))
+            return;
+        StopAll(list);
+        sound.PropertyChanged -= SoundOnPropertyChanged;
+        sound.UpdatePlaybackState(false);
     }
 
     extension(SoundViewModel sound)

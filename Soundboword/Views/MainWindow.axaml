@@ -22,7 +22,11 @@
                 <Button Command="{Binding StopAllCommand}">Stop All</Button>
             </StackPanel>
             <ItemsControl Grid.Row="1" ItemsSource="{Binding SoundList.Sounds}">
-
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
             </ItemsControl>
         </Grid>
         <UserControl Grid.Column="1" Content="{Binding Inputs}" />
