@@ -44,7 +44,7 @@ public static class AudioManager
     {
         if (_engine == null)
             return [];
-        _engine.UpdateMidiDevicesInfo();
+        _engine.UpdateMidiDevicesInfo(); // TODO: portmidi does not support hotswap
         return _engine.MidiInputDevices;
     }
 

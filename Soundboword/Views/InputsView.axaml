@@ -3,25 +3,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
-             xmlns:inputs="clr-namespace:Soundboword.Inputs"
+             xmlns:models="clr-namespace:Soundboword.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Views.InputsView"
              x:DataType="viewModels:InputsViewModel">
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto">
         <Button Command="{Binding RefreshCommand}">Refresh</Button>
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Factories}">
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Available}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="inputs:IInputFactory">
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="\{0\} \{1\}">
-                                <Binding Path="Name" />
-                                <Binding Path="IsAvailable" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                <DataTemplate DataType="models:InputMethodInterface">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="3">
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                        <ToggleSwitch Grid.Column="1" IsChecked="{Binding Activated}" />
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Unavailable}" IsEnabled="False" DisplayMemberBinding="{Binding Name}" />
     </Grid>
 </UserControl>

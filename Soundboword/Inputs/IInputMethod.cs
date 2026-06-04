@@ -1,6 +1,8 @@
+using System;
+
 namespace Soundboword.Inputs;
 
-public interface IInputMethod
+public interface IInputMethod : IDisposable
 {
 
 }

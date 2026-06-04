@@ -3,31 +3,37 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
+using Soundboword.Models;
 
 namespace Soundboword.ViewModels;
 
 public sealed partial class InputsViewModel : ViewModelBase
 {
 
-    private readonly List<IInputFactory> _factories;
+    private readonly List<InputMethodInterface> _all;
 
-    public ObservableCollection<IInputFactory> Factories { get; } = [];
+    public ObservableCollection<InputMethodInterface> Available { get; } = [];
 
-    public InputsViewModel() => _factories = [];
+    public ObservableCollection<InputMethodInterface> Unavailable { get; } = [];
+
+    public InputsViewModel() => _all = [];
 
     public InputsViewModel(IEnumerable<IInputFactory> factories)
     {
-        _factories = factories.ToList();
-        foreach (var factory in _factories)
-            Factories.Add(factory);
+        _all = factories.Select(e => new InputMethodInterface(e)).ToList();
+        Refresh();
     }
 
     [RelayCommand]
     private void Refresh()
     {
-        Factories.Clear();
-        foreach (var factory in _factories)
-            Factories.Add(factory);
+        Available.Clear();
+        Unavailable.Clear();
+        foreach (var method in _all)
+            if (method.IsAvailable)
+                Available.Add(method);
+            else
+                Unavailable.Add(method);
     }
 
 }
