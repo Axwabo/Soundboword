@@ -3,14 +3,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
+             xmlns:converters="clr-namespace:Soundboword.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Views.SoundView"
              x:DataType="viewModels:SoundViewModel"
              BorderBrush="Gray"
              BorderThickness="1"
              Padding="3">
-    <Grid RowDefinitions="Auto,Auto">
+    <Grid RowDefinitions="Auto,Auto,Auto">
         <TextBox Text="{Binding Name}" />
         <Button Grid.Row="1" Command="{Binding PlayCommand}">Play</Button>
+        <ComboBox Grid.Row="2" SelectedItem="{Binding Mode, Mode=TwoWay, Converter={StaticResource PlaybackMode}}">
+            <ComboBoxItem Content="{x:Static converters:PlaybackModeConverter.StartStop}" />
+            <ComboBoxItem Content="{x:Static converters:PlaybackModeConverter.StartRestart}" />
+            <ComboBoxItem Content="{x:Static converters:PlaybackModeConverter.Duplicate}" />
+        </ComboBox>
     </Grid>
 </UserControl>
