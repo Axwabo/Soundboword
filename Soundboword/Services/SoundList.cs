@@ -67,4 +67,10 @@ public sealed partial class SoundList
         UserData.SaveSounds(Sounds);
     }
 
+    public void Delete(SoundViewModel sound)
+    {
+        Sounds.Remove(sound);
+        UserData.SaveSounds(Sounds);
+    }
+
 }
