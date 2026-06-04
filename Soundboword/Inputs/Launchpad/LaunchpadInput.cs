@@ -1,3 +1,4 @@
+using System;
 using SoundFlow.Midi.Routing;
 using SoundFlow.Midi.Routing.Nodes;
 using SoundFlow.Midi.Structs;
@@ -17,7 +18,12 @@ public sealed class LaunchpadInput : IInputMethod
 
     private void OnNodeOnOnMessageOutput(MidiMessage message)
     {
-        // TODO
+        /*
+         data1: note number
+         data2: pressed or not pressed
+         statusbyte: 176 if top row, 144 otherwise
+         */
+        Console.WriteLine(message.StatusByte + " " + message.Data1 + " " + message.Pressure);
     }
 
     public void Dispose() => _node.OnMessageOutput -= OnNodeOnOnMessageOutput;
