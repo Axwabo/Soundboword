@@ -3,6 +3,7 @@ using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Soundboword.Inputs;
 using Soundboword.Inputs.Launchpad;
+using Soundboword.Services;
 
 namespace Soundboword;
 
@@ -22,6 +23,7 @@ internal static class Program
             {
                 Services = new ServiceCollection()
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
+                    .AddSingleton<IFileManagerOpener, DBusFileManagerOpener>()
             })
             .UsePlatformDetect()
 #if DEBUG

@@ -33,6 +33,7 @@ public partial class MainWindowViewModel : ViewModelBase
     };
 
     private readonly HostControl? _host;
+    private readonly IFileManagerOpener? _opener;
 
     public InputsViewModel Inputs { get; }
 
@@ -43,9 +44,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel() => Inputs = new InputsViewModel();
 
-    public MainWindowViewModel(HostControl host, IEnumerable<IInputFactory> factories)
+    public MainWindowViewModel(HostControl host, IFileManagerOpener opener, IEnumerable<IInputFactory> factories)
     {
         _host = host;
+        _opener = opener;
         Inputs = new InputsViewModel(factories);
         _ = TestDBus().ConfigureAwait(false);
     }
@@ -61,7 +63,8 @@ public partial class MainWindowViewModel : ViewModelBase
         Sounds.Add(new SoundViewModel
         {
             Path = files[0].TryGetLocalPath()!,
-            Name = Path.GetFileNameWithoutExtension(files[0].TryGetLocalPath()!)
+            Name = Path.GetFileNameWithoutExtension(files[0].TryGetLocalPath()!),
+            Opener = _opener
         });
     }
 

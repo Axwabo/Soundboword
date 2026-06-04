@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Models;
+using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 
@@ -8,6 +9,8 @@ public sealed partial class SoundViewModel : ViewModelBase
 {
 
     public required string Path { get; init; }
+
+    public required IFileManagerOpener? Opener { get; init; }
 
     [ObservableProperty]
     public required partial string Name { get; set; }
@@ -20,5 +23,8 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     [RelayCommand]
     private void Play() => AudioManager.Trigger(this);
+
+    [RelayCommand]
+    private void Reveal() => Opener?.Open(Path);
 
 }
