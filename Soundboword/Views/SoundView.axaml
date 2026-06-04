@@ -21,7 +21,7 @@
             <TextBlock TextAlignment="Center" Grid.ColumnSpan="3" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="60" Command="{Binding TriggerCommand}">🔊</Button>
             <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding IsPlaying}" Command="{Binding StopCommand}">⏹️</Button>
-            <ToggleButton Grid.Row="2" Grid.Column="1" Command="{Binding ToggleLoopCommand}" Background="{Binding LoopBrush}">🔁️</ToggleButton>
+            <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="{Binding Loop}">🔁️</ToggleButton>
             <Button Grid.Row="2" Grid.Column="2">⚙️️</Button>
             <!-- <TextBox Text="{Binding Name}" /> -->
             <!--<Button Grid.Row="1" Command="{Binding TriggerCommand}">Trigger</Button>
