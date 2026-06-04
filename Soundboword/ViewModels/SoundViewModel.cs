@@ -39,13 +39,6 @@ public sealed partial class SoundViewModel : ViewModelBase
     [RelayCommand]
     private void Reveal() => Opener?.Open(Path);
 
-    [RelayCommand]
-    private void Delete()
-    {
-        AudioManager.StopAll(this);
-        List.Delete(this);
-    }
-
     public void UpdatePlaybackState(bool active)
     {
         if (Dispatcher.UIThread.CheckAccess())

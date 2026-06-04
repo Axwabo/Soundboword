@@ -5,7 +5,8 @@
              xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
              x:Class="Soundboword.Views.SoundView"
-             x:DataType="viewModels:SoundViewModel">
+             x:DataType="viewModels:SoundViewModel"
+             Background="#11000000">
     <UserControl.Styles>
         <Style Selector="Border.sound.playing">
             <Setter Property="Background" Value="{StaticResource Playing}" />
@@ -16,8 +17,8 @@
             <Setter Property="FontSize" Value="20"></Setter>
         </Style>
     </UserControl.Styles>
-    <Border Classes="sound" Classes.playing="{Binding IsPlaying}">
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="45,45,45" RowSpacing="2" ColumnSpacing="2" Background="#11000000">
+    <Border Classes="sound" Classes.playing="{Binding IsPlaying}" Padding="3">
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="45,45,45" RowSpacing="2" ColumnSpacing="2">
             <TextBlock TextAlignment="Center" Grid.ColumnSpan="3" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="60" Command="{Binding TriggerCommand}">
                 🔊
@@ -28,12 +29,9 @@
                     </MultiBinding>
                 </ToolTip.Tip>
             </Button>
-            <Button Grid.Row="2" Grid.Column="0">⏯️️</Button>
-            <Button Grid.Row="2" Grid.Column="1" IsEnabled="{Binding IsPlaying}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
-            <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Add Shortcut">🎛️️</Button>
-            <ToggleButton Grid.Row="3" Grid.Column="0" IsChecked="{Binding Loop}" ToolTip.Tip="{Binding Loop, StringFormat=Loop: \{0\}}">🔁️</ToggleButton>
-            <Button Grid.Row="3" Grid.Column="1" ToolTip.Tip="Configure">⚙️️</Button>
-            <Button Grid.Row="3" Grid.Column="2" Command="{Binding DeleteCommand}" ToolTip.Tip="Delete">🗑️️</Button>
+            <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding IsPlaying}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
+            <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="{Binding Loop}" ToolTip.Tip="{Binding Loop, StringFormat=Loop: \{0\}}">🔁️</ToggleButton>
+            <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure">⚙️️</Button>
             <!-- <TextBox Text="{Binding Name}" /> -->
             <!--<Button Grid.Row="1" Command="{Binding TriggerCommand}">Trigger</Button>
             <ComboBox Grid.Row="2" SelectedItem="{Binding Path=Mode}" ItemsSource="{x:Static converters:PlaybackModeConverter.PlaybackModes}">

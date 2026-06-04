@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Soundboword.Models;
 using Soundboword.ViewModels;
 
@@ -13,7 +14,11 @@ namespace Soundboword;
 public static class UserData
 {
 
-    private static readonly JsonSerializerOptions Options = new() {Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping};
+    private static readonly JsonSerializerOptions Options = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        Converters = {new JsonStringEnumConverter<PlaybackMode>()}
+    };
 
     private static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 

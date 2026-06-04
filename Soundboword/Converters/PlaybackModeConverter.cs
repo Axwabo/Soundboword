@@ -11,13 +11,15 @@ public sealed class PlaybackModeConverter : IValueConverter
 
     private const string StartStopConst = "Start -> Stop";
     private const string StartRestartConst = "Start -> Restart";
+    private const string PlayPauseConst = "Play -> Pause";
     private const string DuplicateConst = "Duplicate";
 
-    public static IReadOnlyList<PlaybackMode> PlaybackModes { get; } = [PlaybackMode.StartStop, PlaybackMode.StartRestart, PlaybackMode.Duplicate];
+    public static IReadOnlyList<PlaybackMode> PlaybackModes { get; } = [PlaybackMode.StartStop, PlaybackMode.StartRestart, PlaybackMode.PlayPause, PlaybackMode.Duplicate];
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => ((PlaybackMode?) value ?? default(PlaybackMode)) switch
     {
         PlaybackMode.StartRestart => StartRestartConst,
+        PlaybackMode.PlayPause => PlayPauseConst,
         PlaybackMode.Duplicate => DuplicateConst,
         _ => StartStopConst
     };
@@ -26,6 +28,7 @@ public sealed class PlaybackModeConverter : IValueConverter
     {
         StartRestartConst => PlaybackMode.StartRestart,
         DuplicateConst => PlaybackMode.Duplicate,
+        PlayPauseConst => PlaybackMode.PlayPause,
         _ => PlaybackMode.StartStop
     };
 

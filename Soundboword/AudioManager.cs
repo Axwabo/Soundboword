@@ -72,12 +72,18 @@ public static class AudioManager
         switch (sound.Mode)
         {
             case PlaybackMode.Duplicate:
-            case PlaybackMode.StartRestart when !sound.Active:
-            case PlaybackMode.StartStop when !sound.Active:
+            case PlaybackMode.StartRestart or PlaybackMode.StartStop or PlaybackMode.PlayPause when !sound.Active:
             {
                 PlayNew(sound);
                 break;
             }
+            case PlaybackMode.PlayPause when Sounds.TryGetValue(sound, out var list):
+                foreach (var playback in list)
+                    if (playback.Player.State == PlaybackState.Playing)
+                        playback.Player.Pause();
+                    else
+                        playback.Player.Play();
+                break;
             case PlaybackMode.StartStop when Sounds.TryGetValue(sound, out var list):
                 StopAll(list);
                 sound.PropertyChanged -= SoundOnPropertyChanged;
