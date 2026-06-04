@@ -13,7 +13,11 @@ namespace Soundboword;
 public static class UserData
 {
 
-    private static readonly JsonSerializerOptions Options = new() {Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping};
+    private static readonly JsonSerializerOptions Options = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        TypeInfoResolver = SourceGenerationContext.Default
+    };
 
     private static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
