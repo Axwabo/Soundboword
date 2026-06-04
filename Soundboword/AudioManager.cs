@@ -23,7 +23,7 @@ public static class AudioManager
     private static MiniAudioEngine? _engine;
     private static AudioPlaybackDevice? _playback;
 
-    private static readonly Dictionary<SoundViewModel, List<Sound>> Sounds = [];
+    private static readonly Dictionary<SoundViewModel, List<SoundPlayback>> Sounds = [];
 
     private static readonly AudioFormat Format = new()
     {
@@ -107,7 +107,7 @@ public static class AudioManager
         var provider = new StreamDataProvider(_engine!, Format, File.OpenRead(sound.Path));
         var player = new SoundPlayer(_engine!, Format, provider);
         _playback!.MasterMixer.AddComponent(player);
-        list.Add(new Sound(provider, player));
+        list.Add(new SoundPlayback(provider, player));
         player.Play();
         player.IsLooping = sound.Loop;
         player.PlaybackEnded += RemoveSoundOnEnd;

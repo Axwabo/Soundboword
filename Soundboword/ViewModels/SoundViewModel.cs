@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Models;
@@ -10,6 +11,7 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     public required string Path { get; init; }
 
+    [JsonIgnore]
     public required IFileManagerOpener? Opener { get; init; }
 
     [ObservableProperty]

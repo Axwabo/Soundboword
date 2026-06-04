@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
+using Soundboword.Models;
 using Soundboword.Services;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
@@ -48,6 +50,15 @@ public partial class MainWindowViewModel : ViewModelBase
         _host = host;
         _opener = opener;
         Inputs = new InputsViewModel(factories);
+        foreach (var sound in UserData.LoadSounds())
+            Sounds.Add(new SoundViewModel
+            {
+                Name = sound.Name,
+                Path = sound.Path,
+                Loop = sound.Loop,
+                Mode = sound.Mode,
+                Opener = opener
+            });
         _ = TestDBus().ConfigureAwait(false);
     }
 
@@ -65,6 +76,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Name = Path.GetFileNameWithoutExtension(files[0].TryGetLocalPath()!),
             Opener = _opener
         });
+        UserData.SaveSounds(Sounds.Select(e => new SoundDto(e.Name, e.Path, e.Mode, e.Loop)));
     }
 
     [RelayCommand]
