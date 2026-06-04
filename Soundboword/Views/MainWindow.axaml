@@ -15,7 +15,7 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="*,Auto">
+    <Grid ColumnDefinitions="*,Auto,Auto">
         <Grid RowDefinitions="Auto,*">
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding SoundList.AddCommand}">Add Sound</Button>
@@ -29,7 +29,8 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </Grid>
-        <UserControl Grid.Column="1" Content="{Binding Inputs}" />
+        <UserControl Grid.Column="2" Content="{Binding Inputs}" />
+        <UserControl Grid.Column="1" Content="{Binding SoundList.Editor}" />
     </Grid>
 
 </Window>

@@ -18,7 +18,8 @@ public sealed class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         Services.AddSingleton<MainWindowViewModel>()
-            .AddSingleton<InputsViewModel>();
+            .AddSingleton<InputsViewModel>()
+            .AddSingleton<EditSoundViewModel>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

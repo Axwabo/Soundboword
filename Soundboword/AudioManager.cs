@@ -77,12 +77,8 @@ public static class AudioManager
                 PlayNew(sound);
                 break;
             }
-            case PlaybackMode.PlayPause when Sounds.TryGetValue(sound, out var list):
-                foreach (var playback in list)
-                    if (playback.Player.State == PlaybackState.Playing)
-                        playback.Player.Pause();
-                    else
-                        playback.Player.Play();
+            case PlaybackMode.PlayPause:
+                TogglePause(sound);
                 break;
             case PlaybackMode.StartStop when Sounds.TryGetValue(sound, out var list):
                 StopAll(list);
@@ -92,9 +88,24 @@ public static class AudioManager
                 break;
             case PlaybackMode.StartRestart when Sounds.TryGetValue(sound, out var list):
                 foreach (var played in list)
+                {
+                    played.Player.Play();
                     played.Provider.Seek(0);
+                }
+
                 break;
         }
+    }
+
+    public static void TogglePause(SoundViewModel sound)
+    {
+        if (!Sounds.TryGetValue(sound, out var list))
+            return;
+        foreach (var playback in list)
+            if (playback.Player.State == PlaybackState.Playing)
+                playback.Player.Pause();
+            else
+                playback.Player.Play();
     }
 
     private static void StopAll(List<SoundPlayback> list)

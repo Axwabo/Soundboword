@@ -24,7 +24,7 @@ internal static class Program
                 Services = new ServiceCollection()
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
                     .AddSingleton<IFileManagerOpener, DBusFileManagerOpener>()
-                    .AddSingleton<Services.SoundList>()
+                    .AddSingleton<SoundList>()
             })
             .UsePlatformDetect()
 #if DEBUG

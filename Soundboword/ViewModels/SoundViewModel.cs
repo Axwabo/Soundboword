@@ -13,8 +13,6 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     public required SoundList List { get; init; }
 
-    public required IFileManagerOpener? Opener { get; init; }
-
     [ObservableProperty]
     public required partial string Name { get; set; }
 
@@ -37,7 +35,7 @@ public sealed partial class SoundViewModel : ViewModelBase
     private void ToggleLoop() => Loop = !Loop;
 
     [RelayCommand]
-    private void Reveal() => Opener?.Open(Path);
+    private void Configure() => List.Editor.Open(this);
 
     public void UpdatePlaybackState(bool active)
     {

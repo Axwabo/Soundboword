@@ -31,18 +31,7 @@
             </Button>
             <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding IsPlaying}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
             <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="{Binding Loop}" ToolTip.Tip="{Binding Loop, StringFormat=Loop: \{0\}}">🔁️</ToggleButton>
-            <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure">⚙️️</Button>
-            <!-- <TextBox Text="{Binding Name}" /> -->
-            <!--<Button Grid.Row="1" Command="{Binding TriggerCommand}">Trigger</Button>
-            <ComboBox Grid.Row="2" SelectedItem="{Binding Path=Mode}" ItemsSource="{x:Static converters:PlaybackModeConverter.PlaybackModes}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate DataType="models:PlaybackMode">
-                        <TextBlock Text="{Binding Converter={StaticResource PlaybackMode}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <CheckBox Grid.Row="3" IsChecked="{Binding Loop}">Loop</CheckBox>
-            <Button Grid.Row="4" Command="{Binding RevealCommand}" IsEnabled="{Binding Opener, Converter={x:Static ObjectConverters.IsNotNull}}">Show in file manager</Button>-->
+            <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure" Command="{Binding ConfigureCommand}">⚙️️</Button>
         </Grid>
     </Border>
 
