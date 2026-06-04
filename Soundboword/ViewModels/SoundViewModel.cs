@@ -15,7 +15,10 @@ public sealed partial class SoundViewModel : ViewModelBase
     [ObservableProperty]
     public partial PlaybackMode Mode { get; set; }
 
+    [ObservableProperty]
+    public partial bool Loop { get; set; }
+
     [RelayCommand]
-    private void Play() => AudioManager.Play(this);
+    private void Play() => AudioManager.Trigger(this);
 
 }

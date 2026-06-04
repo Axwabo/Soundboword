@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Soundboword.Models;
@@ -50,18 +51,52 @@ public static class AudioManager
         Sounds.Clear();
     }
 
-    public static void Play(SoundViewModel sound)
+    public static void Trigger(SoundViewModel sound)
     {
         if (_engine == null || _playback == null)
             return;
-        var provider = new StreamDataProvider(_engine, Format, File.OpenRead(sound.Path));
-        var player = new SoundPlayer(_engine, Format, provider);
-        _playback.MasterMixer.AddComponent(player);
+        switch (sound.Mode)
+        {
+            case PlaybackMode.Duplicate:
+            case PlaybackMode.StartRestart when !sound.Active:
+            case PlaybackMode.StartStop when !sound.Active:
+            {
+                PlayNew(sound);
+                break;
+            }
+            case PlaybackMode.StartStop when Sounds.TryGetValue(sound, out var list):
+                foreach (var (provider, player) in list)
+                {
+                    player.Stop();
+                    provider.Dispose();
+                    _playback.MasterMixer.RemoveComponent(player);
+                }
+
+                sound.PropertyChanged -= SoundOnPropertyChanged;
+                Sounds.Remove(sound);
+                break;
+            case PlaybackMode.StartRestart when Sounds.TryGetValue(sound, out var list):
+                foreach (var played in list)
+                    played.Provider.Seek(0);
+                break;
+        }
+    }
+
+    private static void PlayNew(SoundViewModel sound)
+    {
         if (!Sounds.TryGetValue(sound, out var list))
+        {
             list = Sounds[sound] = [];
+            sound.PropertyChanged += SoundOnPropertyChanged;
+        }
+
+        var provider = new StreamDataProvider(_engine!, Format, File.OpenRead(sound.Path));
+        var player = new SoundPlayer(_engine!, Format, provider);
+        _playback!.MasterMixer.AddComponent(player);
         list.Add(new Sound(provider, player));
         player.Play();
-        player.PlaybackEnded += RemoveSound;
+        player.IsLooping = sound.Loop;
+        player.PlaybackEnded += RemoveSoundOnEnd;
     }
 
     internal static void StopAll()
@@ -70,13 +105,37 @@ public static class AudioManager
             return;
         foreach (var component in _playback.MasterMixer.Components.ToList())
             _playback.MasterMixer.RemoveComponent(component);
+        foreach (var sound in Sounds.Keys)
+            sound.PropertyChanged -= SoundOnPropertyChanged;
         Sounds.Clear();
     }
 
-    private static void RemoveSound(object? sender, EventArgs _)
+    private static void RemoveSoundOnEnd(object? sender, EventArgs _)
     {
-        foreach (var list in Sounds.Values)
-            list.RemoveAll(e => e.Player == sender);
+        foreach (var (sound, list) in Sounds)
+        {
+            var removed = list.RemoveAll(e => e.Player == sender);
+            if (removed == 0)
+                continue;
+            sound.PropertyChanged -= SoundOnPropertyChanged;
+            Sounds.Remove(sound);
+            break;
+        }
+    }
+
+    private static void SoundOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not SoundViewModel sound || e.PropertyName != nameof(SoundViewModel.Loop) || !Sounds.TryGetValue(sound, out var list))
+            return;
+        foreach (var played in list)
+            played.Player.IsLooping = sound.Loop;
+    }
+
+    extension(SoundViewModel sound)
+    {
+
+        public bool Active => Sounds.TryGetValue(sound, out var list) && list.Count != 0;
+
     }
 
 }
