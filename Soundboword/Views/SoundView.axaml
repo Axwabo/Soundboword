@@ -9,11 +9,17 @@
              x:Class="Soundboword.Views.SoundView"
              x:DataType="viewModels:SoundViewModel"
              BorderBrush="Gray"
-             BorderThickness="1"
-             Padding="3">
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+             BorderThickness="1">
+    <UserControl.Styles>
+        <Style Selector="Grid.sound.playing">
+            <Setter Property="Background" Value="{StaticResource Playing}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+          Classes="sound"
+          Classes.playing="{Binding IsPlaying}">
         <TextBox Text="{Binding Name}" />
-        <Button Grid.Row="1" Command="{Binding PlayCommand}">Trigger</Button>
+        <Button Grid.Row="1" Command="{Binding TriggerCommand}">Trigger</Button>
         <ComboBox Grid.Row="2" SelectedItem="{Binding Path=Mode}" ItemsSource="{x:Static converters:PlaybackModeConverter.PlaybackModes}">
             <ComboBox.ItemTemplate>
                 <DataTemplate DataType="models:PlaybackMode">

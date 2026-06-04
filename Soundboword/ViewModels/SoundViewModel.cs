@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Models;
@@ -10,7 +11,7 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     public required string Path { get; init; }
 
-    public required Services.SoundList List { get; init; }
+    public required SoundList List { get; init; }
 
     public required IFileManagerOpener? Opener { get; init; }
 
@@ -23,10 +24,21 @@ public sealed partial class SoundViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool Loop { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsPlaying { get; private set; }
+
     [RelayCommand]
-    private void Play() => AudioManager.Trigger(this);
+    private void Trigger() => AudioManager.Trigger(this);
 
     [RelayCommand]
     private void Reveal() => Opener?.Open(Path);
+
+    public void UpdatePlaybackState(bool active)
+    {
+        if (Dispatcher.UIThread.CheckAccess())
+            IsPlaying = active;
+        else
+            Dispatcher.UIThread.Post(() => IsPlaying = active);
+    }
 
 }

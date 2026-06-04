@@ -15,5 +15,6 @@
 
     <Application.Resources>
         <converters:PlaybackModeConverter x:Key="PlaybackMode" />
+        <SolidColorBrush x:Key="Playing" Color="#1100ff00" />
     </Application.Resources>
 </Application>

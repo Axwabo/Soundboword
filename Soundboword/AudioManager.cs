@@ -87,6 +87,7 @@ public static class AudioManager
                 }
 
                 sound.PropertyChanged -= SoundOnPropertyChanged;
+                sound.UpdatePlaybackState(false);
                 Sounds.Remove(sound);
                 break;
             case PlaybackMode.StartRestart when Sounds.TryGetValue(sound, out var list):
@@ -111,6 +112,7 @@ public static class AudioManager
         player.Play();
         player.IsLooping = sound.Loop;
         player.PlaybackEnded += RemoveSoundOnEnd;
+        sound.UpdatePlaybackState(true);
     }
 
     internal static void StopAll()
@@ -120,7 +122,11 @@ public static class AudioManager
         foreach (var component in _playback.MasterMixer.Components.ToList())
             _playback.MasterMixer.RemoveComponent(component);
         foreach (var sound in Sounds.Keys)
+        {
             sound.PropertyChanged -= SoundOnPropertyChanged;
+            sound.UpdatePlaybackState(false);
+        }
+
         Sounds.Clear();
     }
 
@@ -132,6 +138,7 @@ public static class AudioManager
             if (removed == 0)
                 continue;
             sound.PropertyChanged -= SoundOnPropertyChanged;
+            sound.UpdatePlaybackState(false);
             Sounds.Remove(sound);
             break;
         }
