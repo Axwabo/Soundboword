@@ -1,6 +1,8 @@
 ﻿using System;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
+using Soundboword.Inputs;
+using Soundboword.Inputs.Methods;
 
 namespace Soundboword;
 
@@ -16,7 +18,11 @@ internal static class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure(() => new App {Services = new ServiceCollection()})
+        => AppBuilder.Configure(() => new App
+            {
+                Services = new ServiceCollection()
+                    .AddSingleton<IInputFactory, LaunchpadInputFactory>()
+            })
             .UsePlatformDetect()
 #if DEBUG
             .WithDeveloperTools()

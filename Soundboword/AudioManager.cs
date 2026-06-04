@@ -9,6 +9,7 @@ using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
 using SoundFlow.Components;
 using SoundFlow.Enums;
+using SoundFlow.Midi.Structs;
 using SoundFlow.Providers;
 using SoundFlow.Structs;
 
@@ -35,6 +36,14 @@ public static class AudioManager
         var defaultDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.IsDefault);
         _playback = _engine.InitializePlaybackDevice(defaultDevice, Format);
         _playback.Start();
+    }
+
+    public static MidiDeviceInfo[] RefreshMidiInputs()
+    {
+        if (_engine == null)
+            return [];
+        _engine.UpdateMidiDevicesInfo();
+        return _engine.MidiInputDevices;
     }
 
     internal static void Destroy()
@@ -134,7 +143,7 @@ public static class AudioManager
     extension(SoundViewModel sound)
     {
 
-        public bool Active => Sounds.TryGetValue(sound, out var list) && list.Count != 0;
+        private bool Active => Sounds.TryGetValue(sound, out var list) && list.Count != 0;
 
     }
 
