@@ -10,6 +10,7 @@ using SoundFlow.Backends.MiniAudio;
 using SoundFlow.Components;
 using SoundFlow.Enums;
 using SoundFlow.Midi.PortMidi;
+using SoundFlow.Midi.Routing;
 using SoundFlow.Midi.Structs;
 using SoundFlow.Providers;
 using SoundFlow.Structs;
@@ -47,6 +48,8 @@ public static class AudioManager
         _engine.UpdateMidiDevicesInfo(); // TODO: portmidi does not support hotswap
         return _engine.MidiInputDevices;
     }
+
+    public static MidiManager? Midi => _engine?.MidiManager;
 
     internal static void Destroy()
     {

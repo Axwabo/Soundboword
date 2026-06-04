@@ -1,6 +1,4 @@
-using System;
-
-namespace Soundboword.Inputs.Methods;
+namespace Soundboword.Inputs.Launchpad;
 
 public sealed class LaunchpadInputFactory : IInputFactory
 {
@@ -18,6 +16,14 @@ public sealed class LaunchpadInputFactory : IInputFactory
         }
     }
 
-    public IInputMethod? Activate() => throw new NotImplementedException();
+    public IInputMethod? Activate()
+    {
+        if (AudioManager.Midi is not { } midi)
+            return null;
+        foreach (var input in midi.AvailableInputs)
+            if (input.Name.Contains("Launchpad Mini"))
+                return new LaunchpadInput(midi, input);
+        return null;
+    }
 
 }

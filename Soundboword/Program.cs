@@ -2,7 +2,7 @@
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Soundboword.Inputs;
-using Soundboword.Inputs.Methods;
+using Soundboword.Inputs.Launchpad;
 
 namespace Soundboword;
 
