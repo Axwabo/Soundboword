@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -55,7 +54,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddSound()
     {
-        if (TopLevel.GetTopLevel(_host?.Host) is not {StorageProvider: var provider})
+        if (_host?.Host is not {StorageProvider: var provider})
             return;
         var files = await provider.OpenFilePickerAsync(FileOptions);
         if (files.Count == 0)
