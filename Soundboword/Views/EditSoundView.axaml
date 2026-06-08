@@ -12,7 +12,7 @@
         <viewModels:EditSoundViewModel />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="Button">
+        <Style Selector="Button.icon">
             <Setter Property="FontSize" Value="20" />
         </Style>
     </UserControl.Styles>
@@ -27,13 +27,17 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <StackPanel Orientation="Horizontal" Spacing="3">
-            <Button Command="{Binding TogglePauseCommand}">⏯️</Button>
-            <Button Command="{Binding StopCommand}">🟦</Button>
+            <Button Classes="icon" Command="{Binding TogglePauseCommand}">⏯️</Button>
+            <Button Classes="icon" Command="{Binding StopCommand}">🟦</Button>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="3">
-            <Button Command="{Binding CopyPathCommand}" ToolTip.Tip="Copy Path">📋</Button>
-            <Button Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager">📂</Button>
-            <Button Command="{Binding DeleteCommand}">🗑️</Button>
+            <Button Classes="icon" Command="{Binding CopyPathCommand}" ToolTip.Tip="Copy Path">📋</Button>
+            <Button Classes="icon" Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager">📂</Button>
+            <Button Classes="icon" Command="{Binding DeleteCommand}">🗑️</Button>
         </StackPanel>
+        <ToggleButton Content="{Binding Context.ButtonText}"
+                      IsChecked="{Binding Context.IsListeningForShortcuts}"
+                      Command="{Binding ToggleListeningCommand}" />
+        <Button Command="{Binding RemoveShortcutsCommand}">Remove Shortcuts</Button>
     </StackPanel>
 </UserControl>

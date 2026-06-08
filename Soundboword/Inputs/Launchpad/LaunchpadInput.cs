@@ -29,6 +29,8 @@ public sealed class LaunchpadInput : IInputMethod
 
     public void ListenForShortcutAddition(SoundViewModel target) => _listening = target;
 
+    public void ClearShortcut(SoundViewModel target) => _config.Remove(target.Id);
+
     public void CancelShortcutAddition() => _listening = null;
 
     public void Dispose()
@@ -46,7 +48,7 @@ public sealed class LaunchpadInput : IInputMethod
         if (_listening != null)
         {
             _config[_listening.Id] = key;
-            _listening = null;
+            _list.Editor.CancelShortcutAddition();
             return;
         }
 

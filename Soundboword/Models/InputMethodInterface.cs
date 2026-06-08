@@ -2,6 +2,7 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
+using Soundboword.ViewModels;
 
 namespace Soundboword.Models;
 
@@ -28,9 +29,12 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        base.OnPropertyChanged(e);
         if (e.PropertyName != nameof(Activated))
+        {
+            base.OnPropertyChanged(e);
             return;
+        }
+
         if (Activated)
         {
             _method = _inputFactory.Activate();
@@ -42,9 +46,18 @@ public sealed partial class InputMethodInterface : ObservableObject
             _method?.Dispose();
             _method = null;
         }
+
+        base.OnPropertyChanged(e);
     }
 
     [RelayCommand]
     public void Refresh() => IsAvailable = _inputFactory.IsAvailable;
+
+    public void ListenForShortcutAddition(SoundViewModel target) => _method?.ListenForShortcutAddition(target);
+
+    // TODO: allow while deactivated
+    public void ClearShortcut(SoundViewModel target) => _method?.ClearShortcut(target);
+
+    public void CancelShortcutAddition() => _method?.CancelShortcutAddition();
 
 }

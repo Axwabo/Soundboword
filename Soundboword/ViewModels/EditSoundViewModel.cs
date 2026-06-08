@@ -9,15 +9,21 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private readonly HostControl? _host;
     private readonly IFileManagerOpener? _opener;
+    private readonly InputsViewModel _inputs;
 
     public SoundEditingContext Context { get; }
 
-    public EditSoundViewModel() => Context = new SoundEditingContext();
+    public EditSoundViewModel()
+    {
+        _inputs = new InputsViewModel();
+        Context = new SoundEditingContext();
+    }
 
-    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context)
+    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context, InputsViewModel inputs)
     {
         _host = host;
         _opener = opener;
+        _inputs = inputs;
         Context = context;
     }
 
@@ -56,6 +62,18 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         Context.Close();
         model.List.Delete(model);
+    }
+
+    [RelayCommand]
+    private void ToggleListening() => Context.ToggleListening(_inputs);
+
+    [RelayCommand]
+    private void RemoveShortcuts()
+    {
+        if (Context.Model is not { } model)
+            return;
+        foreach (var input in _inputs.Available)
+            input.ClearShortcut(model);
     }
 
 }
