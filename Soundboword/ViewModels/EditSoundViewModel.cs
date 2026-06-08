@@ -1,5 +1,9 @@
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
+using Soundboword.Models;
 using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
@@ -13,6 +17,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public SoundEditingContext Context { get; }
 
+    public ObservableCollection<IShortcut> Active { get; } = [];
+
     public EditSoundViewModel()
     {
         _inputs = new InputsViewModel();
@@ -25,6 +31,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         _opener = opener;
         _inputs = inputs;
         Context = context;
+        Context.PropertyChanged += ContextOnPropertyChanged;
+        ShortcutList.Shortcuts.CollectionChanged += ShortcutsOnCollectionChanged;
     }
 
     [RelayCommand]
@@ -62,6 +70,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         Context.Close();
         model.List.Delete(model);
+        RemoveShortcuts(model);
     }
 
     [RelayCommand]
@@ -70,10 +79,33 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void RemoveShortcuts()
     {
-        if (Context.Model is not { } model)
-            return;
+        if (Context.Model is { } model)
+            RemoveShortcuts(model);
+    }
+
+    private void RemoveShortcuts(SoundViewModel model)
+    {
+        ShortcutList.RemoveAll(model);
         foreach (var input in _inputs.Available)
             input.ClearShortcut(model);
+    }
+
+    private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SoundEditingContext.Model))
+            UpdateActiveShortcuts();
+    }
+
+    private void ShortcutsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateActiveShortcuts();
+
+    private void UpdateActiveShortcuts()
+    {
+        Active.Clear();
+        if (Context.Model is not { } model)
+            return;
+        foreach (var shortcut in ShortcutList.Shortcuts)
+            if (shortcut.Sound == model)
+                Active.Add(shortcut);
     }
 
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Soundboword.Converters;
+using Soundboword.Models;
 using Soundboword.Services;
 using Soundboword.ViewModels;
 using SoundFlow.Midi.Routing;
@@ -10,6 +12,8 @@ namespace Soundboword.Inputs.Launchpad;
 
 public sealed class LaunchpadInput : IInputMethod
 {
+
+    public const string Name = "Launchpad Mini";
 
     private readonly Dictionary<Guid, LaunchpadKey> _config;
 
@@ -48,7 +52,7 @@ public sealed class LaunchpadInput : IInputMethod
         if (_listening != null)
         {
             _config[_listening.Id] = key;
-            _list.Editor.CancelShortcutAddition();
+            _list.Editor.NotifyShortcutChange(new Shortcut<LaunchpadKey>(Name, _listening, key, LaunchpadKeyValueConverter.Instance));
             return;
         }
 

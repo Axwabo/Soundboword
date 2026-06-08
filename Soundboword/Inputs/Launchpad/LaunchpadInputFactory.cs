@@ -9,14 +9,14 @@ public sealed class LaunchpadInputFactory : IInputFactory
 
     public LaunchpadInputFactory(SoundList soundList) => _soundList = soundList;
 
-    public string Name => "Launchpad Mini";
+    public string Name => LaunchpadInput.Name;
 
     public bool IsAvailable
     {
         get
         {
             foreach (var midi in AudioManager.RefreshMidiInputs())
-                if (midi.Name.Contains("Launchpad Mini"))
+                if (midi.Name.Contains(LaunchpadInput.Name))
                     return true;
             return false;
         }
@@ -27,7 +27,7 @@ public sealed class LaunchpadInputFactory : IInputFactory
         if (AudioManager.Midi is not { } midi)
             return null;
         foreach (var input in midi.AvailableInputs)
-            if (input.Name.Contains("Launchpad Mini"))
+            if (input.Name.Contains(LaunchpadInput.Name))
                 return new LaunchpadInput(midi, input, _soundList);
         return null;
     }

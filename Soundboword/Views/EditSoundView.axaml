@@ -39,5 +39,20 @@
                       IsChecked="{Binding Context.IsListeningForShortcuts}"
                       Command="{Binding ToggleListeningCommand}" />
         <Button Command="{Binding RemoveShortcutsCommand}">Remove Shortcuts</Button>
+        <ItemsControl ItemsSource="{Binding Active}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="3" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Label Content="{Binding MethodName}" />
+                        <ToggleButton IsChecked="True" IsEnabled="False" Content="{Binding Value, Converter={Binding Path=Converter}}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </StackPanel>
 </UserControl>

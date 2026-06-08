@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Soundboword.Models;
+using Soundboword.Services;
 using Soundboword.ViewModels;
 
 namespace Soundboword;
@@ -82,6 +83,17 @@ public sealed partial class SoundEditingContext : ObservableObject
         IsListeningForShortcuts = false;
         foreach (var input in _activatedInputs)
             input.CancelShortcutAddition();
+        _activatedInputs.Clear();
+    }
+
+    public void NotifyShortcutChange<T>(Shortcut<T> shortcut)
+    {
+        CancelShortcutAddition();
+        var index = ShortcutList.FindIndex(shortcut.MethodName, shortcut.Sound);
+        if (index == -1)
+            ShortcutList.Shortcuts.Add(shortcut);
+        else if (ShortcutList.Shortcuts[index] is not Shortcut<T> existing || existing != shortcut)
+            ShortcutList.Shortcuts[index] = shortcut;
     }
 
 }
