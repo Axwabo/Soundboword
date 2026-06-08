@@ -1,8 +1,5 @@
-using System.ComponentModel;
 using Avalonia.Input.Platform;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Soundboword.Models;
 using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
@@ -12,96 +9,53 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private readonly HostControl? _host;
     private readonly IFileManagerOpener? _opener;
-    private readonly InputsViewModel? _inputs;
 
-    public EditSoundViewModel()
-    {
-    }
+    public SoundEditingContext Context { get; }
 
-    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, InputsViewModel inputs)
+    public EditSoundViewModel() => Context = new SoundEditingContext();
+
+    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context)
     {
         _host = host;
         _opener = opener;
-        _inputs = inputs;
+        Context = context;
     }
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Mode), nameof(Name), nameof(StopCommand))]
-    public partial SoundViewModel? Model { get; private set; }
-
-    [ObservableProperty]
-    public partial bool IsListeningForShortcuts { get; set; }
-
-    public string Name
+    [RelayCommand]
+    private void Stop()
     {
-        get => Model?.Name ?? "";
-        set
-        {
-            Model?.Name = value;
-            OnPropertyChanged();
-        }
+        if (Context.Model != null)
+            AudioManager.StopAll(Context.Model);
     }
-
-    public PlaybackMode Mode
-    {
-        get => Model?.Mode ?? default;
-        set
-        {
-            Model?.Mode = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public IRelayCommand? StopCommand => Model?.StopCommand;
-
-    public void Open(SoundViewModel model)
-    {
-        Close();
-        Model = model;
-        Model.PropertyChanged += ModelOnPropertyChanged;
-    }
-
-    public void Close()
-    {
-        Model?.PropertyChanged -= ModelOnPropertyChanged;
-        Model = null;
-    }
-
-    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
     [RelayCommand]
     private void TogglePause()
     {
-        if (Model != null)
-            AudioManager.TogglePause(Model);
+        if (Context.Model != null)
+            AudioManager.TogglePause(Context.Model);
     }
 
     [RelayCommand]
     private void CopyPath()
     {
-        if (Model != null && _host is {Host.Clipboard: { } clipboard})
-            clipboard.SetTextAsync(Model.Path);
+        if (Context.Model is {Path: var path} && _host is {Host.Clipboard: { } clipboard})
+            clipboard.SetTextAsync(path);
     }
 
     [RelayCommand]
     private void Reveal()
     {
-        if (Model != null)
-            _opener?.Open(Model.Path);
+        if (Context.Model is {Path: var path})
+            _opener?.Open(path);
     }
 
     [RelayCommand]
     private void Delete()
     {
-        if (Model is not { } model)
+        if (Context.Model is not { } model)
             return;
-        Close();
+        Context.Close();
         model.List.Delete(model);
-    }
-
-    [RelayCommand]
-    private void ToggleListening()
-    {
     }
 
 }

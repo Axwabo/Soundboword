@@ -16,10 +16,10 @@
             <Setter Property="FontSize" Value="20" />
         </Style>
     </UserControl.Styles>
-    <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding Model, Converter={x:Static ObjectConverters.IsNotNull}}">
-        <TextBox Text="{Binding Name}" />
+    <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding Context.Model, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <TextBox Text="{Binding Context.Name}" />
         <Label>Trigger Mode:</Label>
-        <ComboBox SelectedItem="{Binding Path=Mode}" ItemsSource="{x:Static converters:PlaybackModeConverter.PlaybackModes}">
+        <ComboBox SelectedItem="{Binding Path=Context.PlaybackMode}" ItemsSource="{x:Static converters:PlaybackModeConverter.PlaybackModes}">
             <ComboBox.ItemTemplate>
                 <DataTemplate DataType="models:PlaybackMode">
                     <TextBlock Text="{Binding Converter={StaticResource PlaybackMode}}" />
@@ -35,6 +35,5 @@
             <Button Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager">📂</Button>
             <Button Command="{Binding DeleteCommand}">🗑️</Button>
         </StackPanel>
-        <ToggleButton IsChecked="{Binding IsListeningForShortcuts}" Command="{Binding ToggleListeningCommand}">Add a shortcut</ToggleButton>
     </StackPanel>
 </UserControl>

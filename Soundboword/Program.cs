@@ -25,6 +25,7 @@ internal static class Program
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
                     .AddSingleton<IFileManagerOpener, DBusFileManagerOpener>()
                     .AddSingleton<SoundList>()
+                    .AddSingleton<SoundEditingContext>()
             })
             .UsePlatformDetect()
 #if DEBUG
