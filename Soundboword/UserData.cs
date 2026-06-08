@@ -31,7 +31,7 @@ public static class UserData
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
-    private static T Load<T>(string path, Func<T> fallback) where T : notnull
+    public static T Load<T>(string path, Func<T> fallback) where T : notnull
     {
         EnsureDirectory();
         if (!File.Exists(path))
@@ -47,7 +47,7 @@ public static class UserData
         }
     }
 
-    private static void Save<T>(string path, T data) where T : notnull
+    public static void Save<T>(string path, T data) where T : notnull
     {
         EnsureDirectory();
         try

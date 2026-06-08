@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Soundboword.Models;
 using Soundboword.Services;
 using Soundboword.ViewModels;
 using SoundFlow.Midi.Routing;
@@ -14,8 +11,6 @@ public sealed class LaunchpadInput : IInputMethod
 
     public const string Name = "Launchpad Mini";
 
-    private readonly Dictionary<Guid, LaunchpadKey> _config;
-
     private readonly SoundList _list;
 
     private readonly MidiInputNode _node;
@@ -24,18 +19,12 @@ public sealed class LaunchpadInput : IInputMethod
 
     public LaunchpadInput(MidiManager midi, MidiDeviceInfo input, SoundList list)
     {
-        _config = ShortcutManager.Load<LaunchpadShortcut>(Name);
         _list = list;
         _node = midi.GetOrCreateInputNode(input);
         _node.OnMessageOutput += OnNodeOnOnMessageOutput;
-        foreach (var sound in list.Sounds)
-            if (_config.TryGetValue(sound.Id, out var key))
-                ShortcutList.Shortcuts.Add(new LaunchpadShortcut(Name, key));
     }
 
     public void ListenForShortcutAddition(SoundViewModel target) => _listening = target;
-
-    public void ClearShortcut(SoundViewModel target) => _config.Remove(target.Id);
 
     public void CancelShortcutAddition() => _listening = null;
 
@@ -43,7 +32,6 @@ public sealed class LaunchpadInput : IInputMethod
     {
         _node.OnMessageOutput -= OnNodeOnOnMessageOutput;
         _listening = null;
-        ShortcutList.RemoveAll(Name);
         UserData.SaveLaunchpadConfig(_config);
     }
 

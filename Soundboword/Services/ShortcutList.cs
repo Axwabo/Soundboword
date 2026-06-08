@@ -1,35 +1,35 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using Soundboword.Inputs;
 using Soundboword.Models;
 using Soundboword.ViewModels;
 
 namespace Soundboword.Services;
 
-public static class ShortcutList
+public sealed class ShortcutList
 {
 
-    private static readonly Dictionary<SoundViewModel, HashSet<Shortcut>> ShortcutsBySound = [];
-
-    public static IEnumerable<Shortcut> ForSound(SoundViewModel sound) => ShortcutsBySound.TryGetValue(sound, out var set) ? set : Enumerable.Empty<Shortcut>();
-
-    public static int FindIndex(string methodName, SoundViewModel sound)
+    public static Dictionary<Guid, T> Load<T>(string name, Func<T, string> friendlyNameConverter)
     {
-        for (var i = 0; i < Shortcuts.Count; i++)
-            if (Shortcuts[i].MethodName == methodName && Shortcuts[i].Sound == sound)
-                return i;
-        return -1;
+        var saved = UserData.Load(Path.Combine(UserData.Folder, name + ".json"), () => new Dictionary<Guid, T>());
+        foreach (var (key, value) in saved)
+        {
+            ShortcutsCache<> 
+        }
     }
 
-    public static void RemoveAll(SoundViewModel sound) => ShortcutsBySound.Remove(sound);
+    private readonly Dictionary<SoundViewModel, HashSet<Shortcut>> ShortcutsBySound = [];
 
-    public static void RemoveAll(string method)
-    {
-        for (var i = Shortcuts.Count - 1; i >= 0; i--)
-            if (Shortcuts[i].MethodName == method)
-                Shortcuts.RemoveAt(i);
-    }
+    public IEnumerable<Shortcut> ForSound(SoundViewModel sound) => ShortcutsBySound.TryGetValue(sound, out var set) ? set : Enumerable.Empty<Shortcut>();
+
+    public void RemoveAll(SoundViewModel sound) => ShortcutsBySound.Remove(sound);
+
+}
+
+file static class ShortcutsCache<T>
+{
+
+    private static readonly Dictionary<Guid, T> ById = [];
 
 }

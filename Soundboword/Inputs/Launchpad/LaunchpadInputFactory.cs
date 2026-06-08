@@ -7,7 +7,10 @@ public sealed class LaunchpadInputFactory : IInputFactory
 
     private readonly SoundList _soundList;
 
-    public LaunchpadInputFactory(SoundList soundList) => _soundList = soundList;
+    public LaunchpadInputFactory(SoundList soundList)
+    {
+        _soundList = soundList;
+    }
 
     public string Name => LaunchpadInput.Name;
 
