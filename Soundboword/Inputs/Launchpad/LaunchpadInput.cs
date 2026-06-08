@@ -1,4 +1,6 @@
 using System;
+using Soundboword.Services;
+using Soundboword.ViewModels;
 using SoundFlow.Midi.Routing;
 using SoundFlow.Midi.Routing.Nodes;
 using SoundFlow.Midi.Structs;
@@ -8,24 +10,28 @@ namespace Soundboword.Inputs.Launchpad;
 public sealed class LaunchpadInput : IInputMethod
 {
 
+    private readonly SoundList _list;
+
     private readonly MidiInputNode _node;
 
-    public LaunchpadInput(MidiManager midi, MidiDeviceInfo input)
+    private SoundViewModel? _listening;
+
+    public LaunchpadInput(MidiManager midi, MidiDeviceInfo input, SoundList list)
     {
+        _list = list;
         _node = midi.GetOrCreateInputNode(input);
         _node.OnMessageOutput += OnNodeOnOnMessageOutput;
     }
 
-    private void OnNodeOnOnMessageOutput(MidiMessage message)
-    {
-        /*
-         data1: note number
-         data2: pressed or not pressed
-         statusbyte: 176 if top row, 144 otherwise
-         */
-        Console.WriteLine(message.StatusByte + " " + message.Data1 + " " + message.Pressure);
-    }
+    public void ListenForShortcutAddition(SoundViewModel target) => _listening = target;
+
+    public void CancelShortcutAddition() => _listening = null;
 
     public void Dispose() => _node.OnMessageOutput -= OnNodeOnOnMessageOutput;
+
+    private void OnNodeOnOnMessageOutput(MidiMessage message)
+    {
+        Console.WriteLine(message.LaunchpadKey);
+    }
 
 }

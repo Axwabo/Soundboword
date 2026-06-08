@@ -46,7 +46,7 @@ public static class UserData
     {
         EnsureDirectory();
         using var file = File.Create(Sounds);
-        JsonSerializer.Serialize(file, sounds.Select(e => new SoundDto(e.Name, e.Path, e.Mode, e.Loop)), Options);
+        JsonSerializer.Serialize(file, sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop)), Options);
     }
 
 }

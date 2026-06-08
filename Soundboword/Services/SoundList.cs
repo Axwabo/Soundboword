@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ public sealed partial class SoundList
         foreach (var sound in UserData.LoadSounds())
             Sounds.Add(new SoundViewModel
             {
+                Id = sound.Id,
                 Name = sound.Name,
                 Path = sound.Path,
                 Loop = sound.Loop,
@@ -57,6 +59,7 @@ public sealed partial class SoundList
         var path = files[0].TryGetLocalPath()!;
         Sounds.Add(new SoundViewModel
         {
+            Id = Guid.NewGuid(),
             Path = path,
             Name = Path.GetFileNameWithoutExtension(path),
             List = this
