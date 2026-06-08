@@ -35,6 +35,9 @@ public sealed class App : Application
             window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
             desktop.MainWindow = window;
 
+            var soundList = provider.GetRequiredService<SoundList>();
+            desktop.Exit += (_, _) => UserData.SaveSounds(soundList.Sounds);
+
             var shortcutList = provider.GetRequiredService<ShortcutList>();
             desktop.Exit += (_, _) => shortcutList.CommitAll();
         }

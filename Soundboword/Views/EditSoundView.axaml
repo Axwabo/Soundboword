@@ -50,10 +50,8 @@
                 <DataTemplate>
                     <StackPanel>
                         <Label Content="{Binding InputMethodName}" />
-                        <!-- ReSharper disable Xaml.PossibleNullReferenceException -->
-                        <ToggleButton Content="{Binding FriendlyName}"
-                                      IsChecked="{Binding #Root.((viewModels:EditSoundViewModel)DataContext).Context.ListeningMethod, Converter={StaticResource StringEquality}, ConverterParameter={Binding InputMethodName}}"
-                                      Command="{Binding #Root.((viewModels:EditSoundViewModel)DataContext).ToggleListeningCommand}" CommandParameter="{Binding InputMethodName}" />
+                        <!-- ReSharper disable once Xaml.PossibleNullReferenceException -->
+                        <Button Content="{Binding FriendlyName}" Command="{Binding #Root.((viewModels:EditSoundViewModel)DataContext).ToggleListeningCommand}" CommandParameter="{Binding InputMethodName}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
