@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
@@ -32,7 +31,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         _inputs = inputs;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
-        ShortcutList.Shortcuts.CollectionChanged += ShortcutsOnCollectionChanged;
     }
 
     [RelayCommand]
@@ -70,7 +68,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         Context.Close();
         model.List.Delete(model);
-        RemoveShortcuts(model);
+        ShortcutList.RemoveAll(model);
     }
 
     [RelayCommand]
@@ -80,14 +78,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private void RemoveShortcuts()
     {
         if (Context.Model is { } model)
-            RemoveShortcuts(model);
-    }
-
-    private void RemoveShortcuts(SoundViewModel model)
-    {
-        ShortcutList.RemoveAll(model);
-        foreach (var input in _inputs.Available)
-            input.ClearShortcut(model);
+            ShortcutList.RemoveAll(model);
     }
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -96,16 +87,13 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             UpdateActiveShortcuts();
     }
 
-    private void ShortcutsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateActiveShortcuts();
-
     private void UpdateActiveShortcuts()
     {
         Active.Clear();
         if (Context.Model is not { } model)
             return;
-        foreach (var shortcut in ShortcutList.Shortcuts)
-            if (shortcut.Sound == model)
-                Active.Add(shortcut);
+        foreach (var shortcut in ShortcutList.ForSound(model))
+            Active.Add(shortcut);
     }
 
 }

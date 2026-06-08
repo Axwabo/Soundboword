@@ -1,5 +1,5 @@
-using Soundboword.ViewModels;
+using System.Text.Json.Serialization;
 
 namespace Soundboword.Models;
 
-public readonly record struct Shortcut(string MethodName, SoundViewModel Sound, string FriendlyName);
+public abstract record Shortcut(string InputMethodName, string FriendlyName);

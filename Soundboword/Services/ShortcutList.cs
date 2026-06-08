@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Soundboword.Inputs;
 using Soundboword.Models;
 using Soundboword.ViewModels;
 
@@ -7,7 +11,9 @@ namespace Soundboword.Services;
 public static class ShortcutList
 {
 
-    public static ObservableCollection<Shortcut> Shortcuts { get; } = [];
+    private static readonly Dictionary<SoundViewModel, HashSet<Shortcut>> ShortcutsBySound = [];
+
+    public static IEnumerable<Shortcut> ForSound(SoundViewModel sound) => ShortcutsBySound.TryGetValue(sound, out var set) ? set : Enumerable.Empty<Shortcut>();
 
     public static int FindIndex(string methodName, SoundViewModel sound)
     {
@@ -17,12 +23,7 @@ public static class ShortcutList
         return -1;
     }
 
-    public static void RemoveAll(SoundViewModel sound)
-    {
-        for (var i = Shortcuts.Count - 1; i >= 0; i--)
-            if (Shortcuts[i].Sound == sound)
-                Shortcuts.RemoveAt(i);
-    }
+    public static void RemoveAll(SoundViewModel sound) => ShortcutsBySound.Remove(sound);
 
     public static void RemoveAll(string method)
     {

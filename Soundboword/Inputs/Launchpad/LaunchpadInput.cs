@@ -24,13 +24,13 @@ public sealed class LaunchpadInput : IInputMethod
 
     public LaunchpadInput(MidiManager midi, MidiDeviceInfo input, SoundList list)
     {
-        _config = UserData.LoadLaunchpadConfig();
+        _config = ShortcutManager.Load<LaunchpadShortcut>(Name);
         _list = list;
         _node = midi.GetOrCreateInputNode(input);
         _node.OnMessageOutput += OnNodeOnOnMessageOutput;
         foreach (var sound in list.Sounds)
             if (_config.TryGetValue(sound.Id, out var key))
-                ShortcutList.Shortcuts.Add(new Shortcut(Name, sound, key.FriendlyName));
+                ShortcutList.Shortcuts.Add(new LaunchpadShortcut(Name, key));
     }
 
     public void ListenForShortcutAddition(SoundViewModel target) => _listening = target;
@@ -55,7 +55,7 @@ public sealed class LaunchpadInput : IInputMethod
         if (_listening != null)
         {
             _config[_listening.Id] = key;
-            _list.Editor.NotifyShortcutChange(new Shortcut(Name, _listening, key.FriendlyName));
+            _list.Editor.NotifyShortcutChange(new LaunchpadShortcut(Name, key));
             return;
         }
 

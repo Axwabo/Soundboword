@@ -25,11 +25,9 @@ public static class UserData
         }
     };
 
-    private static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
+    public static string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
-    private static readonly string Sounds = Path.Combine(Folder, "sounds.json");
-
-    private static readonly string Launchpad = Path.Combine(Folder, "launchpad.json");
+    private static string Sounds { get; } = Path.Combine(Folder, "sounds.json");
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
@@ -66,10 +64,6 @@ public static class UserData
 
     public static IReadOnlyList<SoundDto> LoadSounds() => Load<IReadOnlyList<SoundDto>>(Sounds, () => []);
 
-    public static Dictionary<Guid, LaunchpadKey> LoadLaunchpadConfig() => Load(Launchpad, () => new Dictionary<Guid, LaunchpadKey>());
-
     public static void SaveSounds(ObservableCollection<SoundViewModel> sounds) => Save(Sounds, sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop)));
-
-    public static void SaveLaunchpadConfig(Dictionary<Guid, LaunchpadKey> config) => Save(Launchpad, config);
 
 }

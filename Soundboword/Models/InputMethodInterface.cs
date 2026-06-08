@@ -55,9 +55,6 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     public void ListenForShortcutAddition(SoundViewModel target) => _method?.ListenForShortcutAddition(target);
 
-    // TODO: allow while deactivated
-    public void ClearShortcut(SoundViewModel target) => _method?.ClearShortcut(target);
-
     public void CancelShortcutAddition() => _method?.CancelShortcutAddition();
 
 }

@@ -8,8 +8,6 @@ public interface IInputMethod : IDisposable
 
     void ListenForShortcutAddition(SoundViewModel target);
 
-    void ClearShortcut(SoundViewModel target);
-
     void CancelShortcutAddition();
 
 }

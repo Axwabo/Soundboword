@@ -86,14 +86,4 @@ public sealed partial class SoundEditingContext : ObservableObject
         _activatedInputs.Clear();
     }
 
-    public void NotifyShortcutChange(Shortcut shortcut)
-    {
-        CancelShortcutAddition();
-        var index = ShortcutList.FindIndex(shortcut.MethodName, shortcut.Sound);
-        if (index == -1)
-            ShortcutList.Shortcuts.Add(shortcut);
-        else
-            ShortcutList.Shortcuts[index] = shortcut;
-    }
-
 }
