@@ -2,7 +2,6 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
-using Soundboword.ViewModels;
 
 namespace Soundboword.Models;
 
@@ -52,9 +51,5 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     [RelayCommand]
     public void Refresh() => IsAvailable = _inputFactory.IsAvailable;
-
-    public void ListenForShortcutAddition(SoundViewModel target) => _method?.ListenForShortcutAddition(target);
-
-    public void CancelShortcutAddition() => _method?.CancelShortcutAddition();
 
 }

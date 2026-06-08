@@ -13,6 +13,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private readonly HostControl? _host;
     private readonly IFileManagerOpener? _opener;
     private readonly InputsViewModel _inputs;
+    private readonly ShortcutList _shortcuts;
 
     public SoundEditingContext Context { get; }
 
@@ -22,13 +23,15 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         _inputs = new InputsViewModel();
         Context = new SoundEditingContext();
+        _shortcuts = new ShortcutList(Context);
     }
 
-    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context, InputsViewModel inputs)
+    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context, InputsViewModel inputs, ShortcutList shortcuts)
     {
         _host = host;
         _opener = opener;
         _inputs = inputs;
+        _shortcuts = shortcuts;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
     }
@@ -68,17 +71,17 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         Context.Close();
         model.List.Delete(model);
-        ShortcutList.RemoveAll(model);
+        _shortcuts.Remove(model);
     }
 
     [RelayCommand]
-    private void ToggleListening() => Context.ToggleListening(_inputs);
+    private void ToggleListening() => Context.ToggleListening();
 
     [RelayCommand]
     private void RemoveShortcuts()
     {
         if (Context.Model is { } model)
-            ShortcutList.RemoveAll(model);
+            _shortcuts.Remove(model);
     }
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -92,7 +95,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Active.Clear();
         if (Context.Model is not { } model)
             return;
-        foreach (var shortcut in ShortcutList.ForSound(model))
+        foreach (var shortcut in _shortcuts.ForSound(model))
             Active.Add(shortcut);
     }
 

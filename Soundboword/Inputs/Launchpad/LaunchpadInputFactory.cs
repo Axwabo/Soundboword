@@ -5,12 +5,9 @@ namespace Soundboword.Inputs.Launchpad;
 public sealed class LaunchpadInputFactory : IInputFactory
 {
 
-    private readonly SoundList _soundList;
+    private readonly ShortcutList _shortcuts;
 
-    public LaunchpadInputFactory(SoundList soundList)
-    {
-        _soundList = soundList;
-    }
+    public LaunchpadInputFactory(ShortcutList shortcuts) => _shortcuts = shortcuts;
 
     public string Name => LaunchpadInput.Name;
 
@@ -31,7 +28,7 @@ public sealed class LaunchpadInputFactory : IInputFactory
             return null;
         foreach (var input in midi.AvailableInputs)
             if (input.Name.Contains(LaunchpadInput.Name))
-                return new LaunchpadInput(midi, input, _soundList);
+                return new LaunchpadInput(midi, input, _shortcuts);
         return null;
     }
 

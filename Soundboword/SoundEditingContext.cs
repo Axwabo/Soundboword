@@ -1,16 +1,12 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Soundboword.Models;
-using Soundboword.Services;
 using Soundboword.ViewModels;
 
 namespace Soundboword;
 
 public sealed partial class SoundEditingContext : ObservableObject
 {
-
-    private readonly HashSet<InputMethodInterface> _activatedInputs = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PlaybackMode), nameof(Name))]
@@ -40,6 +36,8 @@ public sealed partial class SoundEditingContext : ObservableObject
     [NotifyPropertyChangedFor(nameof(ButtonText))]
     public partial bool IsListeningForShortcuts { get; set; }
 
+    public SoundViewModel? Listening { get; private set; }
+
     public string ButtonText => IsListeningForShortcuts ? "Listening..." : "Add Shortcut";
 
     public void Open(SoundViewModel model)
@@ -51,39 +49,27 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     public void Close()
     {
+        Listening = null;
         Model?.PropertyChanged -= ModelOnPropertyChanged;
         Model = null;
     }
 
     private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
-    public void ToggleListening(InputsViewModel inputs)
+    public void ToggleListening()
     {
         if (Model is not { } model)
             return;
-        if (!IsListeningForShortcuts)
-        {
+        if (IsListeningForShortcuts)
+            Listening = model;
+        else
             CancelShortcutAddition();
-            return;
-        }
-
-        foreach (var input in inputs.Available)
-            if (input.Activated)
-            {
-                input.ListenForShortcutAddition(model);
-                _activatedInputs.Add(input);
-            }
-
-        if (_activatedInputs.Count == 0)
-            IsListeningForShortcuts = false;
     }
 
     public void CancelShortcutAddition()
     {
+        Listening = null;
         IsListeningForShortcuts = false;
-        foreach (var input in _activatedInputs)
-            input.CancelShortcutAddition();
-        _activatedInputs.Clear();
     }
 
 }
