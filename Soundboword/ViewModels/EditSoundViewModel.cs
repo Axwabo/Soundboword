@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Avalonia.Input.Platform;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Models;
 using Soundboword.Services;
@@ -12,7 +13,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private readonly HostControl? _host;
     private readonly IFileManagerOpener? _opener;
-    private readonly InputsViewModel _inputs;
     private readonly ShortcutList _shortcuts;
 
     public SoundEditingContext Context { get; }
@@ -21,19 +21,18 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public EditSoundViewModel()
     {
-        _inputs = new InputsViewModel();
         Context = new SoundEditingContext();
-        _shortcuts = new ShortcutList(Context);
+        _shortcuts = new ShortcutList(new SoundList(_host, Context));
     }
 
-    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context, InputsViewModel inputs, ShortcutList shortcuts)
+    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
     {
         _host = host;
         _opener = opener;
-        _inputs = inputs;
         _shortcuts = shortcuts;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
+        _shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
 
     [RelayCommand]
@@ -89,6 +88,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         if (e.PropertyName == nameof(SoundEditingContext.Model))
             UpdateActiveShortcuts();
     }
+
+    private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);
 
     private void UpdateActiveShortcuts()
     {

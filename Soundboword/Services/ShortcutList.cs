@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Soundboword.Inputs;
 using Soundboword.Models;
@@ -10,16 +10,20 @@ namespace Soundboword.Services;
 public sealed class ShortcutList
 {
 
-    private readonly SoundEditingContext _editingContext;
+    private readonly SoundList _sounds;
 
     private readonly List<IShortcutRepository> _repositories;
 
-    public ObservableCollection<Shortcut> All { get; } = [];
+    private readonly HashSet<Shortcut> _all = [];
 
-    public ShortcutList(SoundEditingContext editingContext, params IEnumerable<IShortcutRepository> repositories)
+    public event Action? ShortcutsChanged;
+
+    public ShortcutList(SoundList sounds, params IEnumerable<IShortcutRepository> repositories)
     {
-        _editingContext = editingContext;
+        _sounds = sounds;
         _repositories = repositories.ToList();
+        foreach (var sound in sounds.Sounds)
+            _all.UnionWith(ForSound(sound));
     }
 
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
@@ -31,7 +35,7 @@ public sealed class ShortcutList
 
     public void Trigger<T>(T key) where T : notnull
     {
-        if (_editingContext.Listening is not { } sound)
+        if (_sounds.Editor.Listening is not { } sound)
         {
             foreach (var repository in _repositories)
                 if (repository is ShortcutRepository<T> implementation)
@@ -39,21 +43,28 @@ public sealed class ShortcutList
             return;
         }
 
+        var changed = false;
         foreach (var repository in _repositories)
-            if (repository is ShortcutRepository<T> implementation && implementation.Assign(key, sound) is { } shortcut)
-                All.Add(shortcut);
-        _editingContext.CancelShortcutAddition();
+            if (repository is ShortcutRepository<T> implementation)
+                changed |= implementation.Assign(key, sound, _all);
+        _sounds.Editor.CancelShortcutAddition();
+        if (changed)
+            ShortcutsChanged?.Invoke();
     }
 
     public void Remove(SoundViewModel sound)
     {
-        if (_editingContext.Listening == sound)
-            _editingContext.CancelShortcutAddition();
+        if (_sounds.Editor.Listening == sound)
+            _sounds.Editor.CancelShortcutAddition();
         foreach (var repository in _repositories)
             repository.RemoveAll(sound);
-        for (var i = All.Count - 1; i >= 0; i--)
-            if (All[i].Sound == sound)
-                All.RemoveAt(i);
+        _all.RemoveWhere(e => e.Sound == sound);
+    }
+
+    public void CommitAll()
+    {
+        foreach (var repository in _repositories)
+            repository.Commit();
     }
 
 }

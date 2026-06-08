@@ -23,25 +23,26 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         _map = UserData.Load(File, () => new Dictionary<Guid, T>());
         foreach (var sound in soundList.Sounds)
             if (_map.TryGetValue(sound.Id, out var key))
-                Assign(key, sound);
+                Assign(key, sound, null);
     }
 
     private string File => Path.Combine(UserData.Folder, $"{_inputMethodName}.json");
 
-    public Shortcut? Assign(T key, SoundViewModel sound)
+    public bool Assign(T key, SoundViewModel sound, HashSet<Shortcut>? all)
     {
-        if (_map.TryGetValue(sound.Id, out var assigned))
+        if (all != null && _map.TryGetValue(sound.Id, out var assigned))
         {
             if (EqualityComparer<T>.Default.Equals(key, assigned))
-                return null;
-            Unbind(assigned, sound);
+                return false;
+            Unbind(assigned, sound, all);
         }
 
         if (!_shortcuts.TryGetValue(key, out var set))
             _shortcuts[key] = set = [];
         _map[sound.Id] = key;
         var shortcut = new Shortcut(_inputMethodName, _toFriendlyName(key), sound);
-        return set.Add(shortcut) ? shortcut : null;
+        all?.Add(shortcut);
+        return set.Add(shortcut);
     }
 
     public void Trigger(T key)
@@ -52,10 +53,18 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
             AudioManager.Trigger(shortcut.Sound);
     }
 
-    private void Unbind(T assigned, SoundViewModel sound)
+    private void Unbind(T assigned, SoundViewModel sound, HashSet<Shortcut> all)
     {
-        if (_shortcuts.TryGetValue(assigned, out var set))
-            set.RemoveWhere(e => e.Sound == sound);
+        if (!_shortcuts.TryGetValue(assigned, out var set))
+            return;
+        foreach (var shortcut in set)
+        {
+            if (shortcut.Sound != sound)
+                continue;
+            set.Remove(shortcut);
+            all.Remove(shortcut);
+            break;
+        }
     }
 
     public IEnumerable<Shortcut> GetAll(SoundViewModel sound)
