@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Soundboword.Services;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
@@ -15,7 +16,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public InputsViewModel Inputs { get; }
 
-    public Services.SoundList SoundList { get; }
+    public SoundList SoundList { get; }
+
+    public EditSoundViewModel Editor { get; }
 
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
@@ -23,13 +26,15 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         Inputs = new InputsViewModel();
-        SoundList = new Services.SoundList();
+        SoundList = new SoundList();
+        Editor = new EditSoundViewModel();
     }
 
-    public MainWindowViewModel(Services.SoundList list, InputsViewModel inputs)
+    public MainWindowViewModel(SoundList list, InputsViewModel inputs, EditSoundViewModel editor)
     {
         SoundList = list;
         Inputs = inputs;
+        Editor = editor;
         _ = TestDBus().ConfigureAwait(false);
     }
 

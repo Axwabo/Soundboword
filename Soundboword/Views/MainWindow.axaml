@@ -30,7 +30,7 @@
             </ItemsControl>
         </Grid>
         <UserControl Grid.Column="2" Content="{Binding Inputs}" />
-        <UserControl Grid.Column="1" Content="{Binding SoundList.Editor}" />
+        <UserControl Grid.Column="1" Content="{Binding Editor}" />
     </Grid>
 
 </Window>

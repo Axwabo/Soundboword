@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Soundboword.Inputs.Launchpad;
 using Soundboword.Models;
 using Soundboword.ViewModels;
 
@@ -17,36 +18,58 @@ public static class UserData
     private static readonly JsonSerializerOptions Options = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        Converters = {new JsonStringEnumConverter<PlaybackMode>()}
+        Converters =
+        {
+            new JsonStringEnumConverter<PlaybackMode>(),
+            new JsonStringEnumConverter<LaunchpadKey>(),
+        }
     };
 
     private static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
     private static readonly string Sounds = Path.Combine(Folder, "sounds.json");
 
+    private static readonly string Launchpad = Path.Combine(Folder, "launchpad.json");
+
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
-    public static IReadOnlyList<SoundDto> LoadSounds()
+    private static T Load<T>(string path, Func<T> fallback) where T : notnull
     {
         EnsureDirectory();
-        if (!File.Exists(Sounds))
-            return [];
+        if (!File.Exists(path))
+            return fallback();
         try
         {
-            using var file = File.OpenRead(Sounds);
-            return JsonSerializer.Deserialize<IReadOnlyList<SoundDto>>(file, Options) ?? [];
+            using var file = File.OpenRead(path);
+            return JsonSerializer.Deserialize<T>(file, Options) ?? fallback();
         }
         catch (Exception)
         {
-            return [];
+            return fallback();
         }
     }
 
-    public static void SaveSounds(ObservableCollection<SoundViewModel> sounds)
+    private static void Save<T>(string path, T data) where T : notnull
     {
         EnsureDirectory();
-        using var file = File.Create(Sounds);
-        JsonSerializer.Serialize(file, sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop)), Options);
+        try
+        {
+            using var file = File.Create(path);
+            JsonSerializer.Serialize(file, data, Options);
+        }
+        catch (Exception)
+        {
+            // ignored
+            // TODO: log somehow
+        }
     }
+
+    public static IReadOnlyList<SoundDto> LoadSounds() => Load<IReadOnlyList<SoundDto>>(Sounds, () => []);
+
+    public static Dictionary<Guid, LaunchpadKey> LoadLaunchpadConfig() => Load(Launchpad, () => new Dictionary<Guid, LaunchpadKey>());
+
+    public static void SaveSounds(ObservableCollection<SoundViewModel> sounds) => Save(Sounds, sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop)));
+
+    public static void SaveLaunchpadConfig(Dictionary<Guid, LaunchpadKey> config) => Save(Launchpad, config);
 
 }

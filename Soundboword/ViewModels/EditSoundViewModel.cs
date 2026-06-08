@@ -12,20 +12,25 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private readonly HostControl? _host;
     private readonly IFileManagerOpener? _opener;
+    private readonly InputsViewModel? _inputs;
 
     public EditSoundViewModel()
     {
     }
 
-    public EditSoundViewModel(HostControl host, IFileManagerOpener opener)
+    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, InputsViewModel inputs)
     {
         _host = host;
         _opener = opener;
+        _inputs = inputs;
     }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Mode), nameof(Name), nameof(StopCommand))]
     public partial SoundViewModel? Model { get; private set; }
+
+    [ObservableProperty]
+    public partial bool IsListeningForShortcuts { get; set; }
 
     public string Name
     {
@@ -92,6 +97,11 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         Close();
         model.List.Delete(model);
+    }
+
+    [RelayCommand]
+    private void ToggleListening()
+    {
     }
 
 }

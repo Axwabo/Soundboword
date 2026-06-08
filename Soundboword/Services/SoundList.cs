@@ -26,16 +26,15 @@ public sealed partial class SoundList
 
     private readonly HostControl? _host;
 
-    public EditSoundViewModel Editor { get; }
-
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
-    public SoundList() => Editor = new EditSoundViewModel();
+    public SoundList()
+    {
+    }
 
     public SoundList(HostControl? host, EditSoundViewModel editor)
     {
         _host = host;
-        Editor = editor;
         foreach (var sound in UserData.LoadSounds())
             Sounds.Add(new SoundViewModel
             {
@@ -44,7 +43,8 @@ public sealed partial class SoundList
                 Path = sound.Path,
                 Loop = sound.Loop,
                 Mode = sound.Mode,
-                List = this
+                List = this,
+                Editor = editor
             });
     }
 
@@ -62,7 +62,8 @@ public sealed partial class SoundList
             Id = Guid.NewGuid(),
             Path = path,
             Name = Path.GetFileNameWithoutExtension(path),
-            List = this
+            List = this,
+            Editor = null!
         });
         UserData.SaveSounds(Sounds);
     }

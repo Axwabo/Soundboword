@@ -35,5 +35,6 @@
             <Button Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager">📂</Button>
             <Button Command="{Binding DeleteCommand}">🗑️</Button>
         </StackPanel>
+        <ToggleButton IsChecked="{Binding IsListeningForShortcuts}" Command="{Binding ToggleListeningCommand}">Add a shortcut</ToggleButton>
     </StackPanel>
 </UserControl>

@@ -16,6 +16,8 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     public required SoundList List { get; init; }
 
+    public required EditSoundViewModel Editor { get; init; }
+
     [ObservableProperty]
     public required partial string Name { get; set; }
 
@@ -38,7 +40,7 @@ public sealed partial class SoundViewModel : ViewModelBase
     private void ToggleLoop() => Loop = !Loop;
 
     [RelayCommand]
-    private void Configure() => List.Editor.Open(this);
+    private void Configure() => Editor.Open(this);
 
     public void UpdatePlaybackState(bool active)
     {
