@@ -15,6 +15,7 @@
 
     <Application.Resources>
         <converters:PlaybackModeConverter x:Key="PlaybackMode" />
+        <converters:IsReassigningValueConverter x:Key="IsReassigningShortcut" />
         <SolidColorBrush x:Key="Playing" Color="#1100ff00" />
     </Application.Resources>
 </Application>

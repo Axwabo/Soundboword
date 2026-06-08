@@ -10,7 +10,8 @@ namespace Soundboword.Inputs;
 public abstract class ShortcutRepository<T> : IShortcutRepository where T : notnull
 {
 
-    private readonly string _inputMethodName;
+    public string InputMethodName { get; }
+
     private readonly Func<T, string> _toFriendlyName;
 
     private readonly Dictionary<Guid, T> _map;
@@ -18,7 +19,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
 
     protected ShortcutRepository(SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName)
     {
-        _inputMethodName = inputMethodName;
+        InputMethodName = inputMethodName;
         _toFriendlyName = toFriendlyName;
         _map = UserData.Load(File, () => new Dictionary<Guid, T>());
         foreach (var sound in soundList.Sounds)
@@ -26,7 +27,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
                 Assign(key, sound, null);
     }
 
-    private string File => Path.Combine(UserData.Folder, $"{_inputMethodName}.json");
+    private string File => Path.Combine(UserData.Folder, $"{InputMethodName}.json");
 
     public bool Assign(T key, SoundViewModel sound, HashSet<Shortcut>? all)
     {
@@ -40,7 +41,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         if (!_shortcuts.TryGetValue(key, out var set))
             _shortcuts[key] = set = [];
         _map[sound.Id] = key;
-        var shortcut = new Shortcut(_inputMethodName, _toFriendlyName(key), sound);
+        var shortcut = new Shortcut(InputMethodName, _toFriendlyName(key), sound);
         all?.Add(shortcut);
         return set.Add(shortcut);
     }
