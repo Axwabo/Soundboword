@@ -7,7 +7,7 @@ namespace Soundboword.Services;
 public static class ShortcutList
 {
 
-    public static ObservableCollection<IShortcut> Shortcuts { get; } = [];
+    public static ObservableCollection<Shortcut> Shortcuts { get; } = [];
 
     public static int FindIndex(string methodName, SoundViewModel sound)
     {
@@ -21,6 +21,13 @@ public static class ShortcutList
     {
         for (var i = Shortcuts.Count - 1; i >= 0; i--)
             if (Shortcuts[i].Sound == sound)
+                Shortcuts.RemoveAt(i);
+    }
+
+    public static void RemoveAll(string method)
+    {
+        for (var i = Shortcuts.Count - 1; i >= 0; i--)
+            if (Shortcuts[i].MethodName == method)
                 Shortcuts.RemoveAt(i);
     }
 

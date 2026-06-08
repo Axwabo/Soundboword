@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Soundboword.Converters;
 using Soundboword.Models;
 using Soundboword.Services;
 using Soundboword.ViewModels;
@@ -29,6 +28,9 @@ public sealed class LaunchpadInput : IInputMethod
         _list = list;
         _node = midi.GetOrCreateInputNode(input);
         _node.OnMessageOutput += OnNodeOnOnMessageOutput;
+        foreach (var sound in list.Sounds)
+            if (_config.TryGetValue(sound.Id, out var key))
+                ShortcutList.Shortcuts.Add(new Shortcut(Name, sound, key.FriendlyName));
     }
 
     public void ListenForShortcutAddition(SoundViewModel target) => _listening = target;
@@ -41,6 +43,7 @@ public sealed class LaunchpadInput : IInputMethod
     {
         _node.OnMessageOutput -= OnNodeOnOnMessageOutput;
         _listening = null;
+        ShortcutList.RemoveAll(Name);
         UserData.SaveLaunchpadConfig(_config);
     }
 
@@ -52,7 +55,7 @@ public sealed class LaunchpadInput : IInputMethod
         if (_listening != null)
         {
             _config[_listening.Id] = key;
-            _list.Editor.NotifyShortcutChange(new Shortcut<LaunchpadKey>(Name, _listening, key, LaunchpadKeyValueConverter.Instance));
+            _list.Editor.NotifyShortcutChange(new Shortcut(Name, _listening, key.FriendlyName));
             return;
         }
 

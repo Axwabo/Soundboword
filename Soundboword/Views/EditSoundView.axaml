@@ -49,7 +49,7 @@
                 <DataTemplate>
                     <StackPanel>
                         <Label Content="{Binding MethodName}" />
-                        <ToggleButton IsChecked="True" IsEnabled="False" Content="{Binding Value, Converter={Binding Path=Converter}}" />
+                        <ToggleButton IsChecked="True" IsEnabled="False" Content="{Binding FriendlyName}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

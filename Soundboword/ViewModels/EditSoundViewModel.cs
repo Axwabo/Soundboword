@@ -17,7 +17,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public SoundEditingContext Context { get; }
 
-    public ObservableCollection<IShortcut> Active { get; } = [];
+    public ObservableCollection<Shortcut> Active { get; } = [];
 
     public EditSoundViewModel()
     {
