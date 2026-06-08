@@ -37,8 +37,7 @@
             <Button Classes="icon" Command="{Binding DeleteCommand}">🗑️</Button>
         </StackPanel>
         <ToggleButton Content="{Binding Context.ButtonText}"
-                      IsChecked="{Binding Context.IsListeningForShortcuts}"
-                      Command="{Binding ToggleListeningCommand}" />
+                      IsChecked="{Binding Context.IsListeningForShortcuts}" />
         <Button Command="{Binding RemoveShortcutsCommand}">Remove Shortcuts</Button>
         <ItemsControl ItemsSource="{Binding Active}">
             <ItemsControl.ItemsPanel>
@@ -48,10 +47,11 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
+                    <StackPanel Spacing="3">
                         <Label Content="{Binding InputMethodName}" />
-                        <!-- ReSharper disable once Xaml.PossibleNullReferenceException -->
-                        <Button Content="{Binding FriendlyName}" Command="{Binding #Root.((viewModels:EditSoundViewModel)DataContext).ToggleListeningCommand}" CommandParameter="{Binding InputMethodName}" />
+                        <Border Padding="3" Background="#22ffaa00">
+                            <Label Content="{Binding FriendlyName}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
+                        </Border>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

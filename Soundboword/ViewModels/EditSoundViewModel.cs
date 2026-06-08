@@ -74,9 +74,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ToggleListening(string? inputMethodName = null) => Context.ToggleListening(inputMethodName ?? "");
-
-    [RelayCommand]
     private void RemoveShortcuts()
     {
         if (Context.Model is { } model)

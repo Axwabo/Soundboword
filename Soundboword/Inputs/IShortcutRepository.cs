@@ -7,8 +7,6 @@ namespace Soundboword.Inputs;
 public interface IShortcutRepository
 {
 
-    string InputMethodName { get; }
-
     IEnumerable<Shortcut> GetAll(SoundViewModel sound);
 
     void RemoveAll(SoundViewModel sound);

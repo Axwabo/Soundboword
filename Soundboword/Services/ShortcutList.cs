@@ -37,9 +37,8 @@ public sealed class ShortcutList
     {
         if (!_sounds.Editor.IsListeningForShortcuts)
         {
-            var method = _sounds.Editor.ListeningMethod;
             foreach (var repository in _repositories)
-                if ((method == null || method == repository.InputMethodName) && repository is ShortcutRepository<T> implementation)
+                if (repository is ShortcutRepository<T> implementation)
                     implementation.Trigger(key);
             return;
         }

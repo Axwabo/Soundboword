@@ -38,9 +38,6 @@ public sealed partial class SoundEditingContext : ObservableObject
     [MemberNotNullWhen(true, nameof(Model))]
     public partial bool IsListeningForShortcuts { get; set; }
 
-    [ObservableProperty]
-    public partial string ListeningMethod { get; private set; } = "";
-
     public string ButtonText => IsListeningForShortcuts ? "Listening..." : "Add Shortcut";
 
     public void Open(SoundViewModel model)
@@ -59,21 +56,6 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
-    public void ToggleListening(string inputMethodName)
-    {
-        if (Model == null)
-            return;
-        if (!string.IsNullOrEmpty(inputMethodName))
-            IsListeningForShortcuts = !IsListeningForShortcuts;
-        ListeningMethod = inputMethodName;
-        if (!IsListeningForShortcuts)
-            CancelShortcutAddition();
-    }
-
-    public void CancelShortcutAddition()
-    {
-        ListeningMethod = "";
-        IsListeningForShortcuts = false;
-    }
+    public void CancelShortcutAddition() => IsListeningForShortcuts = false;
 
 }
