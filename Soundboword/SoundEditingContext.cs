@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Soundboword.Models;
 using Soundboword.ViewModels;
@@ -34,11 +35,11 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ButtonText))]
+    [MemberNotNullWhen(true, nameof(Model))]
     public partial bool IsListeningForShortcuts { get; set; }
 
-    public SoundViewModel? Listening { get; private set; }
-
-    public string? ListeningMethod { get; private set; }
+    [ObservableProperty]
+    public partial string ListeningMethod { get; private set; } = "";
 
     public string ButtonText => IsListeningForShortcuts ? "Listening..." : "Add Shortcut";
 
@@ -52,30 +53,26 @@ public sealed partial class SoundEditingContext : ObservableObject
     public void Close()
     {
         IsListeningForShortcuts = false;
-        Listening = null;
         Model?.PropertyChanged -= ModelOnPropertyChanged;
         Model = null;
     }
 
     private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
-    public void ToggleListening(string? inputMethodName)
+    public void ToggleListening(string inputMethodName)
     {
-        if (Model is not { } model)
+        if (Model == null)
             return;
-        if (inputMethodName != null)
+        if (!string.IsNullOrEmpty(inputMethodName))
             IsListeningForShortcuts = !IsListeningForShortcuts;
         ListeningMethod = inputMethodName;
-        if (IsListeningForShortcuts)
-            Listening = model;
-        else
+        if (!IsListeningForShortcuts)
             CancelShortcutAddition();
     }
 
     public void CancelShortcutAddition()
     {
-        Listening = null;
-        ListeningMethod = null;
+        ListeningMethod = "";
         IsListeningForShortcuts = false;
     }
 

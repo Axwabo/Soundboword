@@ -35,7 +35,7 @@ public sealed class ShortcutList
 
     public void Trigger<T>(T key) where T : notnull
     {
-        if (_sounds.Editor.Listening is not { } sound)
+        if (!_sounds.Editor.IsListeningForShortcuts)
         {
             var method = _sounds.Editor.ListeningMethod;
             foreach (var repository in _repositories)
@@ -47,7 +47,7 @@ public sealed class ShortcutList
         var changed = false;
         foreach (var repository in _repositories)
             if (repository is ShortcutRepository<T> implementation)
-                changed |= implementation.Assign(key, sound, _all);
+                changed |= implementation.Assign(key, _sounds.Editor.Model, _all);
         _sounds.Editor.CancelShortcutAddition();
         if (changed)
             ShortcutsChanged?.Invoke();
@@ -55,7 +55,7 @@ public sealed class ShortcutList
 
     public void Remove(SoundViewModel sound)
     {
-        if (_sounds.Editor.Listening == sound)
+        if (_sounds.Editor.IsListeningForShortcuts && _sounds.Editor.Model == sound)
             _sounds.Editor.CancelShortcutAddition();
         foreach (var repository in _repositories)
             repository.RemoveAll(sound);
