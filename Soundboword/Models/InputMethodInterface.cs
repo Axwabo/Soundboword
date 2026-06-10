@@ -2,6 +2,8 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
+using Soundboword.Inputs.Launchpad;
+using Soundboword.Services;
 
 namespace Soundboword.Models;
 
@@ -19,6 +21,10 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     [ObservableProperty]
     public partial bool Activated { get; set; }
+
+    public InputMethodInterface() : this(new LaunchpadInputFactory(new ShortcutList(null, new SoundList())))
+    {
+    }
 
     public InputMethodInterface(IInputFactory inputFactory)
     {
