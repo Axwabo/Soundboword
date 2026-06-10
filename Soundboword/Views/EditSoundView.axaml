@@ -13,7 +13,7 @@
         <viewModels:EditSoundViewModel />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="Button.icon, ToggleButton.icon">
+        <Style Selector="Button.icon">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
@@ -32,10 +32,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto,Auto" RowSpacing="3" ColumnSpacing="3">
-            <ToggleButton Classes="icon" Command="{Binding TogglePauseCommand}"
-                          IsChecked="{Binding Context.PlaybackState, Mode=OneWayToSource, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:SoundState.Paused}}">
-                ⏯️
-            </ToggleButton>
+            <Button Classes="icon" Command="{Binding TogglePauseCommand}">⏯️</Button>
             <Button Grid.Row="0" Grid.Column="1" Classes="icon" Command="{Binding StopCommand}">🟦</Button>
             <Button Grid.Row="0" Grid.Column="2" Classes="icon" Command="{Binding RelinkCommand}" ToolTip.Tip="Relink">🔗</Button>
             <Button Grid.Row="1" Grid.Column="0" Classes="icon" Command="{Binding CopyPathCommand}" ToolTip.Tip="Copy Path">📋</Button>
