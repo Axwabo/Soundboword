@@ -13,14 +13,17 @@
     </Design.DataContext>
     <StackPanel Spacing="3">
         <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
-        <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding Manager.AllSounds}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <views:SoundPlaybackView DataContext="{Binding}" Manager="{Binding #Root.((viewModels:PlaybacksViewModel)DataContext)?.Manager}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <Panel>
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Manager.AllSounds}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:SoundPlaybackView DataContext="{Binding}" Manager="{Binding #Root.((viewModels:PlaybacksViewModel)DataContext)?.Manager}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Label IsVisible="{Binding !Manager.AllSounds.Count}">No sounds are being played</Label>
+        </Panel>
     </StackPanel>
 </UserControl>
