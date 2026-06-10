@@ -20,7 +20,7 @@ public static class UserData
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         Converters =
         {
-            new JsonStringEnumConverter<PlaybackMode>(),
+            new JsonStringEnumConverter<TriggerMode>(),
             new JsonStringEnumConverter<LaunchpadKey>(),
         }
     };

@@ -20,7 +20,7 @@ public sealed partial class SoundViewModel : ViewModelBase
     public required partial string Name { get; set; }
 
     [ObservableProperty]
-    public partial PlaybackMode Mode { get; set; }
+    public partial TriggerMode Mode { get; set; }
 
     [ObservableProperty]
     public partial bool Loop { get; set; }

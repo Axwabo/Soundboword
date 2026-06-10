@@ -20,9 +20,9 @@
     <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding Context.Model, Converter={x:Static ObjectConverters.IsNotNull}}">
         <TextBox Text="{Binding Context.Name}" />
         <Label>Trigger Mode:</Label>
-        <ComboBox SelectedItem="{Binding Path=Context.PlaybackMode}" ItemsSource="{x:Static converters:PlaybackModeConverter.PlaybackModes}">
+        <ComboBox SelectedItem="{Binding Path=Context.TriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}">
             <ComboBox.ItemTemplate>
-                <DataTemplate DataType="models:PlaybackMode">
+                <DataTemplate DataType="models:TriggerMode">
                     <TextBlock Text="{Binding Converter={StaticResource PlaybackMode}}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>

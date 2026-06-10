@@ -29,13 +29,13 @@ functionality will be limited (no shortcuts).
 
 Click the `Add Sound` button to add a sound.
 
-Press the 🔊 button to play the sound.
+Press 🔊 to play the sound.
 
-Click the ⚙️ icon to configure settings, including changing [trigger modes](#trigger-modes)
+Click ⚙️ to configure settings, including changing [trigger modes](#trigger-modes)
 
-Click the 🟦 to stop the sound.
+Click 🟦 to stop the sound.
 
-Click the 🔁 button to toggle looping.
+Click 🔁 to toggle looping.
 
 [//]: # (TODO: sound setup guide)
 
@@ -52,3 +52,13 @@ If you trigger it again, it'll stop playing.
 When you press the trigger, the sound will start playing.
 
 If you trigger it again, it'll restart from the beginning, unpausing playback.
+
+### Play 🠊 Pause
+
+When you press the trigger, the sound will start playing.
+
+If you trigger it again, it'll pause or unpause playback.
+
+### Duplicate
+
+Each time you press the trigger, a new sound instance will be played.

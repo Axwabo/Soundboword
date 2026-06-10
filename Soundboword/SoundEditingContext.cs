@@ -10,7 +10,7 @@ public sealed partial class SoundEditingContext : ObservableObject
 {
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(PlaybackMode), nameof(Name))]
+    [NotifyPropertyChangedFor(nameof(TriggerMode), nameof(Name))]
     public partial SoundViewModel? Model { get; private set; }
 
     public string Name
@@ -23,7 +23,7 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
-    public PlaybackMode PlaybackMode
+    public TriggerMode TriggerMode
     {
         get => Model?.Mode ?? default;
         set

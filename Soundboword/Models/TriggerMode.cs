@@ -1,6 +1,6 @@
 namespace Soundboword.Models;
 
-public enum PlaybackMode
+public enum TriggerMode
 {
 
     StartStop,
