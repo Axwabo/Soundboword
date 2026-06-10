@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
 using Soundboword.Models;
-using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 
@@ -22,7 +22,7 @@ public sealed partial class InputsViewModel : ViewModelBase
 
     public InputsViewModel() => _all = [];
 
-    public InputsViewModel(Host host, IEnumerable<IInputFactory> factories)
+    public InputsViewModel(IClassicDesktopStyleApplicationLifetime lifetime, IEnumerable<IInputFactory> factories)
     {
         _all = factories.Select(e => new InputMethodInterface(e)).ToList();
         Refresh();
@@ -30,7 +30,7 @@ public sealed partial class InputsViewModel : ViewModelBase
         foreach (var input in Available)
             if (activated.Contains(input.Name))
                 input.Activated = true;
-        host.Lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name));
+        lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name));
     }
 
     [RelayCommand]

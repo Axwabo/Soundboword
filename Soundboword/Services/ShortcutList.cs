@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Inputs;
 using Soundboword.Models;
 using Soundboword.ViewModels;
@@ -18,13 +19,13 @@ public sealed class ShortcutList
 
     public event Action? ShortcutsChanged;
 
-    public ShortcutList(Host? host, SoundList sounds, params IEnumerable<IShortcutRepository> repositories)
+    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, SoundList sounds, params IEnumerable<IShortcutRepository> repositories)
     {
         _sounds = sounds;
         _repositories = repositories.ToList();
         foreach (var sound in sounds.Sounds)
             _all.UnionWith(ForSound(sound));
-        host?.Lifetime.Exit += (_, _) =>
+        lifetime?.Exit += (_, _) =>
         {
             foreach (var repository in _repositories)
                 repository.Commit();

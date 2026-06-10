@@ -2,6 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Models;
@@ -25,7 +27,7 @@ public sealed partial class SoundList
         ]
     };
 
-    private readonly Host? _host;
+    private readonly TopLevel? _topLevel;
 
     public SoundEditingContext Editor { get; }
 
@@ -33,9 +35,9 @@ public sealed partial class SoundList
 
     public SoundList() => Editor = new SoundEditingContext();
 
-    public SoundList(Host? host, SoundEditingContext editor)
+    public SoundList(TopLevel? topLevel, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor)
     {
-        _host = host;
+        _topLevel = topLevel;
         Editor = editor;
         foreach (var sound in UserData.LoadSounds())
         {
@@ -54,13 +56,13 @@ public sealed partial class SoundList
             Sounds.Add(soundViewModel);
         }
 
-        _host?.Lifetime.Exit += (_, _) => UserData.SaveSounds(Sounds);
+        lifetime?.Exit += (_, _) => UserData.SaveSounds(Sounds);
     }
 
     [RelayCommand]
     private async Task Add()
     {
-        var path = await BrowseAudioAsync(_host);
+        var path = await BrowseAudioAsync(_topLevel);
         if (path == null)
             return;
         Sounds.Add(new SoundViewModel
@@ -79,9 +81,9 @@ public sealed partial class SoundList
         UserData.SaveSounds(Sounds);
     }
 
-    public static async Task<string?> BrowseAudioAsync(Host? host)
+    public static async Task<string?> BrowseAudioAsync(TopLevel? topLevel)
     {
-        if (host?.TopLevel is not {StorageProvider: var provider})
+        if (topLevel is not {StorageProvider: var provider})
             return null;
         var files = await provider.OpenFilePickerAsync(FileOptions);
         return files.Count == 0 ? null : files[0].TryGetLocalPath()!;

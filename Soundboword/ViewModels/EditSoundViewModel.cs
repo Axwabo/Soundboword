@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,7 +15,7 @@ namespace Soundboword.ViewModels;
 public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
-    private readonly Host? _host;
+    private readonly TopLevel? _topLevel;
     private readonly IFileManagerOpener? _opener;
     private readonly ShortcutList _shortcuts;
 
@@ -25,12 +26,12 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     public EditSoundViewModel()
     {
         Context = new SoundEditingContext();
-        _shortcuts = new ShortcutList(null, new SoundList(_host, Context));
+        _shortcuts = new ShortcutList(null, new SoundList(_topLevel, null, Context));
     }
 
-    public EditSoundViewModel(Host host, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
+    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
     {
-        _host = host;
+        _topLevel = topLevel;
         _opener = opener;
         _shortcuts = shortcuts;
         Context = context;
@@ -59,7 +60,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         if (Context.Model is not { } model)
             return;
-        var path = await SoundList.BrowseAudioAsync(_host);
+        var path = await SoundList.BrowseAudioAsync(_topLevel);
         if (path == null)
             return;
         model.Path = path;
@@ -76,7 +77,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void CopyPath()
     {
-        if (Context.Model is {Path: var path} && _host is {TopLevel.Clipboard: { } clipboard})
+        if (Context.Model is {Path: var path} && _topLevel is {Clipboard: { } clipboard})
             clipboard.SetTextAsync(path);
     }
 

@@ -1,8 +1,8 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
-using Soundboword.Services;
 using Soundboword.ViewModels;
 using Soundboword.Views;
 
@@ -28,7 +28,8 @@ public sealed class App : Application
             desktop.Exit += (_, _) => AudioManager.Destroy();
 
             var window = new MainWindow();
-            Services.AddSingleton(new Host(window, desktop));
+            Services.AddSingleton<TopLevel>(window);
+            Services.AddSingleton(desktop);
 
             var provider = Services.BuildServiceProvider();
 
