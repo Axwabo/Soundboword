@@ -43,6 +43,7 @@ public sealed partial class SoundList
                 Name = sound.Name,
                 Path = sound.Path,
                 Loop = sound.Loop,
+                Volume = sound.Volume,
                 Mode = sound.Mode,
                 List = this
             });

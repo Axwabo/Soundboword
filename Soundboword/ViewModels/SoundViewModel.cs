@@ -26,6 +26,9 @@ public sealed partial class SoundViewModel : ViewModelBase
     public partial bool Loop { get; set; }
 
     [ObservableProperty]
+    public partial float Volume { get; set; } = 1;
+
+    [ObservableProperty]
     public partial bool IsPlaying { get; private set; }
 
     [RelayCommand]

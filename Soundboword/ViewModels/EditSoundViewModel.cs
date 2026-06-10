@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Soundboword.Models;
 using Soundboword.Services;
@@ -34,6 +35,12 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Context.PropertyChanged += ContextOnPropertyChanged;
         _shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MaxVolume))]
+    public partial bool RaiseMaximumVolume { get; set; }
+
+    public float MaxVolume => RaiseMaximumVolume ? 2 : 1;
 
     [RelayCommand]
     private void Stop()

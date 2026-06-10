@@ -19,6 +19,9 @@
     </UserControl.Styles>
     <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding Context.Model, Converter={x:Static ObjectConverters.IsNotNull}}">
         <TextBox Text="{Binding Context.Name}" />
+        <ToggleSwitch IsChecked="{Binding RaiseMaximumVolume}">Raise Maximum Volume</ToggleSwitch>
+        <Label Content="{Binding Context.Volume, StringFormat=Volume: \{0:P0\}}" />
+        <Slider Minimum="0" Maximum="{Binding MaxVolume}" SmallChange="0.01" LargeChange="0.1" Value="{Binding Context.Volume}" />
         <Label>Trigger Mode:</Label>
         <ComboBox SelectedItem="{Binding Path=Context.TriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}">
             <ComboBox.ItemTemplate>

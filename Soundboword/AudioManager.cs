@@ -130,9 +130,10 @@ public static class AudioManager
         var player = new SoundPlayer(_engine!, Format, provider);
         _playback!.MasterMixer.AddComponent(player);
         list.Add(new SoundPlayback(provider, player));
-        player.Play();
+        player.Volume = sound.Volume;
         player.IsLooping = sound.Loop;
         player.PlaybackEnded += RemoveSoundOnEnd;
+        player.Play();
         sound.UpdatePlaybackState(true);
     }
 
@@ -167,10 +168,21 @@ public static class AudioManager
 
     private static void SoundOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is not SoundViewModel sound || e.PropertyName != nameof(SoundViewModel.Loop) || !Sounds.TryGetValue(sound, out var list))
+        if (sender is not SoundViewModel sound || !Sounds.TryGetValue(sound, out var list))
             return;
-        foreach (var played in list)
-            played.Player.IsLooping = sound.Loop;
+        switch (e.PropertyName)
+        {
+            case nameof(SoundViewModel.Volume):
+                foreach (var played in list)
+                    played.Player.Volume = sound.Volume;
+                break;
+            case nameof(SoundViewModel.Loop):
+            {
+                foreach (var played in list)
+                    played.Player.IsLooping = sound.Loop;
+                break;
+            }
+        }
     }
 
     public static void StopAll(SoundViewModel sound)
