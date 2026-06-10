@@ -18,12 +18,17 @@ public sealed class ShortcutList
 
     public event Action? ShortcutsChanged;
 
-    public ShortcutList(SoundList sounds, params IEnumerable<IShortcutRepository> repositories)
+    public ShortcutList(Host? host, SoundList sounds, params IEnumerable<IShortcutRepository> repositories)
     {
         _sounds = sounds;
         _repositories = repositories.ToList();
         foreach (var sound in sounds.Sounds)
             _all.UnionWith(ForSound(sound));
+        host?.Lifetime.Exit += (_, _) =>
+        {
+            foreach (var repository in _repositories)
+                repository.Commit();
+        };
     }
 
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
@@ -59,12 +64,6 @@ public sealed class ShortcutList
         foreach (var repository in _repositories)
             repository.RemoveAll(sound);
         _all.RemoveWhere(e => e.Sound == sound);
-    }
-
-    public void CommitAll()
-    {
-        foreach (var repository in _repositories)
-            repository.Commit();
     }
 
 }

@@ -25,7 +25,7 @@ public sealed partial class SoundList
         ]
     };
 
-    private readonly HostControl? _host;
+    private readonly Host? _host;
 
     public SoundEditingContext Editor { get; }
 
@@ -33,7 +33,7 @@ public sealed partial class SoundList
 
     public SoundList() => Editor = new SoundEditingContext();
 
-    public SoundList(HostControl? host, SoundEditingContext editor)
+    public SoundList(Host? host, SoundEditingContext editor)
     {
         _host = host;
         Editor = editor;
@@ -53,6 +53,8 @@ public sealed partial class SoundList
                 soundViewModel.UpdatePlaybackState(SoundState.Error);
             Sounds.Add(soundViewModel);
         }
+
+        _host?.Lifetime.Exit += (_, _) => UserData.SaveSounds(Sounds);
     }
 
     [RelayCommand]
@@ -77,9 +79,9 @@ public sealed partial class SoundList
         UserData.SaveSounds(Sounds);
     }
 
-    public static async Task<string?> BrowseAudioAsync(HostControl? host)
+    public static async Task<string?> BrowseAudioAsync(Host? host)
     {
-        if (host?.Host is not {StorageProvider: var provider})
+        if (host?.TopLevel is not {StorageProvider: var provider})
             return null;
         var files = await provider.OpenFilePickerAsync(FileOptions);
         return files.Count == 0 ? null : files[0].TryGetLocalPath()!;

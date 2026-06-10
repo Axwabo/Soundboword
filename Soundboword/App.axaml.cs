@@ -24,22 +24,15 @@ public sealed class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             AudioManager.Init();
-
             desktop.Exit += (_, _) => AudioManager.Destroy();
 
             var window = new MainWindow();
-            Services.AddSingleton(new HostControl(window));
+            Services.AddSingleton(new Host(window, desktop));
 
             var provider = Services.BuildServiceProvider();
 
             window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
             desktop.MainWindow = window;
-
-            var soundList = provider.GetRequiredService<SoundList>();
-            desktop.Exit += (_, _) => UserData.SaveSounds(soundList.Sounds);
-
-            var shortcutList = provider.GetRequiredService<ShortcutList>();
-            desktop.Exit += (_, _) => shortcutList.CommitAll();
         }
 
         base.OnFrameworkInitializationCompleted();

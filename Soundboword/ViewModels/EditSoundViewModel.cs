@@ -14,7 +14,7 @@ namespace Soundboword.ViewModels;
 public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
-    private readonly HostControl? _host;
+    private readonly Host? _host;
     private readonly IFileManagerOpener? _opener;
     private readonly ShortcutList _shortcuts;
 
@@ -25,10 +25,10 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     public EditSoundViewModel()
     {
         Context = new SoundEditingContext();
-        _shortcuts = new ShortcutList(new SoundList(_host, Context));
+        _shortcuts = new ShortcutList(null, new SoundList(_host, Context));
     }
 
-    public EditSoundViewModel(HostControl host, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
+    public EditSoundViewModel(Host host, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
     {
         _host = host;
         _opener = opener;
@@ -76,7 +76,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void CopyPath()
     {
-        if (Context.Model is {Path: var path} && _host is {Host.Clipboard: { } clipboard})
+        if (Context.Model is {Path: var path} && _host is {TopLevel.Clipboard: { } clipboard})
             clipboard.SetTextAsync(path);
     }
 
