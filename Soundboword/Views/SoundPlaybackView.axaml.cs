@@ -1,5 +1,9 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Soundboword.Models;
 
 namespace Soundboword.Views;
@@ -7,10 +11,31 @@ namespace Soundboword.Views;
 public sealed partial class SoundPlaybackView : UserControl
 {
 
-    public SoundPlaybackView()
+    public static readonly StyledProperty<AudioManager> ManagerProperty = AvaloniaProperty.Register<SoundPlaybackView, AudioManager>(nameof(Manager));
+
+    public AudioManager Manager
     {
-        InitializeComponent();
-        Dispatcher.Post(Update); // TODO: optimize
+        get => GetValue(ManagerProperty);
+        set => SetValue(ManagerProperty, value);
+    }
+
+    private CancellationTokenSource? _cts;
+
+    public SoundPlaybackView() => InitializeComponent();
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        Update();
+        _cts = new CancellationTokenSource();
+        var token = _cts.Token;
+        _ = Task.Run(() => UpdateAsync(token), token);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
     }
 
     protected override void OnDataContextChanged(EventArgs e)
@@ -22,11 +47,23 @@ public sealed partial class SoundPlaybackView : UserControl
         Progress.Maximum = playback.Player.Duration;
     }
 
+    private async Task UpdateAsync(CancellationToken cancellationToken)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
+        while (await timer.WaitForNextTickAsync(cancellationToken))
+            Dispatcher.Post(Update);
+    }
+
     private void Update()
     {
-        Dispatcher.Post(Update);
         if (IsEffectivelyVisible && DataContext is SoundPlayback playback)
             Progress.Value = playback.Player.Time;
+    }
+
+    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is SoundPlayback playback)
+            Manager.Stop(playback);
     }
 
 }

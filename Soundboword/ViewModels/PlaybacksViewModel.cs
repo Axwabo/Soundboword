@@ -1,6 +1,8 @@
+using CommunityToolkit.Mvvm.Input;
+
 namespace Soundboword.ViewModels;
 
-public sealed class PlaybacksViewModel : ViewModelBase
+public sealed partial class PlaybacksViewModel : ViewModelBase
 {
 
     public AudioManager Manager { get; }
@@ -8,5 +10,8 @@ public sealed class PlaybacksViewModel : ViewModelBase
     public PlaybacksViewModel() => Manager = new AudioManager();
 
     public PlaybacksViewModel(AudioManager audioManager) => Manager = audioManager;
+
+    [RelayCommand]
+    private void StopAll() => Manager.StopAll();
 
 }

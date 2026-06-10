@@ -121,12 +121,15 @@ public sealed class AudioManager
     private void StopAll(List<SoundPlayback> list)
     {
         foreach (var played in list)
-        {
-            AllSounds.Remove(played);
-            played.Player.Stop();
-            played.Provider.Dispose();
-            _playback!.MasterMixer.RemoveComponent(played.Player);
-        }
+            StopInternal(played);
+    }
+
+    private void StopInternal(SoundPlayback played)
+    {
+        AllSounds.Remove(played);
+        played.Player.Stop();
+        played.Provider.Dispose();
+        _playback!.MasterMixer.RemoveComponent(played.Player);
     }
 
     private void PlayNew(SoundViewModel sound)
@@ -162,6 +165,7 @@ public sealed class AudioManager
     {
         if (_playback == null)
             return;
+        AllSounds.Clear();
         foreach (var component in _playback.MasterMixer.Components.ToList())
             _playback.MasterMixer.RemoveComponent(component);
         foreach (var sound in _sounds.Keys)
@@ -200,6 +204,7 @@ public sealed class AudioManager
 
     public void Stop(SoundPlayback playback)
     {
+        StopInternal(playback);
         // TODO: optimize
         foreach (var (sound, list) in _sounds)
         {

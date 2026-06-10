@@ -9,5 +9,6 @@
     <StackPanel Orientation="Vertical" Spacing="3">
         <TextBlock Name="SoundName" />
         <ProgressBar Foreground="Red" Name="Progress" />
+        <Button Click="Button_OnClick">Stop</Button>
     </StackPanel>
 </UserControl>
