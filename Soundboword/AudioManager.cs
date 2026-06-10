@@ -101,11 +101,13 @@ public static class AudioManager
     {
         if (!Sounds.TryGetValue(sound, out var list))
             return;
+        var pause = sound.PlaybackState == SoundState.Playing;
         foreach (var playback in list)
-            if (playback.Player.State == PlaybackState.Playing)
+            if (pause)
                 playback.Player.Pause();
             else
                 playback.Player.Play();
+        sound.UpdatePlaybackState(pause ? SoundState.Paused : SoundState.Playing);
     }
 
     private static void StopAll(List<SoundPlayback> list)
