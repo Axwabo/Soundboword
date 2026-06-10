@@ -32,10 +32,10 @@ public sealed partial class SoundViewModel : ViewModelBase
     public partial SoundState PlaybackState { get; private set; }
 
     [RelayCommand]
-    private void Trigger() => AudioManager.Trigger(this);
+    private void Trigger() => List.AudioManager.Trigger(this);
 
     [RelayCommand]
-    private void Stop() => AudioManager.StopAll(this);
+    private void Stop() => List.AudioManager.StopAll(this);
 
     [RelayCommand]
     private void ToggleLoop() => Loop = !Loop;

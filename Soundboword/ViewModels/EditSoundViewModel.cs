@@ -19,6 +19,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private readonly FilePicker _filePicker;
     private readonly IFileManagerOpener? _opener;
     private readonly ShortcutList _shortcuts;
+    private readonly AudioManager _audioManager;
 
     public SoundEditingContext Context { get; }
 
@@ -28,15 +29,17 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         Context = new SoundEditingContext();
         _filePicker = new FilePicker();
-        _shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context));
+        _audioManager = new AudioManager();
+        _shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context, _audioManager));
     }
 
-    public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
+    public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts, AudioManager audioManager)
     {
         _topLevel = topLevel;
         _filePicker = filePicker;
         _opener = opener;
         _shortcuts = shortcuts;
+        _audioManager = audioManager;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
         _shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
@@ -55,7 +58,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private void Stop()
     {
         if (Context.Model != null)
-            AudioManager.StopAll(Context.Model);
+            _audioManager.StopAll(Context.Model);
     }
 
     [RelayCommand]
@@ -74,7 +77,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private void TogglePause()
     {
         if (Context.Model != null)
-            AudioManager.TogglePause(Context.Model);
+            _audioManager.TogglePause(Context.Model);
     }
 
     [RelayCommand]

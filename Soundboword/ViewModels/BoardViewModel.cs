@@ -21,6 +21,6 @@ public sealed partial class BoardViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private static void StopAll() => AudioManager.StopAll();
+    private void StopAll() => List.AudioManager.StopAll();
 
 }

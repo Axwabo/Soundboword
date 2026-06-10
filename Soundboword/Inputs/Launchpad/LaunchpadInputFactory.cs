@@ -6,8 +6,13 @@ public sealed class LaunchpadInputFactory : IInputFactory
 {
 
     private readonly ShortcutList _shortcuts;
+    private readonly AudioManager _audioManager;
 
-    public LaunchpadInputFactory(ShortcutList shortcuts) => _shortcuts = shortcuts;
+    public LaunchpadInputFactory(ShortcutList shortcuts, AudioManager audioManager)
+    {
+        _shortcuts = shortcuts;
+        _audioManager = audioManager;
+    }
 
     public string Name => LaunchpadInput.Name;
 
@@ -15,7 +20,7 @@ public sealed class LaunchpadInputFactory : IInputFactory
     {
         get
         {
-            foreach (var midi in AudioManager.RefreshMidiInputs())
+            foreach (var midi in _audioManager.RefreshMidiInputs())
                 if (midi.Name.Contains(LaunchpadInput.Name))
                     return true;
             return false;
@@ -24,7 +29,7 @@ public sealed class LaunchpadInputFactory : IInputFactory
 
     public IInputMethod? Activate()
     {
-        if (AudioManager.Midi is not { } midi)
+        if (_audioManager.Midi is not { } midi)
             return null;
         foreach (var input in midi.AvailableInputs)
             if (input.Name.Contains(LaunchpadInput.Name))

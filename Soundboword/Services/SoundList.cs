@@ -28,20 +28,24 @@ public sealed partial class SoundList
 
     private readonly FilePicker _filePicker;
 
+    public AudioManager AudioManager { get; }
+
     public SoundEditingContext Editor { get; }
 
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
     public SoundList()
     {
+        AudioManager = new AudioManager();
         _filePicker = new FilePicker();
         Editor = new SoundEditingContext();
     }
 
-    public SoundList(FilePicker filePicker, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor)
+    public SoundList(FilePicker filePicker, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
     {
         _filePicker = filePicker;
         Editor = editor;
+        AudioManager = audioManager;
         foreach (var sound in UserData.LoadSounds())
         {
             var soundViewModel = new SoundViewModel

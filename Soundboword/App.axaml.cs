@@ -24,9 +24,6 @@ public sealed class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            AudioManager.Init();
-            desktop.Exit += (_, _) => AudioManager.Destroy();
-
             var window = new MainWindow();
             Services.AddSingleton<TopLevel>(window);
             Services.AddSingleton(desktop);

@@ -10,14 +10,16 @@ namespace Soundboword.Inputs;
 public abstract class ShortcutRepository<T> : IShortcutRepository where T : notnull
 {
 
+    private readonly AudioManager _audioManager;
     private readonly string _inputMethodName;
     private readonly Func<T, string> _toFriendlyName;
 
     private readonly Dictionary<Guid, T> _map;
     private readonly Dictionary<T, HashSet<Shortcut>> _shortcuts = [];
 
-    protected ShortcutRepository(SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName)
+    protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName)
     {
+        _audioManager = audioManager;
         _inputMethodName = inputMethodName;
         _toFriendlyName = toFriendlyName;
         _map = UserData.Load(File, () => new Dictionary<Guid, T>());
@@ -50,7 +52,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         if (!_shortcuts.TryGetValue(key, out var list))
             return;
         foreach (var shortcut in list)
-            AudioManager.Trigger(shortcut.Sound);
+            _audioManager.Trigger(shortcut.Sound);
     }
 
     private void Unbind(T assigned, SoundViewModel sound, HashSet<Shortcut> all)
