@@ -83,7 +83,7 @@ public static class AudioManager
             case TriggerMode.StartStop when Sounds.TryGetValue(sound, out var list):
                 StopAll(list);
                 sound.PropertyChanged -= SoundOnPropertyChanged;
-                sound.UpdatePlaybackState(false);
+                sound.UpdatePlaybackState(SoundState.Stopped);
                 Sounds.Remove(sound);
                 break;
             case TriggerMode.StartRestart when Sounds.TryGetValue(sound, out var list):
@@ -133,8 +133,10 @@ public static class AudioManager
         player.Volume = sound.Volume;
         player.IsLooping = sound.Loop;
         player.PlaybackEnded += RemoveSoundOnEnd;
+        if (sound.PlaybackState == SoundState.Paused)
+            return;
         player.Play();
-        sound.UpdatePlaybackState(true);
+        sound.UpdatePlaybackState(SoundState.Playing);
     }
 
     internal static void StopAll()
@@ -146,7 +148,7 @@ public static class AudioManager
         foreach (var sound in Sounds.Keys)
         {
             sound.PropertyChanged -= SoundOnPropertyChanged;
-            sound.UpdatePlaybackState(false);
+            sound.UpdatePlaybackState(SoundState.Stopped);
         }
 
         Sounds.Clear();
@@ -160,7 +162,7 @@ public static class AudioManager
             if (removed == 0)
                 continue;
             sound.PropertyChanged -= SoundOnPropertyChanged;
-            sound.UpdatePlaybackState(false);
+            sound.UpdatePlaybackState(SoundState.Stopped);
             Sounds.Remove(sound);
             break;
         }
@@ -191,7 +193,7 @@ public static class AudioManager
             return;
         StopAll(list);
         sound.PropertyChanged -= SoundOnPropertyChanged;
-        sound.UpdatePlaybackState(false);
+        sound.UpdatePlaybackState(SoundState.Stopped);
     }
 
     extension(SoundViewModel sound)

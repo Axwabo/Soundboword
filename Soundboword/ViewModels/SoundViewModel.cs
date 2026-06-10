@@ -29,7 +29,7 @@ public sealed partial class SoundViewModel : ViewModelBase
     public partial float Volume { get; set; } = 1;
 
     [ObservableProperty]
-    public partial bool IsPlaying { get; private set; }
+    public partial SoundState PlaybackState { get; private set; }
 
     [RelayCommand]
     private void Trigger() => AudioManager.Trigger(this);
@@ -43,12 +43,12 @@ public sealed partial class SoundViewModel : ViewModelBase
     [RelayCommand]
     private void Configure() => List.Editor.Open(this);
 
-    public void UpdatePlaybackState(bool active)
+    public void UpdatePlaybackState(SoundState active)
     {
         if (Dispatcher.UIThread.CheckAccess())
-            IsPlaying = active;
+            PlaybackState = active;
         else
-            Dispatcher.UIThread.Post(() => IsPlaying = active);
+            Dispatcher.UIThread.Post(() => PlaybackState = active);
     }
 
 }
