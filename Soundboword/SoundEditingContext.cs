@@ -10,7 +10,7 @@ public sealed partial class SoundEditingContext : ObservableObject
 {
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume))]
+    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(CanRelink))]
     public partial SoundViewModel? Model { get; private set; }
 
     public string Name
