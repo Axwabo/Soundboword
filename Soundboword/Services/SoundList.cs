@@ -58,12 +58,9 @@ public sealed partial class SoundList
     [RelayCommand]
     private async Task Add()
     {
-        if (_host?.Host is not {StorageProvider: var provider})
+        var path = await BrowseAudioAsync(_host);
+        if (path == null)
             return;
-        var files = await provider.OpenFilePickerAsync(FileOptions);
-        if (files.Count == 0)
-            return;
-        var path = files[0].TryGetLocalPath()!;
         Sounds.Add(new SoundViewModel
         {
             Id = Guid.NewGuid(),
@@ -78,6 +75,14 @@ public sealed partial class SoundList
     {
         Sounds.Remove(sound);
         UserData.SaveSounds(Sounds);
+    }
+
+    public static async Task<string?> BrowseAudioAsync(HostControl? host)
+    {
+        if (host?.Host is not {StorageProvider: var provider})
+            return null;
+        var files = await provider.OpenFilePickerAsync(FileOptions);
+        return files.Count == 0 ? null : files[0].TryGetLocalPath()!;
     }
 
 }

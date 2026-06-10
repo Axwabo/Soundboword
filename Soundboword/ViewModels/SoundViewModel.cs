@@ -12,9 +12,9 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     public required Guid Id { get; init; }
 
-    public required string Path { get; init; }
-
     public required SoundList List { get; init; }
+
+    public required string Path { get; set; }
 
     [ObservableProperty]
     public required partial string Name { get; set; }

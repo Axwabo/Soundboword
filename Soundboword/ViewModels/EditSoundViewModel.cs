@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -42,11 +44,26 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public float MaxVolume => RaiseMaximumVolume ? 2 : 1;
 
+    [ObservableProperty]
+    public partial bool IsNotFound { get; private set; }
+
     [RelayCommand]
     private void Stop()
     {
         if (Context.Model != null)
             AudioManager.StopAll(Context.Model);
+    }
+
+    [RelayCommand]
+    private async Task Relink()
+    {
+        if (Context.Model is not { } model)
+            return;
+        var path = await SoundList.BrowseAudioAsync(_host);
+        if (path == null)
+            return;
+        model.Path = path;
+        IsNotFound = false;
     }
 
     [RelayCommand]
@@ -89,8 +106,10 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SoundEditingContext.Model))
-            UpdateActiveShortcuts();
+        if (e.PropertyName != nameof(SoundEditingContext.Model))
+            return;
+        UpdateActiveShortcuts();
+        IsNotFound = Context.Model is { } model && !File.Exists(model.Path);
     }
 
     private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);

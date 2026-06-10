@@ -43,6 +43,8 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
+    public bool CanRelink => Model?.PlaybackState is SoundState.Stopped or SoundState.Error;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ButtonText))]
     [MemberNotNullWhen(true, nameof(Model))]
@@ -64,7 +66,12 @@ public sealed partial class SoundEditingContext : ObservableObject
         Model = null;
     }
 
-    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
+    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        OnPropertyChanged(e.PropertyName);
+        if (e.PropertyName == nameof(SoundViewModel.PlaybackState))
+            OnPropertyChanged(nameof(CanRelink));
+    }
 
     public void CancelShortcutAddition() => IsListeningForShortcuts = false;
 
