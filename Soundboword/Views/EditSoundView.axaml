@@ -18,7 +18,7 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
     </UserControl.Styles>
-    <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding Context.Model, Converter={x:Static ObjectConverters.IsNotNull}}">
+    <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding !!Context.Model}">
         <TextBox Text="{Binding Context.Name}" />
         <ToggleSwitch IsChecked="{Binding RaiseMaximumVolume}">Raise Maximum Volume</ToggleSwitch>
         <Label Content="{Binding Context.Volume, StringFormat=Volume: \{0:P0\}}" />
