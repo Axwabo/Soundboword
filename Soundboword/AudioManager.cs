@@ -164,11 +164,14 @@ public static class AudioManager
 
     private static void RemoveSoundOnEnd(object? sender, EventArgs _)
     {
+        // TODO: optimize
         foreach (var (sound, list) in Sounds)
         {
             var removed = list.RemoveAll(e => e.Player == sender);
             if (removed == 0)
                 continue;
+            if (list.Count != 0)
+                break;
             sound.PropertyChanged -= SoundOnPropertyChanged;
             sound.UpdatePlaybackState(SoundState.Stopped);
             Sounds.Remove(sound);
