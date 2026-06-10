@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,7 @@ using SoundFlow.Structs;
 
 namespace Soundboword;
 
+// TODO: thread safety
 public sealed class AudioManager
 {
 
@@ -32,6 +34,8 @@ public sealed class AudioManager
         SampleRate = 48000,
         Channels = 2
     };
+
+    public ObservableCollection<SoundPlayback> AllSounds { get; } = [];
 
     public AudioManager(IClassicDesktopStyleApplicationLifetime? lifetime = null)
     {
@@ -116,11 +120,12 @@ public sealed class AudioManager
 
     private void StopAll(List<SoundPlayback> list)
     {
-        foreach (var (provider, player) in list)
+        foreach (var played in list)
         {
-            player.Stop();
-            provider.Dispose();
-            _playback!.MasterMixer.RemoveComponent(player);
+            AllSounds.Remove(played);
+            played.Player.Stop();
+            played.Provider.Dispose();
+            _playback!.MasterMixer.RemoveComponent(played.Player);
         }
     }
 
@@ -141,7 +146,9 @@ public sealed class AudioManager
         var provider = new StreamDataProvider(_engine!, Format, File.OpenRead(sound.Path));
         var player = new SoundPlayer(_engine!, Format, provider);
         _playback!.MasterMixer.AddComponent(player);
-        list.Add(new SoundPlayback(provider, player));
+        var soundPlayback = new SoundPlayback(provider, player, sound.Name);
+        list.Add(soundPlayback);
+        AllSounds.Add(soundPlayback);
         player.Volume = sound.Volume;
         player.IsLooping = sound.Loop;
         player.PlaybackEnded += RemoveSoundOnEnd;
@@ -171,14 +178,35 @@ public sealed class AudioManager
         // TODO: optimize
         foreach (var (sound, list) in _sounds)
         {
-            var removed = list.RemoveAll(e => e.Player == sender);
-            if (removed == 0)
+            var index = list.FindIndex(e => e.Player == sender);
+            if (index == -1)
                 continue;
-            if (list.Count != 0)
-                break;
-            sound.PropertyChanged -= SoundOnPropertyChanged;
-            sound.UpdatePlaybackState(SoundState.Stopped);
-            _sounds.Remove(sound);
+            var playback = list[index];
+            list.RemoveAt(index);
+            MarkRemoved(playback, list, sound);
+            break;
+        }
+    }
+
+    private void MarkRemoved(SoundPlayback playback, List<SoundPlayback> list, SoundViewModel sound)
+    {
+        AllSounds.Remove(playback);
+        if (list.Count != 0)
+            return;
+        sound.PropertyChanged -= SoundOnPropertyChanged;
+        sound.UpdatePlaybackState(SoundState.Stopped);
+        _sounds.Remove(sound);
+    }
+
+    public void Stop(SoundPlayback playback)
+    {
+        // TODO: optimize
+        foreach (var (sound, list) in _sounds)
+        {
+            if (!list.Remove(playback))
+                continue;
+            AllSounds.Remove(playback);
+            MarkRemoved(playback, list, sound);
             break;
         }
     }

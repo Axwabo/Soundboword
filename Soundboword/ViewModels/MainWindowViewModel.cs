@@ -15,6 +15,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public BoardViewModel Board { get; }
 
+    public PlaybacksViewModel Playbacks { get; }
+
     public InputsViewModel Inputs { get; }
 
     public FilePicker FilePicker { get; }
@@ -25,15 +27,17 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         Board = new BoardViewModel();
+        Playbacks = new PlaybacksViewModel();
         Inputs = new InputsViewModel();
         FilePicker = new FilePicker();
     }
 
-    public MainWindowViewModel(BoardViewModel board, InputsViewModel inputs, FilePicker filePicker)
+    public MainWindowViewModel(BoardViewModel board, PlaybacksViewModel playbacks, InputsViewModel inputs, FilePicker filePicker)
     {
         Board = board;
         Inputs = inputs;
         FilePicker = filePicker;
+        Playbacks = playbacks;
         _ = TestDBus().ConfigureAwait(false);
     }
 

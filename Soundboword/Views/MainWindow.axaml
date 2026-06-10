@@ -19,9 +19,13 @@
             <TabItem Header="🔊 Sounds">
                 <UserControl Content="{Binding Board}" />
             </TabItem>
+            <TabItem Header="🎚️ Playbacks">
+                <UserControl Content="{Binding Playbacks}" />
+            </TabItem>
             <TabItem Header="🎛️ Inputs">
                 <UserControl Content="{Binding Inputs}" />
             </TabItem>
+
         </TabControl>
         <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
             <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>

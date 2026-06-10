@@ -3,4 +3,4 @@ using SoundFlow.Providers;
 
 namespace Soundboword.Models;
 
-public sealed record SoundPlayback(StreamDataProvider Provider, SoundPlayer Player);
+public sealed record SoundPlayback(StreamDataProvider Provider, SoundPlayer Player, string Name);
