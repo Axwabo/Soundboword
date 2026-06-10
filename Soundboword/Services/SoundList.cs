@@ -2,7 +2,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +13,7 @@ namespace Soundboword.Services;
 public sealed partial class SoundList
 {
 
-    private static readonly FilePickerOpenOptions FileOptions = new()
+    public static FilePickerOpenOptions Options { get; } = new()
     {
         Title = "Pick a sound",
         FileTypeFilter =
@@ -27,17 +26,21 @@ public sealed partial class SoundList
         ]
     };
 
-    private readonly TopLevel? _topLevel;
+    private readonly FilePicker _filePicker;
 
     public SoundEditingContext Editor { get; }
 
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
-    public SoundList() => Editor = new SoundEditingContext();
-
-    public SoundList(TopLevel? topLevel, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor)
+    public SoundList()
     {
-        _topLevel = topLevel;
+        _filePicker = new FilePicker();
+        Editor = new SoundEditingContext();
+    }
+
+    public SoundList(FilePicker filePicker, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor)
+    {
+        _filePicker = filePicker;
         Editor = editor;
         foreach (var sound in UserData.LoadSounds())
         {
@@ -62,7 +65,7 @@ public sealed partial class SoundList
     [RelayCommand]
     private async Task Add()
     {
-        var path = await BrowseAudioAsync(_topLevel);
+        var path = await _filePicker.PickOne(Options);
         if (path == null)
             return;
         Sounds.Add(new SoundViewModel
@@ -79,14 +82,6 @@ public sealed partial class SoundList
     {
         Sounds.Remove(sound);
         UserData.SaveSounds(Sounds);
-    }
-
-    public static async Task<string?> BrowseAudioAsync(TopLevel? topLevel)
-    {
-        if (topLevel is not {StorageProvider: var provider})
-            return null;
-        var files = await provider.OpenFilePickerAsync(FileOptions);
-        return files.Count == 0 ? null : files[0].TryGetLocalPath()!;
     }
 
 }

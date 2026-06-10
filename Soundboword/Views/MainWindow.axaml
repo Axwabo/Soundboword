@@ -14,12 +14,17 @@
     <Window.Resources>
         <x:Double x:Key="TabItemHeaderFontSize">20</x:Double>
     </Window.Resources>
-    <TabControl TabStripPlacement="Top" Padding="5">
-        <TabItem Header="🔊 Sounds">
-            <UserControl Content="{Binding Board}" />
-        </TabItem>
-        <TabItem Header="🎛️ Inputs">
-            <UserControl Content="{Binding Inputs}" />
-        </TabItem>
-    </TabControl>
+    <Panel>
+        <TabControl TabStripPlacement="Top" Padding="5">
+            <TabItem Header="🔊 Sounds">
+                <UserControl Content="{Binding Board}" />
+            </TabItem>
+            <TabItem Header="🎛️ Inputs">
+                <UserControl Content="{Binding Inputs}" />
+            </TabItem>
+        </TabControl>
+        <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
+            <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
+        </Panel>
+    </Panel>
 </Window>

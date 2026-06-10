@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Soundboword.Services;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
@@ -16,6 +17,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public InputsViewModel Inputs { get; }
 
+    public FilePicker FilePicker { get; }
+
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
 
@@ -23,12 +26,14 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
         Board = new BoardViewModel();
         Inputs = new InputsViewModel();
+        FilePicker = new FilePicker();
     }
 
-    public MainWindowViewModel(BoardViewModel board, InputsViewModel list)
+    public MainWindowViewModel(BoardViewModel board, InputsViewModel inputs, FilePicker filePicker)
     {
         Board = board;
-        Inputs = list;
+        Inputs = inputs;
+        FilePicker = filePicker;
         _ = TestDBus().ConfigureAwait(false);
     }
 

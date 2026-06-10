@@ -25,6 +25,7 @@ internal static class Program
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
                     .AddSingleton<IShortcutRepository, LaunchpadShortcutRepository>()
                     .AddSingleton<IFileManagerOpener, DBusFileManagerOpener>()
+                    .AddSingleton<FilePicker>()
                     .AddSingleton<SoundList>()
                     .AddSingleton<SoundEditingContext>()
                     .AddSingleton<ShortcutList>()

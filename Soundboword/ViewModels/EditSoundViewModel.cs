@@ -16,6 +16,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
     private readonly TopLevel? _topLevel;
+    private readonly FilePicker _filePicker;
     private readonly IFileManagerOpener? _opener;
     private readonly ShortcutList _shortcuts;
 
@@ -26,12 +27,14 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     public EditSoundViewModel()
     {
         Context = new SoundEditingContext();
-        _shortcuts = new ShortcutList(null, new SoundList(_topLevel, null, Context));
+        _filePicker = new FilePicker();
+        _shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context));
     }
 
-    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
+    public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts)
     {
         _topLevel = topLevel;
+        _filePicker = filePicker;
         _opener = opener;
         _shortcuts = shortcuts;
         Context = context;
@@ -60,7 +63,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         if (Context.Model is not { } model)
             return;
-        var path = await SoundList.BrowseAudioAsync(_topLevel);
+        var path = await _filePicker.PickOne(SoundList.Options);
         if (path == null)
             return;
         model.Path = path;
