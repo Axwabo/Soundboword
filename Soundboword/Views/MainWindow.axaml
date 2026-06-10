@@ -8,29 +8,28 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Soundboword">
-
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
+    <Window.Resources>
+        <x:Double x:Key="TabItemHeaderFontSize">20</x:Double>
+    </Window.Resources>
+    <TabControl TabStripPlacement="Top">
+        <TabItem Header="🔊 Sounds">
+            <Grid ColumnDefinitions="*,Auto">
+                <ItemsControl ItemsSource="{Binding SoundList.Sounds}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <UserControl MinWidth="200" Grid.Column="1" Content="{Binding Editor}" />
 
-    <Grid ColumnDefinitions="*,Auto,Auto">
-        <Grid RowDefinitions="Auto,*">
-            <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding SoundList.AddCommand}">Add Sound</Button>
-                <Button Command="{Binding StopAllCommand}">Stop All</Button>
-            </StackPanel>
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding SoundList.Sounds}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </Grid>
-        <UserControl Grid.Column="2" Content="{Binding Inputs}" />
-        <UserControl Grid.Column="1" Content="{Binding Editor}" />
-    </Grid>
-
+            </Grid>
+        </TabItem>
+        <TabItem Header="🎛️ Inputs">
+            <UserControl Content="{Binding Inputs}" />
+        </TabItem>
+    </TabControl>
 </Window>
