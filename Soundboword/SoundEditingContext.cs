@@ -10,7 +10,7 @@ public sealed partial class SoundEditingContext : ObservableObject
 {
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume))]
+    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(PlaybackState), nameof(CanRelink))]
     public partial SoundViewModel? Model { get; private set; }
 
     public string Name
@@ -43,7 +43,9 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
-    public bool CanRelink => Model?.PlaybackState is SoundState.Stopped or SoundState.Error;
+    public SoundState PlaybackState => Model?.PlaybackState ?? default;
+
+    public bool CanRelink => PlaybackState is SoundState.Stopped or SoundState.Error;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ButtonText))]

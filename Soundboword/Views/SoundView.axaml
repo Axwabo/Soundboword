@@ -28,7 +28,11 @@
             </Button>
             <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding PlaybackState}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
             <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="{Binding Loop}" ToolTip.Tip="{Binding Loop, StringFormat=Loop: \{0\}}">🔁️</ToggleButton>
-            <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure" Command="{Binding ConfigureCommand}">⚙️️</Button>
+            <ToggleButton Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure"
+                          IsChecked="{Binding Mode=OneWayToSource, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={Binding .}}"
+                          Command="{Binding ConfigureCommand}">
+                ⚙️️
+            </ToggleButton>
         </Grid>
     </Border>
 </UserControl>
