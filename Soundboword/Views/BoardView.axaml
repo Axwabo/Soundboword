@@ -9,22 +9,25 @@
     <Design.DataContext>
         <viewModels:BoardViewModel />
     </Design.DataContext>
-    <Grid ColumnDefinitions="*,220">
-        <StackPanel Spacing="5">
-            <StackPanel Orientation="Horizontal" Spacing="3">
-                <Button Command="{Binding List.AddCommand}">Add Sound</Button>
-                <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
-            </StackPanel>
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding List.Sounds}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
+    <Grid ColumnDefinitions="*,226" RowDefinitions="Auto,*" ColumnSpacing="3" RowSpacing="5">
+        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
+            <Button Command="{Binding List.AddCommand}">Add Sound</Button>
+            <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
         </StackPanel>
-        <UserControl Grid.Column="1" Content="{Binding Editor}" IsVisible="{Binding !!Editor.Context.Model}" />
+        <ScrollViewer Grid.Row="1" Grid.Column="0" PointerReleased="InputElement_OnPointerReleased">
+            <ItemsControl ItemsSource="{Binding List.Sounds}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+        <Panel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#33333333">
+            <TextBlock IsVisible="{Binding Editor.Context.Model, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="#ccc">
+                Configure a sound
+            </TextBlock>
+            <UserControl Margin="3" Content="{Binding Editor}" IsVisible="{Binding !!Editor.Context.Model}" />
+        </Panel>
     </Grid>
 </UserControl>
