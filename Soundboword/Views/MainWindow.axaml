@@ -14,19 +14,9 @@
     <Window.Resources>
         <x:Double x:Key="TabItemHeaderFontSize">20</x:Double>
     </Window.Resources>
-    <TabControl TabStripPlacement="Top">
+    <TabControl TabStripPlacement="Top" Padding="5">
         <TabItem Header="🔊 Sounds">
-            <Grid ColumnDefinitions="*,Auto">
-                <ItemsControl ItemsSource="{Binding SoundList.Sounds}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-                <UserControl MinWidth="200" Grid.Column="1" Content="{Binding Editor}" />
-
-            </Grid>
+            <UserControl Content="{Binding Board}" />
         </TabItem>
         <TabItem Header="🎛️ Inputs">
             <UserControl Content="{Binding Inputs}" />

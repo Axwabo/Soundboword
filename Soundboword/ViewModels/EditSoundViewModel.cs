@@ -110,6 +110,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         UpdateActiveShortcuts();
         IsNotFound = Context.Model is { } model && !File.Exists(model.Path);
+        RaiseMaximumVolume |= Context.Volume > 1;
     }
 
     private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);

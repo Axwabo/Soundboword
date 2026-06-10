@@ -4,42 +4,33 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Soundboword.Services;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
 namespace Soundboword.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public sealed partial class MainWindowViewModel : ViewModelBase
 {
 
+    public BoardViewModel Board { get; }
+
     public InputsViewModel Inputs { get; }
-
-    public SoundList SoundList { get; }
-
-    public EditSoundViewModel Editor { get; }
 
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
 
     public MainWindowViewModel()
     {
+        Board = new BoardViewModel();
         Inputs = new InputsViewModel();
-        SoundList = new SoundList();
-        Editor = new EditSoundViewModel();
     }
 
-    public MainWindowViewModel(SoundList list, InputsViewModel inputs, EditSoundViewModel editor)
+    public MainWindowViewModel(BoardViewModel board, InputsViewModel list)
     {
-        SoundList = list;
-        Inputs = inputs;
-        Editor = editor;
+        Board = board;
+        Inputs = list;
         _ = TestDBus().ConfigureAwait(false);
     }
-
-    [RelayCommand]
-    private static void StopAll() => AudioManager.StopAll();
 
     // TODO: upgrade Tmds.DBus when a new Avalonia version is released (new version included in Avalonia master 2 days ago)
     private async Task TestDBus()

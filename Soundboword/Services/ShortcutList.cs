@@ -63,7 +63,9 @@ public sealed class ShortcutList
             _sounds.Editor.CancelShortcutAddition();
         foreach (var repository in _repositories)
             repository.RemoveAll(sound);
-        _all.RemoveWhere(e => e.Sound == sound);
+        var removed = _all.RemoveWhere(e => e.Sound == sound);
+        if (removed != 0)
+            ShortcutsChanged?.Invoke();
     }
 
 }

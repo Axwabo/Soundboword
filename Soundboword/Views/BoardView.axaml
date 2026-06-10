@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Views.BoardView"
+             x:DataType="viewModels:BoardViewModel">
+    <Design.DataContext>
+        <viewModels:BoardViewModel />
+    </Design.DataContext>
+    <Grid ColumnDefinitions="*,220">
+        <StackPanel Spacing="5">
+            <StackPanel Orientation="Horizontal" Spacing="3">
+                <Button Command="{Binding List.AddCommand}">Add Sound</Button>
+                <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
+            </StackPanel>
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding List.Sounds}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" ItemSpacing="5" LineSpacing="5" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+        <UserControl Grid.Column="1" Content="{Binding Editor}" IsVisible="{Binding !!Editor.Context.Model}" />
+    </Grid>
+</UserControl>

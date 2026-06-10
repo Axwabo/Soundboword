@@ -5,7 +5,7 @@
              xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
              xmlns:models="clr-namespace:Soundboword.Models"
              xmlns:converters="clr-namespace:Soundboword.Converters"
-             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="220" d:DesignHeight="600"
              x:Class="Soundboword.Views.EditSoundView"
              x:DataType="viewModels:EditSoundViewModel"
              Name="Root">
@@ -16,13 +16,23 @@
         <Style Selector="Button.icon">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
     </UserControl.Styles>
-    <StackPanel Orientation="Vertical" Spacing="3" IsEnabled="{Binding !!Context.Model}">
+    <StackPanel Orientation="Vertical" Spacing="3">
         <TextBox Text="{Binding Context.Name}" />
         <ToggleSwitch IsChecked="{Binding RaiseMaximumVolume}" OnContent="Raise Maximum Volume" OffContent="Raise Maximum Volume" />
         <Label Content="{Binding Context.Volume, StringFormat=Volume: \{0:P0\}}" />
-        <Slider Minimum="0" Maximum="{Binding MaxVolume}" SmallChange="0.01" LargeChange="0.1" Value="{Binding Context.Volume}" />
+        <Slider Margin="0" Padding="0" Minimum="0" Maximum="{Binding MaxVolume}" SmallChange="0.01" LargeChange="0.1" Value="{Binding Context.Volume}" />
+        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*" RowSpacing="3" ColumnSpacing="3">
+            <Button Classes="icon" Command="{Binding TogglePauseCommand}">⏯️</Button>
+            <Button Grid.Row="0" Grid.Column="1" Classes="icon" Command="{Binding StopCommand}">🟦</Button>
+            <Button Grid.Row="0" Grid.Column="2" Classes="icon" Command="{Binding RelinkCommand}" IsEnabled="{Binding Context.CanRelink}" ToolTip.Tip="Relink">🔗</Button>
+            <Button Grid.Row="1" Grid.Column="0" Classes="icon" Command="{Binding CopyPathCommand}" ToolTip.Tip="Copy Path">📋</Button>
+            <Button Grid.Row="1" Grid.Column="1" Classes="icon" Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager">📂</Button>
+            <Button Grid.Row="1" Grid.Column="2" Classes="icon" Command="{Binding DeleteCommand}">🗑️</Button>
+        </Grid>
+        <TextBlock IsVisible="{Binding IsNotFound}" TextWrapping="Wrap" Foreground="Red" FontWeight="SemiBold" MaxWidth="300">File not found!</TextBlock>
         <Label>Trigger Mode:</Label>
         <ComboBox SelectedItem="{Binding Path=Context.TriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}" HorizontalAlignment="Stretch">
             <ComboBox.ItemTemplate>
@@ -31,21 +41,10 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto,Auto" RowSpacing="3" ColumnSpacing="3">
-            <Button Classes="icon" Command="{Binding TogglePauseCommand}">⏯️</Button>
-            <Button Grid.Row="0" Grid.Column="1" Classes="icon" Command="{Binding StopCommand}">🟦</Button>
-            <Button Grid.Row="0" Grid.Column="2" Classes="icon" Command="{Binding RelinkCommand}" IsEnabled="{Binding Context.CanRelink}" ToolTip.Tip="Relink">🔗</Button>
-            <Button Grid.Row="1" Grid.Column="0" Classes="icon" Command="{Binding CopyPathCommand}" ToolTip.Tip="Copy Path">📋</Button>
-            <Button Grid.Row="1" Grid.Column="1" Classes="icon" Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager">📂</Button>
-            <Button Grid.Row="1" Grid.Column="2" Classes="icon" Command="{Binding DeleteCommand}">🗑️</Button>
-        </Grid>
-        <TextBlock IsVisible="{Binding IsNotFound}" TextWrapping="Wrap" Foreground="Red" FontWeight="SemiBold" MaxWidth="300">
-            The sound file could not be found!
-            Please relink it using the 🔗 button.
-        </TextBlock>
         <ToggleButton Content="{Binding Context.ButtonText}"
-                      IsChecked="{Binding Context.IsListeningForShortcuts}" />
-        <Button Command="{Binding RemoveShortcutsCommand}">Remove Shortcuts</Button>
+                      IsChecked="{Binding Context.IsListeningForShortcuts}"
+                      HorizontalAlignment="Stretch" />
+        <Button Command="{Binding RemoveShortcutsCommand}" HorizontalAlignment="Stretch">Remove Shortcuts</Button>
         <ItemsControl ItemsSource="{Binding Active}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

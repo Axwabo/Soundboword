@@ -18,6 +18,7 @@ public sealed class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         Services.AddSingleton<MainWindowViewModel>()
+            .AddSingleton<BoardViewModel>()
             .AddSingleton<InputsViewModel>()
             .AddSingleton<EditSoundViewModel>();
 
