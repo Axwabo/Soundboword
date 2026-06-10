@@ -14,15 +14,7 @@
             <Setter Property="FontSize" Value="20"></Setter>
         </Style>
     </UserControl.Styles>
-    <Border Padding="3">
-        <Border.Background>
-            <MultiBinding Converter="{StaticResource SoundState}" ConverterParameter="{Binding PlaybackState}">
-                <x:Null />
-                <StaticResource ResourceKey="Playing" />
-                <StaticResource ResourceKey="Paused" />
-                <StaticResource ResourceKey="Error" />
-            </MultiBinding>
-        </Border.Background>
+    <Border Padding="3" Background="{Binding PlaybackState, Converter={StaticResource SoundState}}">
         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="45,45,45" RowSpacing="2" ColumnSpacing="2">
             <TextBlock TextAlignment="Center" Grid.ColumnSpan="3" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="60" Command="{Binding TriggerCommand}">
@@ -39,5 +31,4 @@
             <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure" Command="{Binding ConfigureCommand}">⚙️️</Button>
         </Grid>
     </Border>
-
 </UserControl>

@@ -43,12 +43,12 @@ public sealed partial class SoundViewModel : ViewModelBase
     [RelayCommand]
     private void Configure() => List.Editor.Open(this);
 
-    public void UpdatePlaybackState(SoundState active)
+    public void UpdatePlaybackState(SoundState state)
     {
         if (Dispatcher.UIThread.CheckAccess())
-            PlaybackState = active;
+            PlaybackState = state;
         else
-            Dispatcher.UIThread.Post(() => PlaybackState = active);
+            Dispatcher.UIThread.Post(() => PlaybackState = state);
     }
 
 }

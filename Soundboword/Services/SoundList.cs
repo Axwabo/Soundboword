@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.Input;
+using Soundboword.Models;
 using Soundboword.ViewModels;
 
 namespace Soundboword.Services;
@@ -37,7 +38,8 @@ public sealed partial class SoundList
         _host = host;
         Editor = editor;
         foreach (var sound in UserData.LoadSounds())
-            Sounds.Add(new SoundViewModel
+        {
+            var soundViewModel = new SoundViewModel
             {
                 Id = sound.Id,
                 Name = sound.Name,
@@ -45,8 +47,12 @@ public sealed partial class SoundList
                 Loop = sound.Loop,
                 Volume = sound.Volume,
                 Mode = sound.Mode,
-                List = this
-            });
+                List = this,
+            };
+            if (!File.Exists(soundViewModel.Path))
+                soundViewModel.UpdatePlaybackState(SoundState.Error);
+            Sounds.Add(soundViewModel);
+        }
     }
 
     [RelayCommand]

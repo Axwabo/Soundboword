@@ -1,13 +1,27 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data.Converters;
+using Avalonia.Media;
+using Avalonia.Media.Immutable;
+using Soundboword.Models;
 
 namespace Soundboword.Converters;
 
-public sealed class SoundStateConverter : IMultiValueConverter
+public sealed class SoundStateConverter : IValueConverter
 {
 
-    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture) => values[(int) (parameter ?? 0)];
+    private static readonly ImmutableSolidColorBrush Playing = new(Color.Parse("#1100ff00"));
+    private static readonly ImmutableSolidColorBrush Paused = new(Color.Parse("#11ffff00"));
+    private static readonly ImmutableSolidColorBrush Error = new(Color.Parse("#22ff0000"));
+
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => ((SoundState?) value ?? default(SoundState)) switch
+    {
+        SoundState.Playing => Playing,
+        SoundState.Paused => Paused,
+        SoundState.Error => Error,
+        _ => null
+    };
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
 
 }

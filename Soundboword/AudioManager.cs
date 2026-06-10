@@ -120,6 +120,12 @@ public static class AudioManager
 
     private static void PlayNew(SoundViewModel sound)
     {
+        if (!File.Exists(sound.Path))
+        {
+            sound.UpdatePlaybackState(SoundState.Error);
+            return;
+        }
+
         if (!Sounds.TryGetValue(sound, out var list))
         {
             list = Sounds[sound] = [];
