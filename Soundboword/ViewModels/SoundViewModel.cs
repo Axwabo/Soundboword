@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,7 +9,7 @@ namespace Soundboword.ViewModels;
 public sealed partial class SoundViewModel : ViewModelBase
 {
 
-    public required Guid Id { get; init; }
+    public required SoundId Id { get; init; }
 
     public required SoundList List { get; init; }
 

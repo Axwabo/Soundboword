@@ -52,7 +52,11 @@ public sealed class ShortcutList
         var changed = false;
         foreach (var repository in _repositories)
             if (repository is ShortcutRepository<T> implementation)
-                changed |= implementation.Assign(key, _sounds.Editor.Model, _all);
+            {
+                SoundViewModel sound = _sounds.Editor.Model;
+                changed |= implementation.Assign(key, new TriggerSoundAction(sound), _all);
+            }
+
         _sounds.Editor.CancelShortcutAddition();
         if (changed)
             ShortcutsChanged?.Invoke();
@@ -64,7 +68,7 @@ public sealed class ShortcutList
             _sounds.Editor.CancelShortcutAddition();
         foreach (var repository in _repositories)
             repository.RemoveAll(sound);
-        var removed = _all.RemoveWhere(e => e.Sound == sound);
+        var removed = _all.RemoveWhere(e => e.IsSound(sound));
         if (removed != 0)
             ShortcutsChanged?.Invoke();
     }

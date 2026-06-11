@@ -14,7 +14,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
     private readonly string _inputMethodName;
     private readonly Func<T, string> _toFriendlyName;
 
-    private readonly Dictionary<Guid, T> _map;
+    private readonly Dictionary<string, T> _map;
     private readonly Dictionary<T, HashSet<Shortcut>> _shortcuts = [];
 
     protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName)
@@ -22,27 +22,27 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         _audioManager = audioManager;
         _inputMethodName = inputMethodName;
         _toFriendlyName = toFriendlyName;
-        _map = UserData.Load(File, () => new Dictionary<Guid, T>());
+        _map = UserData.Load(File, () => new Dictionary<string, T>());
         foreach (var sound in soundList.Sounds)
             if (_map.TryGetValue(sound.Id, out var key))
-                Assign(key, sound, null);
+                Assign(key, new TriggerSoundAction(sound), null);
     }
 
     private string File => Path.Combine(UserData.Folder, $"{_inputMethodName}.json");
 
-    public bool Assign(T key, SoundViewModel sound, HashSet<Shortcut>? all)
+    public bool Assign(T key, ShortcutAction action, HashSet<Shortcut>? all)
     {
-        if (all != null && _map.TryGetValue(sound.Id, out var assigned))
+        if (all != null && _map.TryGetValue(action.Id, out var assigned))
         {
             if (EqualityComparer<T>.Default.Equals(key, assigned))
                 return false;
-            Unbind(assigned, sound, all);
+            Unbind(assigned, action, all);
         }
 
         if (!_shortcuts.TryGetValue(key, out var set))
             _shortcuts[key] = set = [];
-        _map[sound.Id] = key;
-        var shortcut = new Shortcut(_inputMethodName, _toFriendlyName(key), sound);
+        _map[action.Id] = key;
+        var shortcut = new Shortcut(_inputMethodName, _toFriendlyName(key), action);
         all?.Add(shortcut);
         return set.Add(shortcut);
     }
@@ -52,16 +52,16 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         if (!_shortcuts.TryGetValue(key, out var list))
             return;
         foreach (var shortcut in list)
-            _audioManager.Trigger(shortcut.Sound);
+            shortcut.Trigger(_audioManager);
     }
 
-    private void Unbind(T assigned, SoundViewModel sound, HashSet<Shortcut> all)
+    private void Unbind(T assigned, ShortcutAction action, HashSet<Shortcut> all)
     {
         if (!_shortcuts.TryGetValue(assigned, out var set))
             return;
         foreach (var shortcut in set)
         {
-            if (shortcut.Sound != sound)
+            if (shortcut.Action != action)
                 continue;
             set.Remove(shortcut);
             all.Remove(shortcut);
@@ -73,15 +73,15 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
     {
         foreach (var set in _shortcuts.Values)
         foreach (var shortcut in set)
-            if (shortcut.Sound == sound)
+            if (shortcut.IsSound(sound))
                 yield return shortcut;
     }
 
     public void RemoveAll(SoundViewModel sound)
     {
         foreach (var set in _shortcuts.Values)
-            set.RemoveWhere(e => e.Sound == sound);
-        _map.Remove(sound.Id);
+            set.RemoveWhere(e => e.IsSound(sound));
+        _map.Remove(sound.Id.String);
     }
 
     public void Commit() => UserData.Save(File, _map);
