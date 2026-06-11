@@ -19,7 +19,7 @@
             <TabItem Header="🔊 Sounds">
                 <UserControl Content="{Binding Board}" />
             </TabItem>
-            <TabItem Header="🎚️ Playbacks">
+            <TabItem Header="🎚️  Playbacks">
                 <UserControl Content="{Binding Playbacks}" />
             </TabItem>
             <TabItem Header="🎛️ Inputs">
