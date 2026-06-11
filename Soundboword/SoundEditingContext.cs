@@ -59,7 +59,7 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     public void Close()
     {
-        _assigner?.Cancel();
+        _assigner?.Close();
         Model?.PropertyChanged -= ModelOnPropertyChanged;
         Model = null;
     }

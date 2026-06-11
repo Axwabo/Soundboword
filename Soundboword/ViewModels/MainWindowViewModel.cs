@@ -21,6 +21,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public FilePicker FilePicker { get; }
 
+    public ShortcutAssigner ShortcutAssigner { get; }
+
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
 
@@ -30,14 +32,16 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Playbacks = new PlaybacksViewModel();
         Inputs = new InputsViewModel();
         FilePicker = new FilePicker();
+        ShortcutAssigner = new ShortcutAssigner();
     }
 
-    public MainWindowViewModel(BoardViewModel board, PlaybacksViewModel playbacks, InputsViewModel inputs, FilePicker filePicker)
+    public MainWindowViewModel(BoardViewModel board, PlaybacksViewModel playbacks, InputsViewModel inputs, FilePicker filePicker, ShortcutAssigner shortcutAssigner)
     {
         Board = board;
+        Playbacks = playbacks;
         Inputs = inputs;
         FilePicker = filePicker;
-        Playbacks = playbacks;
+        ShortcutAssigner = shortcutAssigner;
         _ = TestDBus().ConfigureAwait(false);
     }
 

@@ -15,7 +15,7 @@
         <x:Double x:Key="TabItemHeaderFontSize">18</x:Double>
     </Window.Resources>
     <Panel>
-        <TabControl TabStripPlacement="Left" Padding="5">
+        <TabControl TabStripPlacement="Left" Padding="5" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
             <TabItem Header="🔊 Sounds">
                 <UserControl Content="{Binding Board}" />
             </TabItem>

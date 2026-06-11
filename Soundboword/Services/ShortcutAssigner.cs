@@ -11,7 +11,7 @@ public sealed partial class ShortcutAssigner : ObservableObject
 
     public ShortcutAction? Target { get; set; }
 
-    public void Cancel()
+    public void Close()
     {
         IsAssigning = false;
         Target = null;
