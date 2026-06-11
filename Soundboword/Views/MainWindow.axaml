@@ -3,6 +3,7 @@
         xmlns:vm="using:Soundboword.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:Soundboword.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Soundboword.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -13,16 +14,33 @@
     </Design.DataContext>
     <Window.Resources>
         <x:Double x:Key="TabItemHeaderFontSize">18</x:Double>
+        <models:PageHeader Icon="🔊" Content="Sounds" x:Key="Sounds" />
+        <models:PageHeader Icon="🎚️" Content="Playbacks" x:Key="Playbacks" />
+        <models:PageHeader Icon="🎛️" Content="Inputs" x:Key="Inputs" />
     </Window.Resources>
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate x:DataType="models:PageHeader">
+                        <Grid ColumnDefinitions="25,Auto">
+                            <Label Padding="0" Content="{Binding Icon}" HorizontalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label Grid.Column="1" Padding="0" Content="{Binding Content}" VerticalContentAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Styles>
     <Panel>
         <TabControl TabStripPlacement="Left" Padding="5" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-            <TabItem Header="🔊 Sounds">
+            <TabItem Header="{StaticResource Sounds}">
                 <UserControl Content="{Binding Board}" />
             </TabItem>
-            <TabItem Header="🎚️ Playbacks">
+            <TabItem Header="{StaticResource Playbacks}">
                 <UserControl Content="{Binding Playbacks}" />
             </TabItem>
-            <TabItem Header="🎛️ Inputs">
+            <TabItem Header="{StaticResource Inputs}">
                 <UserControl Content="{Binding Inputs}" />
             </TabItem>
         </TabControl>
