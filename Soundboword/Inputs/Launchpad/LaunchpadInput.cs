@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using Soundboword.Services;
 using SoundFlow.Midi.Routing;
 using SoundFlow.Midi.Routing.Nodes;
@@ -25,8 +26,10 @@ public sealed class LaunchpadInput : IInputMethod
 
     private void OnNodeOnOnMessageOutput(MidiMessage message)
     {
-        if (message.Velocity != 0)
-            _shortcuts.Trigger(message.LaunchpadKey);
+        if (message.Velocity == 0)
+            return;
+        var key = message.LaunchpadKey;
+        Dispatcher.UIThread.Post(() => _shortcuts.Trigger(key));
     }
 
 }

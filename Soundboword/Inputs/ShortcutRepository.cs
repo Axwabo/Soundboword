@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Soundboword.Models;
 using Soundboword.Services;
-using Soundboword.ViewModels;
 
 namespace Soundboword.Inputs;
 
@@ -69,19 +68,19 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         }
     }
 
-    public IEnumerable<Shortcut> GetAll(SoundViewModel sound)
+    public IEnumerable<Shortcut> GetAll(ShortcutAction action)
     {
         foreach (var set in _shortcuts.Values)
         foreach (var shortcut in set)
-            if (shortcut.IsSound(sound))
+            if (shortcut.Action == action)
                 yield return shortcut;
     }
 
-    public void RemoveAll(SoundViewModel sound)
+    public void RemoveAll(ShortcutAction action)
     {
         foreach (var set in _shortcuts.Values)
-            set.RemoveWhere(e => e.IsSound(sound));
-        _map.Remove(sound.Id.String);
+            set.RemoveWhere(e => e.Action == action);
+        _map.Remove(action.Id);
     }
 
     public void Commit() => UserData.Save(File, _map);

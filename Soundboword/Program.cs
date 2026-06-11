@@ -29,6 +29,7 @@ internal static class Program
                     .AddSingleton<FilePicker>()
                     .AddSingleton<SoundList>()
                     .AddSingleton<SoundEditingContext>()
+                    .AddSingleton<ShortcutAssigner>()
                     .AddSingleton<ShortcutList>()
             })
             .UsePlatformDetect()

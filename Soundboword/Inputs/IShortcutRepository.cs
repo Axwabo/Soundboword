@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using Soundboword.Models;
-using Soundboword.ViewModels;
 
 namespace Soundboword.Inputs;
 
 public interface IShortcutRepository
 {
 
-    IEnumerable<Shortcut> GetAll(SoundViewModel sound);
+    IEnumerable<Shortcut> GetAll(ShortcutAction action);
 
-    void RemoveAll(SoundViewModel sound);
+    void RemoveAll(ShortcutAction action);
 
     void Commit();
 

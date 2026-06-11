@@ -11,17 +11,17 @@ namespace Soundboword.Services;
 public sealed class ShortcutList
 {
 
-    private readonly SoundList _sounds;
-
     private readonly List<IShortcutRepository> _repositories;
 
     private readonly HashSet<Shortcut> _all = [];
 
+    public ShortcutAssigner Assigner { get; }
+
     public event Action? ShortcutsChanged;
 
-    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, SoundList sounds, params IEnumerable<IShortcutRepository> repositories)
+    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, SoundList sounds, ShortcutAssigner assigner, params IEnumerable<IShortcutRepository> repositories)
     {
-        _sounds = sounds;
+        Assigner = assigner;
         _repositories = repositories.ToList();
         foreach (var sound in sounds.Sounds)
             _all.UnionWith(ForSound(sound));
@@ -35,13 +35,13 @@ public sealed class ShortcutList
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
     {
         foreach (var repository in _repositories)
-        foreach (var shortcut in repository.GetAll(sound))
+        foreach (var shortcut in repository.GetAll(new TriggerSoundAction(sound)))
             yield return shortcut;
     }
 
     public void Trigger<T>(T key) where T : notnull
     {
-        if (!_sounds.Editor.IsListeningForShortcuts)
+        if (!Assigner.IsAssigning)
         {
             foreach (var repository in _repositories)
                 if (repository is ShortcutRepository<T> implementation)
@@ -49,26 +49,24 @@ public sealed class ShortcutList
             return;
         }
 
+        Assigner.IsAssigning = false;
+        if (Assigner.Target is not { } action)
+            return;
         var changed = false;
         foreach (var repository in _repositories)
             if (repository is ShortcutRepository<T> implementation)
-            {
-                SoundViewModel sound = _sounds.Editor.Model;
-                changed |= implementation.Assign(key, new TriggerSoundAction(sound), _all);
-            }
-
-        _sounds.Editor.CancelShortcutAddition();
+                changed |= implementation.Assign(key, action, _all);
         if (changed)
             ShortcutsChanged?.Invoke();
     }
 
-    public void Remove(SoundViewModel sound)
+    public void Remove(ShortcutAction action)
     {
-        if (_sounds.Editor.IsListeningForShortcuts && _sounds.Editor.Model == sound)
-            _sounds.Editor.CancelShortcutAddition();
+        if (Assigner.Target == action)
+            Assigner.IsAssigning = false;
         foreach (var repository in _repositories)
-            repository.RemoveAll(sound);
-        var removed = _all.RemoveWhere(e => e.IsSound(sound));
+            repository.RemoveAll(action);
+        var removed = _all.RemoveWhere(e => e.Action == action);
         if (removed != 0)
             ShortcutsChanged?.Invoke();
     }

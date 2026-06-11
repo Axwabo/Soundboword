@@ -1,13 +1,17 @@
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Soundboword.Models;
+using Soundboword.Services;
 using Soundboword.ViewModels;
 
 namespace Soundboword;
 
 public sealed partial class SoundEditingContext : ObservableObject
 {
+
+    private readonly ShortcutAssigner? _assigner;
+
+    public SoundEditingContext(ShortcutAssigner? assigner = null) => _assigner = assigner;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(CanRelink))]
@@ -45,23 +49,17 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     public bool CanRelink => Model?.PlaybackState is SoundState.Stopped or SoundState.Error;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ButtonText))]
-    [MemberNotNullWhen(true, nameof(Model))]
-    public partial bool IsListeningForShortcuts { get; set; }
-
-    public string ButtonText => IsListeningForShortcuts ? "Listening..." : "Add Shortcut";
-
     public void Open(SoundViewModel model)
     {
         Close();
+        _assigner?.Target = new TriggerSoundAction(model);
         Model = model;
         Model.PropertyChanged += ModelOnPropertyChanged;
     }
 
     public void Close()
     {
-        IsListeningForShortcuts = false;
+        _assigner?.Cancel();
         Model?.PropertyChanged -= ModelOnPropertyChanged;
         Model = null;
     }
@@ -72,7 +70,5 @@ public sealed partial class SoundEditingContext : ObservableObject
         if (e.PropertyName == nameof(SoundViewModel.PlaybackState))
             OnPropertyChanged(nameof(CanRelink));
     }
-
-    public void CancelShortcutAddition() => IsListeningForShortcuts = false;
 
 }

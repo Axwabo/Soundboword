@@ -18,8 +18,9 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private readonly TopLevel? _topLevel;
     private readonly FilePicker _filePicker;
     private readonly IFileManagerOpener? _opener;
-    private readonly ShortcutList _shortcuts;
     private readonly AudioManager _audioManager;
+
+    public ShortcutList Shortcuts { get; }
 
     public SoundEditingContext Context { get; }
 
@@ -30,19 +31,19 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Context = new SoundEditingContext();
         _filePicker = new FilePicker();
         _audioManager = new AudioManager();
-        _shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context, _audioManager));
+        Shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context, _audioManager), new ShortcutAssigner());
     }
 
-    public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, ShortcutList shortcuts, AudioManager audioManager)
+    public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
     {
         _topLevel = topLevel;
         _filePicker = filePicker;
         _opener = opener;
-        _shortcuts = shortcuts;
         _audioManager = audioManager;
+        Shortcuts = shortcuts;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
-        _shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
+        Shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
 
     [ObservableProperty]
@@ -101,14 +102,14 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         Context.Close();
         model.List.Delete(model);
-        _shortcuts.Remove(model);
+        Shortcuts.Remove(new TriggerSoundAction(model));
     }
 
     [RelayCommand]
     private void RemoveShortcuts()
     {
         if (Context.Model is { } model)
-            _shortcuts.Remove(model);
+            Shortcuts.Remove(new TriggerSoundAction(model));
     }
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -127,7 +128,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Active.Clear();
         if (Context.Model is not { } model)
             return;
-        foreach (var shortcut in _shortcuts.ForSound(model))
+        foreach (var shortcut in Shortcuts.ForSound(model))
             Active.Add(shortcut);
     }
 

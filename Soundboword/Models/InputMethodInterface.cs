@@ -22,7 +22,7 @@ public sealed partial class InputMethodInterface : ObservableObject
     [ObservableProperty]
     public partial bool Activated { get; set; }
 
-    public InputMethodInterface() : this(new LaunchpadInputFactory(new ShortcutList(null, new SoundList()), new AudioManager()))
+    public InputMethodInterface() : this(new LaunchpadInputFactory(new ShortcutList(null, new SoundList(), new ShortcutAssigner()), new AudioManager()))
     {
     }
 

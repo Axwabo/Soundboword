@@ -41,9 +41,7 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ToggleButton Content="{Binding Context.ButtonText}"
-                      IsChecked="{Binding Context.IsListeningForShortcuts}"
-                      HorizontalAlignment="Stretch" />
+        <ToggleButton IsChecked="{Binding Shortcuts.Assigner.IsAssigning}" HorizontalAlignment="Stretch">Add Shortcut</ToggleButton>
         <Button Command="{Binding RemoveShortcutsCommand}" HorizontalAlignment="Stretch">Remove Shortcuts</Button>
         <ItemsControl ItemsSource="{Binding Active}">
             <ItemsControl.ItemsPanel>
