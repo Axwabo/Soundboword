@@ -42,7 +42,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Inputs = inputs;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
-        _ = TestDBus().ConfigureAwait(false);
+        Task.Run(TestDBus);
     }
 
     // TODO: upgrade Tmds.DBus when a new Avalonia version is released (new version included in Avalonia master 2 days ago)
@@ -54,11 +54,11 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             // return;
             using var connection = new DBusConnection(DBusAddress.Session!);
             await connection.ConnectAsync();
+            const string path = "/org/freedesktop/portal/desktop";
             var sender = (connection.UniqueName ?? "").TrimStart(':').Replace(".", "_");
-            var handleToken = "Soundboword_" + Guid.CreateVersion7();
-            var sessionHandleToken = "Soundboword_" + Guid.CreateVersion7();
+            var handleToken = $"${path}/request/{sender}/Soundboword_{Guid.CreateVersion7()}";
+            var sessionHandleToken = $"${path}/request/{sender}/Soundboword_{Guid.CreateVersion7()}";
             var token = "Soundboword_" + Stopwatch.GetTimestamp();
-            string path = $"/org/freedesktop/portal/desktop";
             var shortcutsProxy = new OrgFreedesktopPortalGlobalShortcutsProxy(connection.AsConnection(), "org.freedesktop.portal.Desktop", path);
             var session = await shortcutsProxy.CreateSessionAsync(new Dictionary<string, VariantValue>
             {
