@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="DBusXml/GlobalShortcuts.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
+        <AdditionalFiles Include="DBusXml/*.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
     </ItemGroup>
 
 </Project>
