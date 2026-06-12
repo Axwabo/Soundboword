@@ -1,11 +1,14 @@
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 
 public sealed partial class DevicesViewModel : ViewModelBase
 {
+
+    private bool _isRefreshing;
 
     public SoundFlowDeviceManager DeviceManager { get; }
 
@@ -14,7 +17,7 @@ public sealed partial class DevicesViewModel : ViewModelBase
     public DevicesViewModel(SoundFlowDeviceManager deviceManager)
     {
         DeviceManager = deviceManager;
-        SelectedDeviceIndex = deviceManager.Devices.IndexOf(deviceManager.SelectedDevice);
+        UpdateSelected();
     }
 
     [ObservableProperty]
@@ -23,8 +26,29 @@ public sealed partial class DevicesViewModel : ViewModelBase
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.PropertyName == nameof(SelectedDeviceIndex))
+        if (!_isRefreshing && e.PropertyName == nameof(SelectedDeviceIndex))
             DeviceManager.SwitchDevice(DeviceManager.Devices[SelectedDeviceIndex]);
+    }
+
+    [RelayCommand]
+    private void Refresh()
+    {
+        _isRefreshing = true;
+        DeviceManager.RefreshAudioDevices();
+        UpdateSelected();
+        _isRefreshing = false;
+    }
+
+    private void UpdateSelected()
+    {
+        var deviceName = DeviceManager.SelectedDevice.Name;
+        for (var i = 0; i < DeviceManager.Devices.Count; i++)
+        {
+            if (DeviceManager.Devices[i].Name != deviceName)
+                continue;
+            SelectedDeviceIndex = i;
+            break;
+        }
     }
 
 }

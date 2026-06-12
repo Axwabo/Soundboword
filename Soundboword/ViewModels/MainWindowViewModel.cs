@@ -46,7 +46,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Inputs = inputs;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
-        Task.Run(TestDBus);
+        // Task.Run(TestDBus);
     }
 
     // TODO: upgrade Tmds.DBus when a new Avalonia version is released (new version included in Avalonia master 2 days ago)
