@@ -62,6 +62,13 @@ public sealed partial class InputsViewModel : ViewModelBase
                 Unavailable.Add(method);
     }
 
+    [RelayCommand]
+    private void RemoveShortcut()
+    {
+        if (Context.Interface != null)
+            Context.List.Remove(StopAllSoundsAction.Instance);
+    }
+
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(InputEditingContext.Interface))
