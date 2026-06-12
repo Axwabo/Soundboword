@@ -47,12 +47,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(MaxVolume))]
-    public partial bool RaiseMaximumVolume { get; set; }
-
-    public float MaxVolume => RaiseMaximumVolume ? 2 : 1;
-
-    [ObservableProperty]
     public partial bool IsNotFound { get; private set; }
 
     [RelayCommand]
@@ -118,7 +112,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             return;
         UpdateActiveShortcuts();
         IsNotFound = Context.Model is { } model && !File.Exists(model.Path);
-        RaiseMaximumVolume |= Context.Volume > 1;
     }
 
     private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);

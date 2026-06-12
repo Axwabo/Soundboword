@@ -5,7 +5,7 @@
              xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
              xmlns:models="clr-namespace:Soundboword.Models"
              xmlns:converters="clr-namespace:Soundboword.Converters"
-             mc:Ignorable="d" d:DesignWidth="220" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
              x:Class="Soundboword.Views.EditSoundView"
              x:DataType="viewModels:EditSoundViewModel"
              Name="Root">
@@ -21,9 +21,8 @@
     </UserControl.Styles>
     <StackPanel Orientation="Vertical" Spacing="3">
         <TextBox Text="{Binding Context.Name}" />
-        <ToggleSwitch IsChecked="{Binding RaiseMaximumVolume}" OnContent="Raise Maximum Volume" OffContent="Raise Maximum Volume" />
         <Label Content="{Binding Context.Volume, StringFormat=Volume: \{0:P0\}}" />
-        <Slider Margin="0" Padding="0" Minimum="0" Maximum="{Binding MaxVolume}" SmallChange="0.01" LargeChange="0.1" Value="{Binding Context.Volume}" />
+        <Slider Margin="0" Padding="0" Minimum="0" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Value="{Binding Context.Volume}" />
         <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*" RowSpacing="3" ColumnSpacing="3">
             <Button Classes="icon" Command="{Binding TogglePauseCommand}">⏯️</Button>
             <Button Grid.Row="0" Grid.Column="1" Classes="icon" Command="{Binding StopCommand}">🟦</Button>
