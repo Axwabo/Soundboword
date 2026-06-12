@@ -28,20 +28,24 @@ public sealed class SoundFlowDeviceManager : IDisposable
     };
 
     private readonly MiniAudioEngine _engine;
-    private readonly Mixer _mixer;
     private AudioPlaybackDevice? _playback;
 
     public SoundFlowDeviceManager(IClassicDesktopStyleApplicationLifetime? lifetime = null)
     {
+        if (lifetime == null)
+        {
+            _engine = null!;
+            return;
+        }
+
         _engine = new MiniAudioEngine();
         _engine.UsePortMidi();
         _engine.UpdateAudioDevicesInfo();
-        _mixer = new Mixer(_engine, Format);
         foreach (var device in _engine.PlaybackDevices)
             Devices.Add(device);
         SelectedDevice = _engine.PlaybackDevices.First(e => e.IsDefault);
         SwitchDevice(SelectedDevice);
-        lifetime?.Exit += (_, _) => Dispose();
+        lifetime.Exit += (_, _) => Dispose();
     }
 
     public DeviceInfo SelectedDevice { get; private set; }
@@ -52,17 +56,21 @@ public sealed class SoundFlowDeviceManager : IDisposable
 
     public void Dispose()
     {
-        _mixer.Dispose();
+        StopAll();
         _playback?.Dispose();
         _engine.Dispose();
     }
 
     public void SwitchDevice(DeviceInfo info)
     {
-        _playback?.MasterMixer.RemoveComponent(_mixer);
-        _playback?.Dispose();
-        _playback = _engine.InitializePlaybackDevice(info, Format);
-        _playback.MasterMixer.AddComponent(_mixer);
+        if (_playback != null)
+            _playback = _engine.SwitchDevice(_playback, info);
+        else
+        {
+            _playback = _engine.InitializePlaybackDevice(info, Format);
+            _playback.Start();
+        }
+
         SelectedDevice = info;
     }
 

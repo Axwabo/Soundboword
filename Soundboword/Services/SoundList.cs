@@ -36,7 +36,7 @@ public sealed partial class SoundList
 
     public SoundList()
     {
-        AudioManager = new AudioManager();
+        AudioManager = new AudioManager(new SoundFlowDeviceManager());
         _filePicker = new FilePicker();
         Editor = new SoundEditingContext();
     }

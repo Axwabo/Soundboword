@@ -3,18 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Models;
+using Soundboword.Services;
 using Soundboword.ViewModels;
-using SoundFlow.Abstracts.Devices;
-using SoundFlow.Backends.MiniAudio;
-using SoundFlow.Components;
 using SoundFlow.Enums;
-using SoundFlow.Midi.PortMidi;
-using SoundFlow.Midi.Routing;
-using SoundFlow.Midi.Structs;
-using SoundFlow.Providers;
 using SoundFlow.Structs;
 
 namespace Soundboword;
@@ -23,6 +15,8 @@ namespace Soundboword;
 public sealed class AudioManager
 {
 
+    private readonly SoundFlowDeviceManager _deviceManager;
+
     private static readonly AudioFormat Format = new()
     {
         Format = SampleFormat.F32,
@@ -30,53 +24,17 @@ public sealed class AudioManager
         Channels = 2
     };
 
-    private readonly MiniAudioEngine? _engine;
-    private readonly AudioPlaybackDevice? _playback;
-
     private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
 
-    public AudioManager(IClassicDesktopStyleApplicationLifetime? lifetime = null)
+    public AudioManager(SoundFlowDeviceManager deviceManager)
     {
-        if (lifetime == null)
-            return;
-        _engine = new MiniAudioEngine();
-        _engine.UsePortMidi();
-        var defaultDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.IsDefault);
-        _playback = _engine.InitializePlaybackDevice(defaultDevice, Format);
-        _playback.Start();
-        lifetime.Exit += (_, _) => Destroy();
+        _deviceManager = deviceManager;
     }
 
     public ObservableCollection<SoundPlayback> AllSounds { get; } = [];
 
-    public MidiManager? Midi => _engine?.MidiManager;
-
-    public MidiDeviceInfo[] RefreshMidiInputs()
-    {
-        if (_engine == null)
-            return [];
-        _engine.UpdateMidiDevicesInfo(); // TODO: portmidi does not support hotswap
-        return _engine.MidiInputDevices;
-    }
-
-    private void Destroy()
-    {
-        _engine?.Dispose();
-        _playback?.Dispose();
-        foreach (var list in _sounds.Values)
-        foreach (var sound in list)
-        {
-            sound.Player.Dispose();
-            sound.Provider.Dispose();
-        }
-
-        _sounds.Clear();
-    }
-
     public void Trigger(SoundViewModel sound)
     {
-        if (_engine == null || _playback == null)
-            return;
         switch (sound.Mode)
         {
             case TriggerMode.Duplicate:
@@ -127,9 +85,7 @@ public sealed class AudioManager
     private void StopInternal(SoundPlayback played)
     {
         AllSounds.Remove(played);
-        played.Player.Stop();
-        played.Provider.Dispose();
-        _playback!.MasterMixer.RemoveComponent(played.Player);
+        _deviceManager.Stop(played);
     }
 
     private void PlayNew(SoundViewModel sound)
@@ -146,32 +102,20 @@ public sealed class AudioManager
             sound.PropertyChanged += SoundOnPropertyChanged;
         }
 
-        var provider = new StreamDataProvider(_engine!, Format, File.OpenRead(sound.Path));
-        var player = new SoundPlayer(_engine!, Format, provider);
-        _playback!.MasterMixer.AddComponent(player);
-        var soundPlayback = new SoundPlayback(provider, player, sound.Name);
+        var soundPlayback = _deviceManager.InitializePlayback(sound);
         list.Add(soundPlayback);
         AllSounds.Add(soundPlayback);
-        player.Volume = sound.Volume;
-        player.IsLooping = sound.Loop;
-        player.PlaybackEnded += RemoveSoundOnEnd;
+        soundPlayback.Player.PlaybackEnded += RemoveSoundOnEnd;
         if (sound.PlaybackState == SoundState.Paused)
             return;
-        player.Play();
+        soundPlayback.Player.Play();
         sound.UpdatePlaybackState(SoundState.Playing);
     }
 
     public void StopAll()
     {
-        if (_playback == null)
-            return;
         AllSounds.Clear();
-        foreach (var component in _playback.MasterMixer.Components.ToList())
-        {
-            component.Dispose();
-            _playback.MasterMixer.RemoveComponent(component);
-        }
-
+        _deviceManager.StopAll();
         foreach (var sound in _sounds.Keys)
         {
             sound.PropertyChanged -= SoundOnPropertyChanged;
@@ -190,6 +134,7 @@ public sealed class AudioManager
             if (index == -1)
                 continue;
             var playback = list[index];
+            _deviceManager.Stop(playback);
             list.RemoveAt(index);
             MarkRemoved(playback, list, sound);
             break;

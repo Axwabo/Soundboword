@@ -30,7 +30,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         Context = new SoundEditingContext();
         _filePicker = new FilePicker();
-        _audioManager = new AudioManager();
+        _audioManager = new AudioManager(new SoundFlowDeviceManager());
         Shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context, _audioManager), new ShortcutAssigner());
     }
 
