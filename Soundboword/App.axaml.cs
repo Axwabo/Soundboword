@@ -19,6 +19,7 @@ public sealed class App : Application
     {
         Services.AddSingleton<MainWindowViewModel>()
             .AddSingleton<BoardViewModel>()
+            .AddSingleton<DevicesViewModel>()
             .AddSingleton<PlaybacksViewModel>()
             .AddSingleton<InputsViewModel>()
             .AddSingleton<EditSoundViewModel>();

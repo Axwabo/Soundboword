@@ -19,6 +19,9 @@
             <TabItem Header="🔊 Sounds">
                 <UserControl Content="{Binding Board}" />
             </TabItem>
+            <TabItem Header="🎧 Devices">
+                <UserControl Content="{Binding Devices}" />
+            </TabItem>
             <TabItem Header="🎚️  Playbacks">
                 <UserControl Content="{Binding Playbacks}" />
             </TabItem>

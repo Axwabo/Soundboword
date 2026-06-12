@@ -22,6 +22,7 @@ internal static class Program
         => AppBuilder.Configure(() => new App
             {
                 Services = new ServiceCollection()
+                    .AddSingleton<SoundFlowDeviceManager>()
                     .AddSingleton<AudioManager>()
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
                     .AddSingleton<IShortcutRepository, LaunchpadShortcutRepository>()

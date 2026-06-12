@@ -23,11 +23,6 @@ namespace Soundboword;
 public sealed class AudioManager
 {
 
-    private readonly MiniAudioEngine? _engine;
-    private readonly AudioPlaybackDevice? _playback;
-
-    private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
-
     private static readonly AudioFormat Format = new()
     {
         Format = SampleFormat.F32,
@@ -35,7 +30,10 @@ public sealed class AudioManager
         Channels = 2
     };
 
-    public ObservableCollection<SoundPlayback> AllSounds { get; } = [];
+    private readonly MiniAudioEngine? _engine;
+    private readonly AudioPlaybackDevice? _playback;
+
+    private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
 
     public AudioManager(IClassicDesktopStyleApplicationLifetime? lifetime = null)
     {
@@ -49,6 +47,10 @@ public sealed class AudioManager
         lifetime.Exit += (_, _) => Destroy();
     }
 
+    public ObservableCollection<SoundPlayback> AllSounds { get; } = [];
+
+    public MidiManager? Midi => _engine?.MidiManager;
+
     public MidiDeviceInfo[] RefreshMidiInputs()
     {
         if (_engine == null)
@@ -56,8 +58,6 @@ public sealed class AudioManager
         _engine.UpdateMidiDevicesInfo(); // TODO: portmidi does not support hotswap
         return _engine.MidiInputDevices;
     }
-
-    public MidiManager? Midi => _engine?.MidiManager;
 
     private void Destroy()
     {
@@ -167,7 +167,11 @@ public sealed class AudioManager
             return;
         AllSounds.Clear();
         foreach (var component in _playback.MasterMixer.Components.ToList())
+        {
+            component.Dispose();
             _playback.MasterMixer.RemoveComponent(component);
+        }
+
         foreach (var sound in _sounds.Keys)
         {
             sound.PropertyChanged -= SoundOnPropertyChanged;

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Views.DevicesView"
+             x:DataType="viewModels:DevicesViewModel">
+    <Design.DataContext>
+        <viewModels:DevicesViewModel />
+    </Design.DataContext>
+    <ListBox ItemsSource="{Binding DeviceManager.Devices}" SelectionMode="AlwaysSelected,Single" Background="Transparent" SelectedIndex="{Binding SelectedDeviceIndex}">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <RadioButton Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+</UserControl>

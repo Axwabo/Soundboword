@@ -15,6 +15,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public BoardViewModel Board { get; }
 
+    public DevicesViewModel Devices { get; }
+
     public PlaybacksViewModel Playbacks { get; }
 
     public InputsViewModel Inputs { get; }
@@ -29,20 +31,22 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         Board = new BoardViewModel();
+        Devices = new DevicesViewModel(new SoundFlowDeviceManager());
         Playbacks = new PlaybacksViewModel();
         Inputs = new InputsViewModel();
         FilePicker = new FilePicker();
         ShortcutAssigner = new ShortcutAssigner();
     }
 
-    public MainWindowViewModel(BoardViewModel board, PlaybacksViewModel playbacks, InputsViewModel inputs, FilePicker filePicker, ShortcutAssigner shortcutAssigner)
+    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, FilePicker filePicker, ShortcutAssigner shortcutAssigner)
     {
         Board = board;
+        Devices = devices;
         Playbacks = playbacks;
         Inputs = inputs;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
-        Task.Run(TestDBus);
+        // Task.Run(TestDBus);
     }
 
     // TODO: upgrade Tmds.DBus when a new Avalonia version is released (new version included in Avalonia master 2 days ago)
