@@ -20,6 +20,8 @@ namespace Soundboword.Services;
 public sealed class SoundFlowDeviceManager : IDisposable
 {
 
+    private static readonly string FilePath = Path.Combine(UserData.Folder, "output.txt");
+
     private static readonly AudioFormat Format = new()
     {
         Format = SampleFormat.F32,
@@ -43,9 +45,14 @@ public sealed class SoundFlowDeviceManager : IDisposable
         _engine.UpdateAudioDevicesInfo();
         foreach (var device in _engine.PlaybackDevices)
             Devices.Add(device);
-        SelectedDevice = _engine.PlaybackDevices.First(e => e.IsDefault);
-        SwitchDevice(SelectedDevice);
-        lifetime.Exit += (_, _) => Dispose();
+        var preferredDeviceName = UserData.Load(FilePath);
+        var preferredDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.Name.AsSpan().Trim().Equals(preferredDeviceName.AsSpan().Trim(), StringComparison.OrdinalIgnoreCase));
+        SwitchDevice(preferredDevice != default ? preferredDevice : _engine.PlaybackDevices.First(e => e.IsDefault));
+        lifetime.Exit += (_, _) =>
+        {
+            UserData.Save(FilePath, SelectedDevice.Name);
+            Dispose();
+        };
     }
 
     public DeviceInfo SelectedDevice { get; private set; }

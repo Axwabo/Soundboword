@@ -31,6 +31,34 @@ public static class UserData
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
+    public static string? Load(string path)
+    {
+        EnsureDirectory();
+        if (!File.Exists(path))
+            return null;
+        try
+        {
+            return File.ReadAllText(path);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public static void Save(string path, string content)
+    {
+        EnsureDirectory();
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+
     public static T Load<T>(string path, Func<T> fallback) where T : notnull
     {
         EnsureDirectory();
