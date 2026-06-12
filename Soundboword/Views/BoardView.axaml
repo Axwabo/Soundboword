@@ -11,7 +11,7 @@
     </Design.DataContext>
     <Grid ColumnDefinitions="*,306" RowDefinitions="Auto,*" ColumnSpacing="3" RowSpacing="5">
         <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
-            <Button Command="{Binding List.AddCommand}">Add Sound</Button>
+            <Button Command="{Binding List.AddCommand}">Add Sounds</Button>
             <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
         </StackPanel>
         <Panel Grid.Row="1" Grid.Column="0">

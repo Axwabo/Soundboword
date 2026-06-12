@@ -13,26 +13,7 @@ namespace Soundboword.Services;
 public sealed partial class SoundList
 {
 
-    public static FilePickerOpenOptions Options { get; } = new()
-    {
-        Title = "Pick a sound",
-        FileTypeFilter =
-        [
-            new FilePickerFileType("Audio files")
-            {
-                Patterns = ["*.mp3", "*.wav"],
-                MimeTypes = ["audio/mpeg", "audio/wav"]
-            }
-        ]
-    };
-
     private readonly FilePicker _filePicker;
-
-    public AudioManager AudioManager { get; }
-
-    public SoundEditingContext Editor { get; }
-
-    public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
     public SoundList()
     {
@@ -66,19 +47,39 @@ public sealed partial class SoundList
         lifetime?.Exit += (_, _) => UserData.SaveSounds(Sounds);
     }
 
+    public static FilePickerOpenOptions Options { get; } = new()
+    {
+        Title = "Pick a sound",
+        FileTypeFilter =
+        [
+            new FilePickerFileType("Audio files (mp3, wav)")
+            {
+                Patterns = ["*.mp3", "*.wav"],
+                MimeTypes = ["audio/mpeg", "audio/wav"]
+            }
+        ]
+    };
+
+    public AudioManager AudioManager { get; }
+
+    public SoundEditingContext Editor { get; }
+
+    public ObservableCollection<SoundViewModel> Sounds { get; } = [];
+
     [RelayCommand]
     private async Task Add()
     {
-        var path = await _filePicker.PickOne(Options);
-        if (path == null)
+        var list = await _filePicker.PickMany(Options);
+        if (list.Count == 0)
             return;
-        Sounds.Add(new SoundViewModel
-        {
-            Id = Guid.NewGuid(),
-            Path = path,
-            Name = Path.GetFileNameWithoutExtension(path),
-            List = this
-        });
+        foreach (var path in list)
+            Sounds.Add(new SoundViewModel
+            {
+                Id = Guid.NewGuid(),
+                Path = path,
+                Name = Path.GetFileNameWithoutExtension(path),
+                List = this
+            });
         UserData.SaveSounds(Sounds);
     }
 
