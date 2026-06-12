@@ -28,7 +28,14 @@ public sealed partial class SoundViewModel : ViewModelBase
     public partial float Volume { get; set; } = 1;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AnyPlaybacks), nameof(CanTrigger), nameof(CanRelink))]
     public partial SoundState PlaybackState { get; private set; }
+
+    public bool AnyPlaybacks => PlaybackState is SoundState.Playing or SoundState.Paused;
+
+    public bool CanTrigger => PlaybackState != SoundState.Error;
+
+    public bool CanRelink => PlaybackState is SoundState.Stopped or SoundState.Error;
 
     [RelayCommand]
     private void Trigger() => List.AudioManager.Trigger(this);

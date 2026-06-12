@@ -47,7 +47,7 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
-    public bool CanRelink => Model?.PlaybackState is SoundState.Stopped or SoundState.Error;
+    public bool CanRelink => Model?.CanRelink ?? false;
 
     public void Open(SoundViewModel model)
     {
@@ -64,11 +64,6 @@ public sealed partial class SoundEditingContext : ObservableObject
         Model = null;
     }
 
-    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        OnPropertyChanged(e.PropertyName);
-        if (e.PropertyName == nameof(SoundViewModel.PlaybackState))
-            OnPropertyChanged(nameof(CanRelink));
-    }
+    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
 }

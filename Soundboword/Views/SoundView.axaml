@@ -17,7 +17,7 @@
     <Border Padding="3" Background="{Binding PlaybackState, Converter={StaticResource SoundState}}">
         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="45,45,45" RowSpacing="2" ColumnSpacing="2">
             <TextBlock TextAlignment="Center" Grid.ColumnSpan="3" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
-            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="60" Command="{Binding TriggerCommand}">
+            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="60" Command="{Binding TriggerCommand}" IsEnabled="{Binding CanTrigger}">
                 🔊
                 <ToolTip.Tip>
                     <MultiBinding StringFormat="Trigger ({0}) {1}">
@@ -26,7 +26,7 @@
                     </MultiBinding>
                 </ToolTip.Tip>
             </Button>
-            <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding PlaybackState}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
+            <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding AnyPlaybacks}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
             <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="{Binding Loop}" ToolTip.Tip="{Binding Loop, StringFormat=Loop: \{0\}}">🔁️</ToggleButton>
             <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure" Command="{Binding ConfigureCommand}">⚙️️</Button>
         </Grid>
