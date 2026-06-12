@@ -24,6 +24,7 @@ internal static class Program
                 Services = new ServiceCollection()
                     .AddSingleton<SoundFlowDeviceManager>()
                     .AddSingleton<AudioManager>()
+                    .AddSingleton<InputEditingContext>()
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
                     .AddSingleton<IShortcutRepository, LaunchpadShortcutRepository>()
                     .AddSingleton<IFileManagerOpener, DBusFileManagerOpener>()

@@ -10,9 +10,25 @@ namespace Soundboword.Models;
 public sealed partial class InputMethodInterface : ObservableObject
 {
 
+    private readonly InputEditingContext _context;
+
     private readonly IInputFactory _inputFactory;
 
     private IInputMethod? _method;
+
+    public InputMethodInterface()
+    {
+        var list = new ShortcutList(null, new ShortcutAssigner());
+        _inputFactory = new LaunchpadInputFactory(list, new SoundFlowDeviceManager());
+        _context = new InputEditingContext(list);
+    }
+
+    public InputMethodInterface(IInputFactory inputFactory, InputEditingContext context)
+    {
+        _inputFactory = inputFactory;
+        _context = context;
+        Refresh();
+    }
 
     public string Name => _inputFactory.Name;
 
@@ -21,16 +37,6 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     [ObservableProperty]
     public partial bool Activated { get; set; }
-
-    public InputMethodInterface() : this(new LaunchpadInputFactory(new ShortcutList(null, new SoundList(), new ShortcutAssigner()), new SoundFlowDeviceManager()))
-    {
-    }
-
-    public InputMethodInterface(IInputFactory inputFactory)
-    {
-        _inputFactory = inputFactory;
-        Refresh();
-    }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -56,6 +62,9 @@ public sealed partial class InputMethodInterface : ObservableObject
     }
 
     [RelayCommand]
-    public void Refresh() => IsAvailable = _inputFactory.IsAvailable;
+    private void Refresh() => IsAvailable = _inputFactory.IsAvailable;
+
+    [RelayCommand]
+    private void Configure() => _context.Open(this);
 
 }

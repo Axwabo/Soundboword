@@ -11,9 +11,9 @@ public sealed class LaunchpadInput : IInputMethod
 
     public const string Name = "Launchpad Mini";
 
-    private readonly ShortcutList _shortcuts;
-
     private readonly MidiInputNode _node;
+
+    private readonly ShortcutList _shortcuts;
 
     public LaunchpadInput(MidiManager midi, MidiDeviceInfo input, ShortcutList shortcuts)
     {
@@ -29,7 +29,7 @@ public sealed class LaunchpadInput : IInputMethod
         if (message.Velocity == 0)
             return;
         var key = message.LaunchpadKey;
-        Dispatcher.UIThread.Post(() => _shortcuts.Trigger(key));
+        Dispatcher.UIThread.Post(() => _shortcuts.Trigger(key, Name));
     }
 
 }

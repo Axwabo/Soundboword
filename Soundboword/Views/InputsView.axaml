@@ -24,7 +24,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Styles>
-    <Grid ColumnDefinitions="*,10,*" RowDefinitions="Auto,Auto,*">
+    <Grid ColumnDefinitions="*,Auto,*,150" RowDefinitions="Auto,Auto,*" RowSpacing="5" ColumnSpacing="5">
         <StackPanel Orientation="Horizontal" Spacing="5">
             <Label>Available Input Devices</Label>
             <Button Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh Devices">🔄</Button>
@@ -34,10 +34,26 @@
         <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Available}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="models:InputMethodInterface">
-                    <ToggleSwitch IsChecked="{Binding Activated}" OnContent="{Binding Name}" OffContent="{Binding Name}" />
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <ToggleSwitch IsChecked="{Binding Activated}" OnContent="{Binding Name}" OffContent="{Binding Name}" />
+                        <Button Command="{Binding ConfigureCommand}">⚙️</Button>
+                    </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <ItemsControl Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Unavailable}" DisplayMemberBinding="{Binding Name}" Foreground="Gray" />
+        <Panel Grid.Row="0" Grid.Column="3" Grid.RowSpan="3" Background="#111">
+            <TextBlock IsVisible="{Binding Context.Interface, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="#ccc">
+                Configure a device
+            </TextBlock>
+            <StackPanel Spacing="5" IsVisible="{Binding !!Context.Interface}" Margin="3">
+                <Label Content="{Binding Context.Name}" FontWeight="Bold" />
+                <Label FontWeight="Normal">Stop All Sounds</Label>
+                <ToggleButton IsChecked="{Binding Assigner.IsAssigning}">Add Shortcut</ToggleButton>
+                <Border Padding="3" Background="#22ffaa00" IsVisible="{Binding !!StopAllShortcut}">
+                    <Label Content="{Binding StopAllShortcut}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
+                </Border>
+            </StackPanel>
+        </Panel>
     </Grid>
 </UserControl>

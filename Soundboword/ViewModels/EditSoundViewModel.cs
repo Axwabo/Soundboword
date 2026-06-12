@@ -15,23 +15,18 @@ namespace Soundboword.ViewModels;
 public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
-    private readonly TopLevel? _topLevel;
+    private readonly AudioManager _audioManager;
     private readonly FilePicker _filePicker;
     private readonly IFileManagerOpener? _opener;
-    private readonly AudioManager _audioManager;
 
-    public ShortcutList Shortcuts { get; }
-
-    public SoundEditingContext Context { get; }
-
-    public ObservableCollection<Shortcut> Active { get; } = [];
+    private readonly TopLevel? _topLevel;
 
     public EditSoundViewModel()
     {
         Context = new SoundEditingContext();
         _filePicker = new FilePicker();
         _audioManager = new AudioManager(new SoundFlowDeviceManager());
-        Shortcuts = new ShortcutList(null, new SoundList(_filePicker, null, Context, _audioManager), new ShortcutAssigner());
+        Shortcuts = new ShortcutList(null, new ShortcutAssigner());
     }
 
     public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
@@ -45,6 +40,12 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Context.PropertyChanged += ContextOnPropertyChanged;
         Shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
+
+    public ShortcutList Shortcuts { get; }
+
+    public SoundEditingContext Context { get; }
+
+    public ObservableCollection<Shortcut> Active { get; } = [];
 
     [ObservableProperty]
     public partial bool IsNotFound { get; private set; }

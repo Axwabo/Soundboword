@@ -11,10 +11,13 @@ public sealed partial class ShortcutAssigner : ObservableObject
 
     public ShortcutAction? Target { get; set; }
 
+    public string? InputMethodFilter { get; set; }
+
     public void Close()
     {
         IsAssigning = false;
         Target = null;
+        InputMethodFilter = null;
     }
 
 }

@@ -11,26 +11,26 @@ namespace Soundboword.Services;
 public sealed class ShortcutList
 {
 
-    private readonly List<IShortcutRepository> _repositories;
-
     private readonly HashSet<Shortcut> _all = [];
 
-    public ShortcutAssigner Assigner { get; }
+    private readonly List<IShortcutRepository> _repositories;
 
-    public event Action? ShortcutsChanged;
-
-    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, SoundList sounds, ShortcutAssigner assigner, params IEnumerable<IShortcutRepository> repositories)
+    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, ShortcutAssigner assigner, params IEnumerable<IShortcutRepository> repositories)
     {
         Assigner = assigner;
         _repositories = repositories.ToList();
-        foreach (var sound in sounds.Sounds)
-            _all.UnionWith(ForSound(sound));
+        foreach (var repository in _repositories)
+            _all.UnionWith(repository.All);
         lifetime?.Exit += (_, _) =>
         {
             foreach (var repository in _repositories)
                 repository.Commit();
         };
     }
+
+    public ShortcutAssigner Assigner { get; }
+
+    public event Action? ShortcutsChanged;
 
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
     {
@@ -39,7 +39,15 @@ public sealed class ShortcutList
             yield return shortcut;
     }
 
-    public void Trigger<T>(T key) where T : notnull
+    public Shortcut? ForStopAll(string inputMethod)
+    {
+        foreach (var repository in _repositories)
+            if (repository.InputMethodName == inputMethod)
+                return repository.GetAll(StopAllSoundsAction.Instance).FirstOrDefault();
+        return null;
+    }
+
+    public void Trigger<T>(T key, string inputMethod) where T : notnull
     {
         if (!Assigner.IsAssigning)
         {
@@ -49,6 +57,8 @@ public sealed class ShortcutList
             return;
         }
 
+        if (Assigner.InputMethodFilter is { } filter && filter != inputMethod)
+            return;
         Assigner.IsAssigning = false;
         if (Assigner.Target is not { } action)
             return;
