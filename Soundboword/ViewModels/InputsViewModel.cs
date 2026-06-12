@@ -12,7 +12,7 @@ using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 
-public sealed partial class InputsViewModel : ViewModelBase
+public sealed partial class InputsViewModel : PageModelBase
 {
 
     private static readonly string File = Path.Combine(UserData.Folder, "inputs.json");
@@ -79,6 +79,12 @@ public sealed partial class InputsViewModel : ViewModelBase
     {
         if (Context.Interface is {Name: var name})
             StopAllShortcut = Context.List.ForStopAll(name)?.FriendlyName;
+    }
+
+    public override void OnActivated()
+    {
+        if (Context.Interface is { } method)
+            Context.Open(method);
     }
 
 }

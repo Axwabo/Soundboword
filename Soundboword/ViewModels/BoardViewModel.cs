@@ -3,12 +3,8 @@ using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 
-public sealed partial class BoardViewModel : ViewModelBase
+public sealed partial class BoardViewModel : PageModelBase
 {
-
-    public SoundList List { get; }
-
-    public EditSoundViewModel Editor { get; }
 
     public BoardViewModel() : this(new SoundList(), new EditSoundViewModel())
     {
@@ -20,7 +16,17 @@ public sealed partial class BoardViewModel : ViewModelBase
         Editor = editor;
     }
 
+    public SoundList List { get; }
+
+    public EditSoundViewModel Editor { get; }
+
     [RelayCommand]
     private void StopAll() => List.AudioManager.StopAll();
+
+    public override void OnActivated()
+    {
+        if (Editor.Context.Model is { } model)
+            Editor.Context.Open(model);
+    }
 
 }

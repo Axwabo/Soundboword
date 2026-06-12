@@ -14,7 +14,7 @@ public sealed partial class SoundEditingContext : ObservableObject
     public SoundEditingContext(ShortcutAssigner? assigner = null) => _assigner = assigner;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(CanRelink))]
+    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(Loop), nameof(CanRelink))]
     public partial SoundViewModel? Model { get; private set; }
 
     public string Name
@@ -43,6 +43,16 @@ public sealed partial class SoundEditingContext : ObservableObject
         set
         {
             Model?.Volume = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool Loop
+    {
+        get => Model?.Loop ?? false;
+        set
+        {
+            Model?.Loop = value;
             OnPropertyChanged();
         }
     }

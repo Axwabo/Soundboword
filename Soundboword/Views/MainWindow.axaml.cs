@@ -10,8 +10,11 @@ public sealed partial class MainWindow : Window
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel model)
-            model.ShortcutAssigner.Close();
+        if (e.Source is not TabControl control || DataContext is not MainWindowViewModel model)
+            return;
+        model.ShortcutAssigner.Close();
+        if (control.SelectedValue is TabItem {Content: UserControl {Content: PageModelBase page}})
+            page.OnActivated();
     }
 
 }
