@@ -27,17 +27,17 @@
             <Label Content="{Binding Author}" />
             <Rectangle HorizontalAlignment="Left" Width="120" Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
         </Panel>
-        <Panel Grid.Row="3" Grid.Column="0">
-            <Label>
-                <Label.Content>
-                    <MultiBinding StringFormat="\{0\} | \{1:d\}">
-                        <Binding Path="Duration" />
-                        <Binding Path="UploadDate" />
-                    </MultiBinding>
-                </Label.Content>
-            </Label>
-            <Rectangle HorizontalAlignment="Left" Width="150" Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
-        </Panel>
+        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Spacing="3">
+            <Panel>
+                <Label Content="{Binding Duration}" />
+                <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
+            </Panel>
+            <Label>•</Label>
+            <Panel>
+                <Label Content="{Binding UploadDate, StringFormat=d}" />
+                <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDescription}" />
+            </Panel>
+        </StackPanel>
         <ScrollViewer Grid.Row="4" Grid.Column="0" IsVisible="{Binding !IsLoadingDescription}">
             <TextBlock TextWrapping="Wrap" Text="{Binding Description}" />
         </ScrollViewer>

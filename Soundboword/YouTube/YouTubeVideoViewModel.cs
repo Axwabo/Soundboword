@@ -42,9 +42,9 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public string Description => Video?.Description ?? "";
 
-    public TimeSpan? Duration => Video?.Duration;
+    public TimeSpan Duration => Video?.Duration ?? TimeSpan.Zero;
 
-    public DateTimeOffset? UploadDate => Video?.UploadDate;
+    public DateTimeOffset UploadDate => Video?.UploadDate ?? DateTimeOffset.UnixEpoch;
 
     [ObservableProperty]
     public partial bool IsLoadingDetails { get; private set; } = true;

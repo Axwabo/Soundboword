@@ -25,14 +25,8 @@
                     <StackPanel>
                         <controls:Thumbnail DataContext="{Binding}" />
                         <Label FontWeight="Bold" Content="{Binding Title}" />
-                        <Label>
-                            <Label.Content>
-                                <MultiBinding StringFormat="\{0\} \{1:hh\':\'mm\':\'ss\}">
-                                    <Binding Path="Author" />
-                                    <Binding Path="Duration" />
-                                </MultiBinding>
-                            </Label.Content>
-                        </Label>
+                        <Label Content="{Binding Author}" />
+                        <Label FontSize="13" Content="{Binding Duration, StringFormat=hh\':\'mm\':\'ss}"></Label>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
