@@ -11,7 +11,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     private readonly YoutubeClient _client;
     private readonly SoundList _soundList;
 
-    private CancellationTokenSource? _cts;
+    private CancellationTokenSource? _download;
 
     private VideoId _id;
 
@@ -31,6 +31,8 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public bool IsSet => Video != null;
 
+    public bool CanDownload => Video != null && !IsDownloading;
+
     [ObservableProperty]
     public partial string Id { get; private set; } = "Id";
 
@@ -41,6 +43,10 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public partial string Description { get; private set; } = "";
 
     [ObservableProperty]
+    public partial bool IsLoadingDetails { get; private set; } = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanDownload))]
     public partial bool IsDownloading { get; private set; }
 
     [ObservableProperty]
@@ -65,19 +71,20 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public void Close()
     {
         Dispose();
+        Description = "";
         Video = null;
     }
 
     [RelayCommand]
     private async Task DownloadAsync()
     {
-        if (_cts != null)
+        if (_download != null)
             return;
-        _cts = new CancellationTokenSource();
+        _download = new CancellationTokenSource();
         IsDownloading = true;
         try
         {
-            var token = _cts.Token;
+            var token = _download.Token;
             var progress = new Progress<double>(d => Dispatcher.UIThread.Post(() => Progress = d));
             var path = await YouTubeCache.CacheAsync(_id, progress, token);
             _soundList.Add(path, Title);
@@ -100,11 +107,23 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void Cancel()
     {
-        _cts?.Cancel();
-        _cts?.Dispose();
-        _cts = null;
+        _download?.Cancel();
+        _download?.Dispose();
+        _download = null;
         IsDownloading = false;
         Progress = double.NaN;
+    }
+
+    public async Task OpenAsync(VideoId id)
+    {
+        _id = id;
+        Id = $"https://youtu.be/{id}";
+        IsLoadingDetails = true;
+        Video = YouTubeVideo.Loading;
+        var video = await _client.Videos.GetAsync(id);
+        Description = video.Description;
+        Open(new YouTubeVideo(video));
+        IsLoadingDetails = false;
     }
 
 }

@@ -9,6 +9,8 @@ public sealed class YouTubeVideo : IDisposable
 
     private const double OptimalResolution = 16 / 9d;
 
+    private static readonly TaskCompletionSource<Bitmap?> Tcs = new();
+
     private readonly CancellationTokenSource _cts = new();
 
     public YouTubeVideo(IVideo video)
@@ -23,6 +25,17 @@ public sealed class YouTubeVideo : IDisposable
             .FirstOrDefault();
         Thumbnail = thumbnail == null ? Task.FromResult<Bitmap?>(null) : ImageHelper.LoadFromWeb(thumbnail.Url, _cts.Token);
     }
+
+    private YouTubeVideo()
+    {
+        Id = default;
+        Title = "Title";
+        Author = "Author";
+        Duration = TimeSpan.Zero;
+        Thumbnail = Tcs.Task;
+    }
+
+    public static YouTubeVideo Loading { get; } = new();
 
     public VideoId Id { get; }
 

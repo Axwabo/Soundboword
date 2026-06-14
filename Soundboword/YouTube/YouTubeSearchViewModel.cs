@@ -83,8 +83,11 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
         if (_isPasting)
         {
             _isPasting = false;
-            // TODO: open async
-            return;
+            if (VideoId.TryParse(Query) is { } id)
+            {
+                _ = _videoViewModel.OpenAsync(id);
+                return;
+            }
         }
 
         _cts = new CancellationTokenSource();

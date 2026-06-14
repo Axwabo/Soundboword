@@ -7,18 +7,36 @@
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
              x:Class="Soundboword.YouTube.YouTubeVideoView"
              x:DataType="youTube:YouTubeVideoViewModel">
-    <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="Auto,*" RowSpacing="3">
+    <Design.DataContext>
+        <youTube:YouTubeVideoViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="300" Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition MinWidth="100" Width="Auto" />
+        </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Spacing="5">
             <Button Command="{Binding CloseCommand}" HotKey="Escape">&lt;- Back</Button>
             <Label Content="{Binding Id}" VerticalAlignment="Center" />
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="0" DockPanel.Dock="Left">
-            <Label FontWeight="Bold" Content="{Binding Title}" />
+        <StackPanel Grid.Row="1" Grid.Column="0" DockPanel.Dock="Left" Spacing="5">
+            <Panel>
+                <Label FontWeight="Bold" Content="{Binding Title}" CornerRadius="5" />
+                <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
+            </Panel>
+            <Panel>
+                <ScrollViewer>
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Description}" />
+                </ScrollViewer>
+                <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" MinHeight="60" />
+            </Panel>
         </StackPanel>
-        <controls:Thumbnail Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" MaxHeight="200" DataContext="{Binding Video}" />
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
+        <GridSplitter Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ResizeDirection="Columns" />
+        <controls:Thumbnail Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" DataContext="{Binding Video}" MaxHeight="200" />
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="3">
             <Button Command="{Binding DownloadCommand}" HotKey="Enter">Download</Button>
-            <Button Command="{Binding CancelCommand}" IsEnabled="{Binding IsDownloading}">Cancel</Button>
+            <Button Command="{Binding CancelCommand}" IsEnabled="{Binding CanDownload}">Cancel</Button>
             <ProgressBar IsVisible="{Binding IsDownloading}" Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" ShowProgressText="True" ProgressTextFormat="\{1:0\}%" Maximum="1" />
         </StackPanel>
     </Grid>
