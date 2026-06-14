@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Soundboword.Inputs;
@@ -7,32 +7,25 @@ using Soundboword.Services;
 
 namespace Soundboword;
 
-internal static class Program
+public static class AvaloniaAppBuilder
 {
 
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
-    [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
-
-    // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure(() => new App
+    public static AppBuilder Create(Action<IServiceCollection> configureServices)
+        => AppBuilder.Configure(() =>
             {
-                Services = new ServiceCollection()
+                var services = new ServiceCollection()
                     .AddSingleton<SoundFlowDeviceManager>()
                     .AddSingleton<AudioManager>()
                     .AddSingleton<InputEditingContext>()
                     .AddSingleton<IInputFactory, LaunchpadInputFactory>()
                     .AddSingleton<IShortcutRepository, LaunchpadShortcutRepository>()
-                    .AddSingleton<IFileManagerOpener, DBusFileManagerOpener>()
                     .AddSingleton<FilePicker>()
                     .AddSingleton<SoundList>()
                     .AddSingleton<SoundEditingContext>()
                     .AddSingleton<ShortcutAssigner>()
-                    .AddSingleton<ShortcutList>()
+                    .AddSingleton<ShortcutList>();
+                configureServices(services);
+                return new App {Services = services};
             })
             .UsePlatformDetect()
 #if DEBUG

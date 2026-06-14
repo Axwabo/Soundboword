@@ -1,6 +1,7 @@
 using System.Diagnostics;
+using Soundboword.Services;
 
-namespace Soundboword.Services;
+namespace Soundboword.Windows.Services;
 
 public sealed class ExplorerOpener : IFileManagerOpener
 {

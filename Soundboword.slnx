@@ -1,3 +1,5 @@
 <Solution>
+    <Project Path="Soundboword.Linux/Soundboword.Linux.csproj" />
+    <Project Path="Soundboword.Windows/Soundboword.Windows.csproj" />
   <Project Path="Soundboword/Soundboword.csproj" />
 </Solution>

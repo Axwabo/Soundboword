@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Tmds.DBus.SourceGenerator" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="DBusXml/*.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Soundboword\Soundboword.csproj" />
+    </ItemGroup>
+    
+</Project>
