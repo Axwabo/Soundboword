@@ -14,7 +14,7 @@ namespace Soundboword.Services;
 public sealed class SoundFlowDeviceManager : IDisposable
 {
 
-    private static readonly string FilePath = Path.Combine(UserData.Folder, "output.txt");
+    private const string FileName = "output";
 
     private static readonly AudioFormat Format = new()
     {
@@ -39,12 +39,12 @@ public sealed class SoundFlowDeviceManager : IDisposable
         _engine.UpdateAudioDevicesInfo();
         foreach (var device in _engine.PlaybackDevices)
             Devices.Add(device);
-        var preferredDeviceName = UserData.Load(FilePath);
+        var preferredDeviceName = UserData.Load(FileName);
         var preferredDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.Name.AsSpan().Trim().Equals(preferredDeviceName.AsSpan().Trim(), StringComparison.OrdinalIgnoreCase));
         SwitchDevice(preferredDevice != default ? preferredDevice : _engine.PlaybackDevices.First(e => e.IsDefault));
         lifetime.Exit += (_, _) =>
         {
-            UserData.Save(FilePath, SelectedDevice.Name);
+            UserData.Save(FileName, SelectedDevice.Name);
             Dispose();
         };
     }

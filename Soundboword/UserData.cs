@@ -6,16 +6,16 @@ namespace Soundboword;
 public static class UserData
 {
 
-    public static string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
+    private static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
-    private static string FullPath(string name) => Path.Combine(Folder, $"{name}.json");
+    private static string FullPath(string name, bool json) => Path.Combine(Folder, $"{name}.{(json ? "json" : "txt")}");
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
     public static string? Load(string name)
     {
         EnsureDirectory();
-        var path = FullPath(name);
+        var path = FullPath(name, false);
         if (!File.Exists(path))
             return null;
         try
@@ -33,7 +33,7 @@ public static class UserData
         EnsureDirectory();
         try
         {
-            File.WriteAllText(FullPath(name), content);
+            File.WriteAllText(FullPath(name, false), content);
         }
         catch (Exception)
         {
@@ -44,7 +44,7 @@ public static class UserData
     public static T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T> typeInfo) where T : notnull
     {
         EnsureDirectory();
-        var path = FullPath(name);
+        var path = FullPath(name, true);
         if (!File.Exists(path))
             return fallback();
         try
@@ -63,7 +63,7 @@ public static class UserData
         EnsureDirectory();
         try
         {
-            using var file = File.Create(FullPath(name));
+            using var file = File.Create(FullPath(name, true));
             JsonSerializer.Serialize(file, data, typeInfo);
         }
         catch (Exception)
