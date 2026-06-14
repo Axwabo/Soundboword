@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:youTube="clr-namespace:Soundboword.YouTube"
              xmlns:controls="clr-namespace:Soundboword.Controls"
+             xmlns:soundboword="clr-namespace:Soundboword"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
              x:Class="Soundboword.YouTube.YouTubeSearchView"
              x:DataType="youTube:YouTubeSearchViewModel"
@@ -11,6 +12,20 @@
     <Design.DataContext>
         <youTube:YouTubeSearchViewModel />
     </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Rectangle.loading">
+            <Style.Animations>
+                <Animation Duration="0:0:1" IterationCount="INFINITE" PlaybackDirection="Alternate" Easing="QuadraticEaseInOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Fill" Value="#555" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Fill" Value="#444" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
     <Grid RowDefinitions="Auto,*" RowSpacing="5">
         <TextBox Name="Query" Text="{Binding Query}" PlaceholderText="Search for a video, or paste a URL" PastingFromClipboard="TextBox_OnPastingFromClipboard" />
         <ProgressBar Grid.Row="1" MaxWidth="200" IsIndeterminate="True" ProgressTextFormat="Searching..." ShowProgressText="True" IsVisible="{Binding IsSearching}" />
@@ -23,7 +38,12 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Image Source="{Binding Thumbnail^}" Stretch="UniformToFill" />
+                        <Panel>
+                            <Viewbox Stretch="UniformToFill">
+                                <Rectangle Classes="loading" Width="{Binding ThumbnailResolution.Width}" Height="{Binding ThumbnailResolution.Height}" IsVisible="{Binding !Thumbnail^}" />
+                            </Viewbox>
+                            <Image Source="{Binding Thumbnail^, TargetNullValue={x:Static soundboword:ImageHelper.NotFound}}" Stretch="UniformToFill" />
+                        </Panel>
                         <Label FontWeight="Bold" Content="{Binding Title}" />
                         <Label>
                             <Label.Content>
