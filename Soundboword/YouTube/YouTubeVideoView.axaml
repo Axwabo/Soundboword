@@ -23,15 +23,15 @@
             <Label FontWeight="Bold" Content="{Binding Title}" CornerRadius="5" />
             <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
         </Panel>
-        <ScrollViewer Grid.Row="2" Grid.Column="0" IsVisible="{Binding !IsLoadingDetails}">
+        <ScrollViewer Grid.Row="2" Grid.Column="0" IsVisible="{Binding !IsLoadingDescription}">
             <!-- TODO: overflows onto 3rd row -->
             <TextBlock TextWrapping="Wrap" Text="{Binding Description}" />
         </ScrollViewer>
-        <Rectangle Grid.Row="2" Grid.Column="0" Classes="loading" IsVisible="{Binding IsLoadingDetails}" MinHeight="60" />
+        <Rectangle Grid.Row="2" Grid.Column="0" Classes="loading" IsVisible="{Binding IsLoadingDescription}" MinHeight="60" />
         <controls:Thumbnail Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" DataContext="{Binding Video}" MaxHeight="200" />
         <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
             <Button Command="{Binding DownloadCommand}" HotKey="Enter">Download</Button>
-            <Button Command="{Binding CancelCommand}" IsEnabled="{Binding CanDownload}">Cancel</Button>
+            <Button Command="{Binding CancelDownloadCommand}" IsEnabled="{Binding CanDownload}">Cancel</Button>
             <ProgressBar IsVisible="{Binding IsDownloading}" Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" ShowProgressText="True" ProgressTextFormat="\{1:0\}%" Maximum="1" />
         </StackPanel>
     </Grid>

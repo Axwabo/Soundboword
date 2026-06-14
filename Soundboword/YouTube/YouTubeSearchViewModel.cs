@@ -22,12 +22,12 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
     {
         _youtubeClient = new YoutubeClient();
         _videoViewModel = new YouTubeVideoViewModel(_youtubeClient, new SoundList());
-        var videoSearchResult = new YouTubeVideo(new VideoSearchResult(new VideoId(), "Among us in real life", new Author(default, "Sussy baka"), TimeSpan.FromMinutes(3), []));
+        var videoSearchResult = YouTubeVideo.Create(new VideoSearchResult(new VideoId(), "Among us in real life", new Author(default, "Sussy baka"), TimeSpan.FromMinutes(3), []));
         Videos.Add(videoSearchResult);
         Videos.Add(videoSearchResult);
         Videos.Add(videoSearchResult);
         Videos.Add(videoSearchResult);
-        var searchResult = new YouTubeVideo(new VideoSearchResult(new VideoId(), "real", new Author(default, "fake"), new TimeSpan(1, 2, 3), []));
+        var searchResult = YouTubeVideo.Create(new VideoSearchResult(new VideoId(), "real", new Author(default, "fake"), new TimeSpan(1, 2, 3), []));
         Videos.Add(searchResult);
         Videos.Add(searchResult);
         Videos.Add(searchResult);
@@ -113,7 +113,7 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
         {
             if (result.Duration == null)
                 continue;
-            Videos.Add(new YouTubeVideo(result));
+            Videos.Add(YouTubeVideo.Create(result));
             if (++count >= 20)
                 break;
         }

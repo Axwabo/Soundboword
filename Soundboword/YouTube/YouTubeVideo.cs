@@ -1,24 +1,26 @@
 using System.Threading;
 using Avalonia.Media.Imaging;
+using YoutubeExplode.Common;
 using YoutubeExplode.Videos;
 
 namespace Soundboword.YouTube;
 
-public sealed class YouTubeVideo : IDisposable
+public sealed class YouTubeVideo : IVideo, IDisposable
 {
 
     private const double OptimalResolution = 16 / 9d;
+
+    private static readonly Author DefaultAuthor = new(default, "Author");
 
     private static readonly TaskCompletionSource<Bitmap?> Tcs = new();
 
     private readonly CancellationTokenSource _cts = new();
 
-    public YouTubeVideo(IVideo video)
+    private readonly IVideo? _source;
+
+    private YouTubeVideo(IVideo video)
     {
-        Id = video.Id;
-        Title = video.Title;
-        Author = video.Author.ChannelTitle;
-        Duration = video.Duration;
+        _source = video;
         var thumbnail = video.Thumbnails
             .OrderBy(e => Math.Abs(OptimalResolution - e.Resolution.Width / (double) e.Resolution.Height))
             .ThenByDescending(e => e.Resolution.Height)
@@ -26,26 +28,21 @@ public sealed class YouTubeVideo : IDisposable
         Thumbnail = thumbnail == null ? Task.FromResult<Bitmap?>(null) : ImageHelper.LoadFromWeb(thumbnail.Url, _cts.Token);
     }
 
-    private YouTubeVideo()
+    public YouTubeVideo(IVideo? source, Task<Bitmap?> thumbnail)
     {
-        Id = default;
-        Title = "Title";
-        Author = "Author";
-        Duration = TimeSpan.Zero;
-        Thumbnail = Tcs.Task;
+        _source = source;
+        Thumbnail = thumbnail;
     }
+
+    private YouTubeVideo() => Thumbnail = Tcs.Task;
 
     public static YouTubeVideo Loading { get; } = new();
 
-    public VideoId Id { get; }
-
-    public string Title { get; }
-
-    public string Author { get; }
-
-    public TimeSpan? Duration { get; }
+    public string Author => ((IVideo) this).Author.ChannelTitle;
 
     public Task<Bitmap?> Thumbnail { get; }
+
+    public string? Description => (_source as Video)?.Description;
 
     public void Dispose()
     {
@@ -54,5 +51,21 @@ public sealed class YouTubeVideo : IDisposable
         if (Thumbnail.IsCompletedSuccessfully)
             Thumbnail.Result?.Dispose();
     }
+
+    public VideoId Id => _source?.Id ?? default;
+
+    string IVideo.Url => _source?.Url ?? "";
+
+    public string Title => _source?.Title ?? "";
+
+    Author IVideo.Author => _source?.Author ?? DefaultAuthor;
+
+    public TimeSpan? Duration => _source?.Duration;
+
+    IReadOnlyList<Thumbnail> IVideo.Thumbnails => _source?.Thumbnails ?? ReadOnlyCollection<Thumbnail>.Empty;
+
+    public static YouTubeVideo Create(IVideo video) => video as YouTubeVideo ?? new YouTubeVideo(video);
+
+    public static YouTubeVideo Merge(YouTubeVideo? video, Video full) => video == null || video == Loading ? new YouTubeVideo(full) : new YouTubeVideo(full, video.Thumbnail);
 
 }

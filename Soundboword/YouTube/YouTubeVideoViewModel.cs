@@ -10,6 +10,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     private readonly YoutubeClient _client;
     private readonly SoundList _soundList;
+    private CancellationTokenSource? _details;
 
     private CancellationTokenSource? _download;
 
@@ -46,6 +47,9 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public partial bool IsLoadingDetails { get; private set; } = true;
 
     [ObservableProperty]
+    public partial bool IsLoadingDescription { get; private set; } = true;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     public partial bool IsDownloading { get; private set; }
 
@@ -55,22 +59,40 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public bool IsIndeterminate => double.IsNaN(Progress);
 
-    public void Dispose() => Cancel();
+    public void Dispose()
+    {
+        CancelDetails();
+        CancelDownload();
+    }
+
+    private void CancelDetails()
+    {
+        _details?.Cancel();
+        _details?.Dispose();
+        _details = null;
+    }
 
     public event Action? Completed;
 
-    public void Open(YouTubeVideo video)
+    public void Open(IVideo video)
     {
         _id = video.Id;
-        Video = video;
+        Video = YouTubeVideo.Create(video);
         Id = $"https://youtu.be/{video.Id}";
         Title = video.Title;
+        var description = video.Description;
+        Description = description ?? "";
+        IsLoadingDetails = false;
+        IsLoadingDescription = description == null;
+        if (IsLoadingDescription)
+            _ = LoadDescriptionAsync();
     }
 
     [RelayCommand]
     public void Close()
     {
         Dispose();
+        Title = "Title";
         Description = "";
         Video = null;
     }
@@ -105,7 +127,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    private void Cancel()
+    private void CancelDownload()
     {
         _download?.Cancel();
         _download?.Dispose();
@@ -118,12 +140,44 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     {
         _id = id;
         Id = $"https://youtu.be/{id}";
+        CancelDetails();
         IsLoadingDetails = true;
+        IsLoadingDescription = true;
         Video = YouTubeVideo.Loading;
-        var video = await _client.Videos.GetAsync(id);
-        Description = video.Description;
-        Open(new YouTubeVideo(video));
-        IsLoadingDetails = false;
+        _details = new CancellationTokenSource();
+        var token = _details.Token;
+        try
+        {
+            Open(await _client.Videos.GetAsync(id, token));
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            IsLoadingDetails = IsLoadingDescription = false;
+        }
+    }
+
+    private async Task LoadDescriptionAsync()
+    {
+        CancelDetails();
+        _details = new CancellationTokenSource();
+        var token = _details.Token;
+        IsLoadingDescription = true;
+        try
+        {
+            var video = await _client.Videos.GetAsync(_id, token);
+            Description = video.Description;
+            Video = YouTubeVideo.Merge(Video, video);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            IsLoadingDescription = false;
+        }
     }
 
 }
