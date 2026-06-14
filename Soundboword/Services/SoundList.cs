@@ -61,12 +61,6 @@ public sealed partial class SoundList
 
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
-    public void SaveSounds() => UserData.Save(
-        FileName,
-        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume)),
-        SourceGenerationContext.Default.IEnumerableSoundDto
-    );
-
     [RelayCommand]
     private async Task Add()
     {
@@ -74,20 +68,28 @@ public sealed partial class SoundList
         if (list.Count == 0)
             return;
         foreach (var path in list)
-            Sounds.Add(new SoundViewModel
-            {
-                Id = Guid.NewGuid(),
-                Path = path,
-                Name = Path.GetFileNameWithoutExtension(path),
-                List = this
-            });
+            Add(path, Path.GetFileNameWithoutExtension(path));
         SaveSounds();
     }
+
+    public void Add(string path, string name) => Sounds.Add(new SoundViewModel
+    {
+        Id = Guid.NewGuid(),
+        Path = path,
+        Name = name,
+        List = this
+    });
 
     public void Delete(SoundViewModel sound)
     {
         Sounds.Remove(sound);
         SaveSounds();
     }
+
+    public void SaveSounds() => UserData.Save(
+        FileName,
+        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume)),
+        SourceGenerationContext.Default.IEnumerableSoundDto
+    );
 
 }

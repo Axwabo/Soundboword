@@ -18,8 +18,10 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
 
     private bool _isPasting;
 
-    public YouTubeSearchViewModel() : this(new YoutubeClient(), new YouTubeVideoViewModel())
+    public YouTubeSearchViewModel()
     {
+        _youtubeClient = new YoutubeClient();
+        _videoViewModel = new YouTubeVideoViewModel(new SoundList());
         var videoSearchResult = new VideoSearchResult(new VideoId(), "Among us in real life", new Author(default, "Sussy baka"), TimeSpan.FromMinutes(3), []);
         Videos.Add(videoSearchResult);
         Videos.Add(videoSearchResult);

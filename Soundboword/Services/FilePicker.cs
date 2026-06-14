@@ -48,12 +48,6 @@ public sealed partial class FilePicker : ObservableObject
     }
 
     // Multipilier reference?
-    private void MarkNotBrowsing()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-            IsBrowsing = false;
-        else
-            Dispatcher.UIThread.Post(() => IsBrowsing = false);
-    }
+    private void MarkNotBrowsing() => Dispatcher.UIThread.InvokeOrPost(() => IsBrowsing = false);
 
 }

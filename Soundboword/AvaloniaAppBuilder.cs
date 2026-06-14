@@ -21,7 +21,7 @@ public static class AvaloniaAppBuilder
                     .AddSingleton<SoundEditingContext>()
                     .AddSingleton<ShortcutAssigner>()
                     .AddSingleton<ShortcutList>()
-                    .AddSingleton<YoutubeClient>();
+                    .AddScoped<YoutubeClient>();
                 configureServices(services);
                 return new App {Services = services};
             })
