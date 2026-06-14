@@ -12,6 +12,7 @@ public sealed partial class AddFromYouTubeWindow : Window
         InitializeComponent();
         _scope = serviceProvider.CreateScope();
         _model = _scope.ServiceProvider.GetRequiredService<AddFromYouTubeViewModel>();
+        _model.Canceled += Close;
         DataContext = _model;
     }
 

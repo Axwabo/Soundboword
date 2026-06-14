@@ -7,5 +7,10 @@
         x:Class="Soundboword.Views.AddFromYouTubeWindow"
         x:DataType="viewModels:AddFromYouTubeViewModel"
         Title="AddFromYouTubeWindow">
-    Welcome to Avalonia!
+    <StackPanel Spacing="3">
+        <TextBox Text="{Binding SearchQuery}" />
+        <Button Command="{Binding DownloadCommand}" IsEnabled="{Binding IsValid}">Download</Button>
+        <Button Command="{Binding CancelCommand}">Cancel</Button>
+        <ProgressBar IsIndeterminate="{Binding IsIndeterminate}" Value="{Binding Progress}" Maximum="1" ShowProgressText="True" />
+    </StackPanel>
 </Window>

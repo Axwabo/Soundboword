@@ -61,7 +61,7 @@ public sealed partial class SoundList
 
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
-    private void SaveSounds() => UserData.Save(
+    public void SaveSounds() => UserData.Save(
         FileName,
         Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume)),
         SourceGenerationContext.Default.IEnumerableSoundDto

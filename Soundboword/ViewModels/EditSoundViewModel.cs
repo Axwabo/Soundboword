@@ -87,6 +87,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         if (Context.Model is not { } model)
             return;
+        _audioManager.StopAll(model);
         Context.Close();
         model.List.Delete(model);
         Shortcuts.Remove(new TriggerSoundAction(model));

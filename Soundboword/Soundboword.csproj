@@ -22,6 +22,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="SoundFlow" />
         <PackageReference Include="SoundFlow.Midi.PortMidi" />
+        <PackageReference Include="YoutubeExplode.Converter" />
     </ItemGroup>
 
 </Project>
