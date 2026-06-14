@@ -3,15 +3,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="Soundboword.Views.AddFromYouTubeWindow"
         x:DataType="viewModels:AddFromYouTubeViewModel"
-        Title="Add Sowond from YouTube">
+        Title="Add Sowond from YouTube"
+        Width="600" Height="400">
     <Design.DataContext>
         <viewModels:AddFromYouTubeViewModel />
     </Design.DataContext>
     <Panel Margin="3">
-        <UserControl Content="{Binding Search}" IsVisible="{Binding !Video.Video}" />
+        <UserControl Content="{Binding Search}" IsVisible="{Binding !Video.IsSet}" />
         <UserControl Content="{Binding Video}" IsVisible="{Binding !!Video.Video}" />
     </Panel>
 </Window>

@@ -1,4 +1,5 @@
 using System.Threading;
+using Avalonia.Threading;
 using YoutubeExplode;
 using YoutubeExplode.Common;
 using YoutubeExplode.Search;
@@ -9,13 +10,15 @@ namespace Soundboword.YouTube;
 public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
 {
 
+    private readonly YouTubeVideoViewModel _videoViewModel;
+
     private readonly YoutubeClient _youtubeClient;
 
     private CancellationTokenSource? _cts;
 
-    private bool _isPasting; // TODO: auto-open video view
+    private bool _isPasting;
 
-    public YouTubeSearchViewModel() : this(new YoutubeClient())
+    public YouTubeSearchViewModel() : this(new YoutubeClient(), new YouTubeVideoViewModel())
     {
         var videoSearchResult = new VideoSearchResult(new VideoId(), "Among us in real life", new Author(default, "Sussy baka"), TimeSpan.FromMinutes(3), []);
         Videos.Add(videoSearchResult);
@@ -31,13 +34,20 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
         Videos.Add(searchResult);
     }
 
-    public YouTubeSearchViewModel(YoutubeClient youtubeClient) => _youtubeClient = youtubeClient;
+    public YouTubeSearchViewModel(YoutubeClient youtubeClient, YouTubeVideoViewModel videoViewModel)
+    {
+        _youtubeClient = youtubeClient;
+        _videoViewModel = videoViewModel;
+    }
 
     [ObservableProperty]
     public partial string Query { get; set; } = "";
 
     [ObservableProperty]
     public partial bool IsSearching { get; private set; }
+
+    [ObservableProperty]
+    public partial VideoSearchResult? SelectedResult { get; set; }
 
     public ObservableCollection<VideoSearchResult> Videos { get; } = [];
 
@@ -50,11 +60,34 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.PropertyName != nameof(Query))
-            return;
+        if (e.PropertyName == nameof(Query))
+            Search();
+        else if (e.PropertyName == nameof(SelectedResult) && SelectedResult is { } result)
+        {
+            Dispatcher.UIThread.Post(() => SelectedResult = null);
+            _videoViewModel.Open(result);
+        }
+    }
+
+    private void Search()
+    {
         _cts?.Cancel();
         _cts?.Dispose();
+        _cts = null;
         Videos.Clear();
+        if (string.IsNullOrEmpty(Query))
+        {
+            IsSearching = false;
+            return;
+        }
+
+        if (_isPasting)
+        {
+            _isPasting = false;
+            // TODO: open async
+            return;
+        }
+
         _cts = new CancellationTokenSource();
         _ = SearchAsync(Query, _cts.Token);
     }

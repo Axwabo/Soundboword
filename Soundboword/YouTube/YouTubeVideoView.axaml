@@ -2,7 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:youTube="clr-namespace:Soundboword.YouTube"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Soundboword.YouTube.YouTubeVideoView">
-    Welcome to Avalonia!
+             x:Class="Soundboword.YouTube.YouTubeVideoView"
+             x:DataType="youTube:YouTubeVideoViewModel">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="5">
+            <Button Command="{Binding CloseCommand}" HotKey="Escape">Back</Button>
+            <Label Content="{Binding Id}" />
+        </StackPanel>
+        <Label Grid.Row="1" FontWeight="Bold" Content="{Binding Title}" />
+        <StackPanel Grid.Row="2">
+            <Button Command="{Binding DownloadCommand}" HotKey="Enter">Download</Button>
+        </StackPanel>
+    </Grid>
 </UserControl>

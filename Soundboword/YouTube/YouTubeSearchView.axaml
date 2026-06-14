@@ -3,16 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:youTube="clr-namespace:Soundboword.YouTube"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
              x:Class="Soundboword.YouTube.YouTubeSearchView"
              x:DataType="youTube:YouTubeSearchViewModel">
     <Design.DataContext>
         <youTube:YouTubeSearchViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto,*" RowSpacing="5">
-        <TextBox Text="{Binding Query}" PlaceholderText="Search for a video, or paste a URL" PastingFromClipboard="TextBox_OnPastingFromClipboard" />
+        <TextBox Name="Query" Text="{Binding Query}" PlaceholderText="Search for a video, or paste a URL" PastingFromClipboard="TextBox_OnPastingFromClipboard" />
         <ProgressBar Grid.Row="1" MaxWidth="200" IsIndeterminate="True" ProgressTextFormat="Searching..." ShowProgressText="True" IsVisible="{Binding IsSearching}" />
-        <ListBox Grid.Row="1" ItemsSource="{Binding Videos}" IsVisible="{Binding !IsSearching}" Background="Transparent">
+        <ListBox Grid.Row="1" ItemsSource="{Binding Videos}" IsVisible="{Binding !IsSearching}" SelectedItem="{Binding SelectedResult}" Background="Transparent">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid />
