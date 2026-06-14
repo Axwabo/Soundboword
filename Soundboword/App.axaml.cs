@@ -18,13 +18,13 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Services.AddView<MainWindowViewModel, MainWindow>()
-            .AddView<BoardViewModel, BoardView>()
-            .AddView<DevicesViewModel, DevicesView>()
-            .AddView<PlaybacksViewModel, PlaybacksView>()
-            .AddView<InputsViewModel, InputsView>()
-            .AddView<EditSoundViewModel, EditSoundView>()
-            .AddViewLocator<SoundViewModel, SoundView>();
+        Services.AddView<MainWindow, MainWindowViewModel>()
+            .AddView<BoardView, BoardViewModel>()
+            .AddView<DevicesView, DevicesViewModel>()
+            .AddView<PlaybacksView, PlaybacksViewModel>()
+            .AddView<InputsView, InputsViewModel>()
+            .AddView<EditSoundView, EditSoundViewModel>()
+            .AddViewLocator<SoundView, SoundViewModel>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

@@ -8,17 +8,17 @@ namespace Soundboword;
 public static class ServiceProviderExtensions
 {
 
-    extension(IServiceCollection collection)
+    extension<TView>(IServiceCollection collection) where TView : Control, new()
     {
 
-        public IServiceCollection AddView<TViewModel, TView>() where TViewModel : ViewModelBase, new() where TView : Control, new()
+        public IServiceCollection AddView<TViewModel>() where TViewModel : ViewModelBase
         {
             collection.AddSingleton<TViewModel>();
-            return collection.AddViewLocator<TViewModel, TView>();
+            return collection.AddViewLocator<TView, TViewModel>();
         }
 
-        public IServiceCollection AddViewLocator<TViewModel, TView>() where TViewModel : ViewModelBase where TView : Control, new()
-            => collection.AddSingleton<IDataTemplate>(new ViewLocator<TViewModel, TView>());
+        public IServiceCollection AddViewLocator<TViewModel>() where TViewModel : ViewModelBase
+            => collection.AddSingleton<IDataTemplate>(new ViewLocator<TView, TViewModel>());
 
     }
 

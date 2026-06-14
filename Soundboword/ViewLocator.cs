@@ -4,7 +4,7 @@ using Soundboword.ViewModels;
 
 namespace Soundboword;
 
-public sealed class ViewLocator<TViewModel, TView> : IDataTemplate where TViewModel : ViewModelBase where TView : Control, new()
+public sealed class ViewLocator<TView, TViewModel> : IDataTemplate where TView : Control, new() where TViewModel : ViewModelBase
 {
 
     public Control Build(object? param) => new TView();
