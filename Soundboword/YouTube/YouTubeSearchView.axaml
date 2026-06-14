@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:youTube="clr-namespace:Soundboword.YouTube"
              xmlns:controls="clr-namespace:Soundboword.Controls"
-             xmlns:soundboword="clr-namespace:Soundboword"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
              x:Class="Soundboword.YouTube.YouTubeSearchView"
              x:DataType="youTube:YouTubeSearchViewModel"
@@ -24,12 +23,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Panel>
-                            <Viewbox Stretch="UniformToFill">
-                                <Rectangle Classes="loading" Width="16" Height="9" IsVisible="{Binding !Thumbnail^}" />
-                            </Viewbox>
-                            <Image Source="{Binding Thumbnail^, TargetNullValue={x:Static soundboword:ImageHelper.NotFound}}" Stretch="UniformToFill" />
-                        </Panel>
+                        <controls:Thumbnail DataContext="{Binding}" />
                         <Label FontWeight="Bold" Content="{Binding Title}" />
                         <Label>
                             <Label.Content>

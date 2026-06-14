@@ -32,10 +32,13 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public bool IsSet => Video != null;
 
     [ObservableProperty]
-    public partial string Id { get; private set; } = "";
+    public partial string Id { get; private set; } = "Id";
 
     [ObservableProperty]
-    public partial string Title { get; private set; } = "";
+    public partial string Title { get; private set; } = "Title";
+
+    [ObservableProperty]
+    public partial string Description { get; private set; } = "";
 
     [ObservableProperty]
     public partial bool IsDownloading { get; private set; }
