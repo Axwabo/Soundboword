@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Soundboword.ViewModels;
@@ -17,20 +18,24 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Services.AddSingleton<MainWindowViewModel>()
-            .AddSingleton<BoardViewModel>()
-            .AddSingleton<DevicesViewModel>()
-            .AddSingleton<PlaybacksViewModel>()
-            .AddSingleton<InputsViewModel>()
-            .AddSingleton<EditSoundViewModel>();
+        Services.AddView<MainWindowViewModel, MainWindow>()
+            .AddView<BoardViewModel, BoardView>()
+            .AddView<DevicesViewModel, DevicesView>()
+            .AddView<PlaybacksViewModel, PlaybacksView>()
+            .AddView<InputsViewModel, InputsView>()
+            .AddView<EditSoundViewModel, EditSoundView>()
+            .AddViewLocator<SoundViewModel, SoundView>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+
             var window = new MainWindow();
             Services.AddSingleton<TopLevel>(window);
             Services.AddSingleton(desktop);
 
             var provider = Services.BuildServiceProvider();
+            DataTemplates.AddRange(provider.GetServices<IDataTemplate>());
 
             window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
             desktop.MainWindow = window;

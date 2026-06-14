@@ -13,21 +13,6 @@ namespace Soundboword.ViewModels;
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
 
-    public BoardViewModel Board { get; }
-
-    public DevicesViewModel Devices { get; }
-
-    public PlaybacksViewModel Playbacks { get; }
-
-    public InputsViewModel Inputs { get; }
-
-    public FilePicker FilePicker { get; }
-
-    public ShortcutAssigner ShortcutAssigner { get; }
-
-    [ObservableProperty]
-    public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
-
     public MainWindowViewModel()
     {
         Board = new BoardViewModel();
@@ -49,6 +34,21 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         // Task.Run(TestDBus);
     }
 
+    public BoardViewModel Board { get; }
+
+    public DevicesViewModel Devices { get; }
+
+    public PlaybacksViewModel Playbacks { get; }
+
+    public InputsViewModel Inputs { get; }
+
+    public FilePicker FilePicker { get; }
+
+    public ShortcutAssigner ShortcutAssigner { get; }
+
+    [ObservableProperty]
+    public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
+
     // TODO: upgrade Tmds.DBus when a new Avalonia version is released (new version included in Avalonia master 2 days ago)
     private async Task TestDBus()
     {
@@ -60,8 +60,10 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             await connection.ConnectAsync();
             const string path = "/org/freedesktop/portal/desktop";
             var sender = (connection.UniqueName ?? "").TrimStart(':').Replace(".", "_");
-            var handleToken = $"${path}/request/{sender}/Soundboword_{Guid.CreateVersion7():N}";
-            var sessionHandleToken = $"${path}/request/{sender}/Soundboword_{Guid.CreateVersion7():N}";
+            var handleToken = $"{path}/request/{sender}/Soundboword_{Guid.CreateVersion7():N}\0";
+            var sessionHandleToken = $"{path}/request/{sender}/Soundboword_{Guid.CreateVersion7():N}\0";
+            Console.WriteLine(handleToken);
+            Console.WriteLine(sessionHandleToken);
             var token = "Soundboword_" + Stopwatch.GetTimestamp();
             var shortcutsProxy = new OrgFreedesktopPortalGlobalShortcutsProxy(connection.AsConnection(), "org.freedesktop.portal.Desktop", path);
             var session = await shortcutsProxy.CreateSessionAsync(new Dictionary<string, VariantValue>
