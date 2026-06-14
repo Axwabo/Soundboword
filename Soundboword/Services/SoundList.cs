@@ -1,12 +1,5 @@
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
-using CommunityToolkit.Mvvm.Input;
-using Soundboword.Models;
-using Soundboword.ViewModels;
 
 namespace Soundboword.Services;
 

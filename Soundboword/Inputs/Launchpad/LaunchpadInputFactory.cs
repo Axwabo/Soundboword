@@ -1,12 +1,11 @@
-using Soundboword.Services;
-
 namespace Soundboword.Inputs.Launchpad;
 
 public sealed class LaunchpadInputFactory : IInputFactory
 {
 
-    private readonly ShortcutList _shortcuts;
     private readonly SoundFlowDeviceManager _deviceManager;
+
+    private readonly ShortcutList _shortcuts;
 
     public LaunchpadInputFactory(ShortcutList shortcuts, SoundFlowDeviceManager deviceManager)
     {

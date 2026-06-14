@@ -1,9 +1,3 @@
-using System.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Soundboword.Models;
-using Soundboword.Services;
-using Soundboword.ViewModels;
-
 namespace Soundboword;
 
 public sealed partial class SoundEditingContext : ObservableObject

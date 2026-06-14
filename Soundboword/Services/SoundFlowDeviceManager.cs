@@ -1,10 +1,4 @@
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using Avalonia.Controls.ApplicationLifetimes;
-using Soundboword.Models;
-using Soundboword.ViewModels;
 using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
 using SoundFlow.Components;

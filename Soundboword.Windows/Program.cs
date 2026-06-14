@@ -1,7 +1,4 @@
-﻿using Avalonia;
-using Microsoft.Extensions.DependencyInjection;
-using Soundboword.Services;
-using Soundboword.Windows.Services;
+﻿using Soundboword.Windows.Services;
 
 namespace Soundboword.Windows;
 

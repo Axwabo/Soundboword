@@ -1,5 +1,3 @@
-using Soundboword.ViewModels;
-
 namespace Soundboword.Models;
 
 public static class ShortcutExtensions

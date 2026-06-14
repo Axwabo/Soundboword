@@ -1,10 +1,5 @@
-using System;
 using System.Threading;
-using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Soundboword.Models;
 
 namespace Soundboword.Views;
 
@@ -13,15 +8,15 @@ public sealed partial class SoundPlaybackView : UserControl
 
     public static readonly StyledProperty<AudioManager> ManagerProperty = AvaloniaProperty.Register<SoundPlaybackView, AudioManager>(nameof(Manager));
 
+    private CancellationTokenSource? _cts;
+
+    public SoundPlaybackView() => InitializeComponent();
+
     public AudioManager Manager
     {
         get => GetValue(ManagerProperty);
         set => SetValue(ManagerProperty, value);
     }
-
-    private CancellationTokenSource? _cts;
-
-    public SoundPlaybackView() => InitializeComponent();
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {

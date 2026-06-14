@@ -1,5 +1,3 @@
-using Soundboword.ViewModels;
-
 namespace Soundboword.Models;
 
 public abstract record ShortcutAction(string Id);

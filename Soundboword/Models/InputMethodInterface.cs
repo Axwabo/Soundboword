@@ -1,9 +1,5 @@
-using System.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Soundboword.Inputs;
 using Soundboword.Inputs.Launchpad;
-using Soundboword.Services;
 
 namespace Soundboword.Models;
 

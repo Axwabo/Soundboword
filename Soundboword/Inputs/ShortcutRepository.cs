@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Soundboword.Models;
-using Soundboword.Services;
-
 namespace Soundboword.Inputs;
 
 public abstract class ShortcutRepository<T> : IShortcutRepository where T : notnull

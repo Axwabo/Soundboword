@@ -1,8 +1,4 @@
 using Avalonia.Threading;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Soundboword.Models;
-using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 

@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using Soundboword.Models;
-using Soundboword.Services;
-using Soundboword.ViewModels;
 using SoundFlow.Enums;
 using SoundFlow.Structs;
 
@@ -15,14 +7,14 @@ namespace Soundboword;
 public sealed class AudioManager
 {
 
-    private readonly SoundFlowDeviceManager _deviceManager;
-
     private static readonly AudioFormat Format = new()
     {
         Format = SampleFormat.F32,
         SampleRate = 48000,
         Channels = 2
     };
+
+    private readonly SoundFlowDeviceManager _deviceManager;
 
     private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
 

@@ -1,6 +1,4 @@
 ﻿using Avalonia.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Soundboword.Services;
 
 namespace Soundboword.ViewModels;
 

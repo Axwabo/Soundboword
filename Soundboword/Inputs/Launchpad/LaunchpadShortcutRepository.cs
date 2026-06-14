@@ -1,5 +1,3 @@
-using Soundboword.Services;
-
 namespace Soundboword.Inputs.Launchpad;
 
 public sealed class LaunchpadShortcutRepository : ShortcutRepository<LaunchpadKey>

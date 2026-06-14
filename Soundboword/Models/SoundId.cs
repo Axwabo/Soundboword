@@ -1,5 +1,3 @@
-using System;
-
 namespace Soundboword.Models;
 
 public readonly record struct SoundId(Guid Value)

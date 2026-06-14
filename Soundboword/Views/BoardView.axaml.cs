@@ -1,6 +1,4 @@
-using Avalonia.Controls;
 using Avalonia.Input;
-using Soundboword.ViewModels;
 
 namespace Soundboword.Views;
 

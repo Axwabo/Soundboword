@@ -1,6 +1,3 @@
-using Avalonia.Controls;
-using Soundboword.ViewModels;
-
 namespace Soundboword.Views;
 
 public sealed partial class MainWindow : Window

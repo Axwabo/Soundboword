@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Inputs;
-using Soundboword.Models;
-using Soundboword.ViewModels;
 
 namespace Soundboword.Services;
 

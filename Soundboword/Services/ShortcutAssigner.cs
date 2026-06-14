@@ -1,6 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using Soundboword.Models;
-
 namespace Soundboword.Services;
 
 public sealed partial class ShortcutAssigner : ObservableObject

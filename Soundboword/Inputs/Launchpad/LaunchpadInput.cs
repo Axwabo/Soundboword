@@ -1,5 +1,4 @@
 using Avalonia.Threading;
-using Soundboword.Services;
 using SoundFlow.Midi.Routing;
 using SoundFlow.Midi.Routing.Nodes;
 using SoundFlow.Midi.Structs;

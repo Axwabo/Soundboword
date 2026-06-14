@@ -1,7 +1,4 @@
-using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Microsoft.Extensions.DependencyInjection;
-using Soundboword.ViewModels;
 
 namespace Soundboword;
 

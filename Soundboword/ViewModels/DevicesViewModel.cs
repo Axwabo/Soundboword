@@ -1,16 +1,9 @@
-using System.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Soundboword.Services;
-
 namespace Soundboword.ViewModels;
 
 public sealed partial class DevicesViewModel : ViewModelBase
 {
 
     private bool _isRefreshing;
-
-    public SoundFlowDeviceManager DeviceManager { get; }
 
     public DevicesViewModel() => DeviceManager = new SoundFlowDeviceManager();
 
@@ -19,6 +12,8 @@ public sealed partial class DevicesViewModel : ViewModelBase
         DeviceManager = deviceManager;
         UpdateSelected();
     }
+
+    public SoundFlowDeviceManager DeviceManager { get; }
 
     [ObservableProperty]
     public partial int SelectedDeviceIndex { get; set; }

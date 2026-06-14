@@ -1,9 +1,5 @@
-using System;
-using Avalonia;
-using Microsoft.Extensions.DependencyInjection;
 using Soundboword.Inputs;
 using Soundboword.Inputs.Launchpad;
-using Soundboword.Services;
 
 namespace Soundboword;
 
