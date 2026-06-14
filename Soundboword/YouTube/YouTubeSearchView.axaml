@@ -12,20 +12,6 @@
     <Design.DataContext>
         <youTube:YouTubeSearchViewModel />
     </Design.DataContext>
-    <UserControl.Styles>
-        <Style Selector="Rectangle.loading">
-            <Style.Animations>
-                <Animation Duration="0:0:1" IterationCount="INFINITE" PlaybackDirection="Alternate" Easing="QuadraticEaseInOut">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Fill" Value="#555" />
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Fill" Value="#444" />
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-    </UserControl.Styles>
     <Grid RowDefinitions="Auto,*" RowSpacing="5">
         <TextBox Name="Query" Text="{Binding Query}" PlaceholderText="Search for a video, or paste a URL" PastingFromClipboard="TextBox_OnPastingFromClipboard" />
         <ProgressBar Grid.Row="1" MaxWidth="200" IsIndeterminate="True" ProgressTextFormat="Searching..." ShowProgressText="True" IsVisible="{Binding IsSearching}" />
@@ -40,7 +26,7 @@
                     <StackPanel>
                         <Panel>
                             <Viewbox Stretch="UniformToFill">
-                                <Rectangle Classes="loading" Width="{Binding ThumbnailResolution.Width}" Height="{Binding ThumbnailResolution.Height}" IsVisible="{Binding !Thumbnail^}" />
+                                <Rectangle Classes="loading" Width="16" Height="9" IsVisible="{Binding !Thumbnail^}" />
                             </Viewbox>
                             <Image Source="{Binding Thumbnail^, TargetNullValue={x:Static soundboword:ImageHelper.NotFound}}" Stretch="UniformToFill" />
                         </Panel>
