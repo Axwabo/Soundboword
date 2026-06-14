@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
         x:Class="Soundboword.Views.AddFromYouTubeWindow"
         x:DataType="viewModels:AddFromYouTubeViewModel"
-        Title="AddFromYouTubeWindow">
+        Title="Add Sowond from YouTube">
     <Design.DataContext>
         <viewModels:AddFromYouTubeViewModel />
     </Design.DataContext>
