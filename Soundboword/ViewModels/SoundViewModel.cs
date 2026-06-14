@@ -40,7 +40,11 @@ public sealed partial class SoundViewModel : ViewModelBase
     private void Stop() => List.AudioManager.StopAll(this);
 
     [RelayCommand]
-    private void ToggleLoop() => Loop = !Loop;
+    private void Assign()
+    {
+        List.Editor.Open(this);
+        List.Editor.StartAssigning();
+    }
 
     [RelayCommand]
     private void Configure() => List.Editor.Open(this);

@@ -70,4 +70,6 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(e.PropertyName);
 
+    public void StartAssigning() => _assigner?.IsAssigning = true;
+
 }
