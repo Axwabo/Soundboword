@@ -26,8 +26,8 @@
                     </MultiBinding>
                 </ToolTip.Tip>
             </Button>
-            <Button Grid.Row="2" Grid.Column="0" IsEnabled="{Binding AnyPlaybacks}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
-            <Button Grid.Row="2" Grid.Column="1" Command="{Binding AssignCommand}">⚡</Button>
+            <Button Grid.Row="2" Grid.Column="0" Command="{Binding AssignCommand}" ToolTip.Tip="Assign Shortcut">⚡</Button>
+            <Button Grid.Row="2" Grid.Column="1" IsEnabled="{Binding AnyPlaybacks}" Command="{Binding StopCommand}" ToolTip.Tip="Stop All Instances">🟦</Button>
             <Button Grid.Row="2" Grid.Column="2" ToolTip.Tip="Configure" Command="{Binding ConfigureCommand}">⚙️️</Button>
         </Grid>
     </Border>
