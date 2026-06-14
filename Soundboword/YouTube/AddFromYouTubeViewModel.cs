@@ -1,6 +1,4 @@
-using Soundboword.YouTube;
-
-namespace Soundboword.ViewModels;
+namespace Soundboword.YouTube;
 
 public sealed class AddFromYouTubeViewModel : ViewModelBase, IDisposable
 {

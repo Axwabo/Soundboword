@@ -1,4 +1,4 @@
-using Soundboword.Views;
+using Soundboword.YouTube;
 
 namespace Soundboword.ViewModels;
 

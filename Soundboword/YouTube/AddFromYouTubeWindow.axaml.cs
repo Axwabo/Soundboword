@@ -1,4 +1,4 @@
-namespace Soundboword.Views;
+namespace Soundboword.YouTube;
 
 public sealed partial class AddFromYouTubeWindow : Window
 {
