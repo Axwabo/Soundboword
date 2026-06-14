@@ -10,10 +10,11 @@
         <viewModels:BoardViewModel />
     </Design.DataContext>
     <Grid ColumnDefinitions="*,306" RowDefinitions="Auto,*" ColumnSpacing="3" RowSpacing="5">
-        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
-            <Button Command="{Binding List.AddCommand}">Add Sounds</Button>
+        <WrapPanel Orientation="Horizontal" ItemSpacing="3" LineSpacing="3">
             <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
-        </StackPanel>
+            <Button Command="{Binding List.AddCommand}">Add Sounds</Button>
+            <Button Command="{Binding AddFromYouTubeCommand}">Add From YouTube</Button>
+        </WrapPanel>
         <Panel Grid.Row="1" Grid.Column="0">
             <ScrollViewer PointerReleased="InputElement_OnPointerReleased">
                 <ItemsControl ItemsSource="{Binding List.Sounds}">

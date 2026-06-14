@@ -20,7 +20,8 @@ public sealed class App : Application
             .AddView<PlaybacksView, PlaybacksViewModel>()
             .AddView<InputsView, InputsViewModel>()
             .AddView<EditSoundView, EditSoundViewModel>()
-            .AddViewLocator<SoundView, SoundViewModel>();
+            .AddViewLocator<SoundView, SoundViewModel>()
+            .AddScoped<AddFromYouTubeViewModel>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

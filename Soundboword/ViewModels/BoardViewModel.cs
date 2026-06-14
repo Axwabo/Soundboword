@@ -1,14 +1,19 @@
+using Soundboword.Views;
+
 namespace Soundboword.ViewModels;
 
 public sealed partial class BoardViewModel : PageModelBase
 {
 
-    public BoardViewModel() : this(new SoundList(), new EditSoundViewModel())
+    private readonly IServiceProvider? _provider;
+
+    public BoardViewModel() : this(new SoundList(), new EditSoundViewModel(), null)
     {
     }
 
-    public BoardViewModel(SoundList list, EditSoundViewModel editor)
+    public BoardViewModel(SoundList list, EditSoundViewModel editor, IServiceProvider? provider)
     {
+        _provider = provider;
         List = list;
         Editor = editor;
     }
@@ -19,6 +24,13 @@ public sealed partial class BoardViewModel : PageModelBase
 
     [RelayCommand]
     private void StopAll() => List.AudioManager.StopAll();
+
+    [RelayCommand]
+    private void AddFromYouTube()
+    {
+        if (_provider != null)
+            AddFromYouTubeWindow.Show(_provider);
+    }
 
     public override void OnActivated()
     {
