@@ -25,4 +25,11 @@
         <PackageReference Include="YoutubeExplode.Converter" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Update="YouTube\YouTubeSearchView.axaml.cs">
+            <DependentUpon>YouTubeSearchView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+
 </Project>

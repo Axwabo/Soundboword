@@ -3,14 +3,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
         x:Class="Soundboword.Views.AddFromYouTubeWindow"
         x:DataType="viewModels:AddFromYouTubeViewModel"
         Title="AddFromYouTubeWindow">
-    <StackPanel Spacing="3">
-        <TextBox Text="{Binding SearchQuery}" />
-        <Button Command="{Binding DownloadCommand}" IsEnabled="{Binding IsValid}">Download</Button>
-        <Button Command="{Binding CancelCommand}">Cancel</Button>
-        <ProgressBar IsIndeterminate="{Binding IsIndeterminate}" Value="{Binding Progress}" Maximum="1" ShowProgressText="True" />
-    </StackPanel>
+    <Design.DataContext>
+        <viewModels:AddFromYouTubeViewModel />
+    </Design.DataContext>
+    <Panel Margin="3">
+        <UserControl Content="{Binding Search}" IsVisible="{Binding !Video.Video}" />
+        <UserControl Content="{Binding Video}" IsVisible="{Binding !!Video.Video}" />
+    </Panel>
 </Window>

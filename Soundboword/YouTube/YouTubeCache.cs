@@ -24,7 +24,7 @@ public static class YouTubeCache
             .SetPreset(ConversionPreset.Medium)
             .SetContainer(Container.Mp3)
             .Build();
-        await client.Videos.DownloadAsync([streamInfo], request, progress, cancellationToken);
+        await client.Videos.DownloadAsync([streamInfo], request, progress, cancellationToken).ConfigureAwait(false);
         return path;
     }
 

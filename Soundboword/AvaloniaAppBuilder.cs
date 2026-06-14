@@ -1,5 +1,6 @@
 using Soundboword.Inputs;
 using Soundboword.Inputs.Launchpad;
+using YoutubeExplode;
 
 namespace Soundboword;
 
@@ -19,7 +20,8 @@ public static class AvaloniaAppBuilder
                     .AddSingleton<SoundList>()
                     .AddSingleton<SoundEditingContext>()
                     .AddSingleton<ShortcutAssigner>()
-                    .AddSingleton<ShortcutList>();
+                    .AddSingleton<ShortcutList>()
+                    .AddSingleton<YoutubeClient>();
                 configureServices(services);
                 return new App {Services = services};
             })

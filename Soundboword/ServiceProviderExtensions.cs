@@ -14,6 +14,12 @@ public static class ServiceProviderExtensions
             return collection.AddViewLocator<TView, TViewModel>();
         }
 
+        public IServiceCollection AddScopedView<TViewModel>() where TViewModel : ViewModelBase, new()
+        {
+            collection.AddScoped<TViewModel>();
+            return collection.AddViewLocator<TView, TViewModel>();
+        }
+
         public IServiceCollection AddViewLocator<TViewModel>() where TViewModel : ViewModelBase
             => collection.AddSingleton<IDataTemplate>(new ViewLocator<TView, TViewModel>());
 

@@ -2,6 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
 using Soundboword.Views;
+using Soundboword.YouTube;
 
 namespace Soundboword;
 
@@ -21,7 +22,9 @@ public sealed class App : Application
             .AddView<InputsView, InputsViewModel>()
             .AddView<EditSoundView, EditSoundViewModel>()
             .AddViewLocator<SoundView, SoundViewModel>()
-            .AddScoped<AddFromYouTubeViewModel>();
+            .AddScoped<AddFromYouTubeViewModel>()
+            .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()
+            .AddScopedView<YouTubeVideoView, YouTubeVideoViewModel>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -36,6 +39,11 @@ public sealed class App : Application
 
             window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
             desktop.MainWindow = window;
+        }
+        else if (Design.IsDesignMode)
+        {
+            var provider = Services.BuildServiceProvider();
+            DataTemplates.AddRange(provider.GetServices<IDataTemplate>());
         }
 
         base.OnFrameworkInitializationCompleted();

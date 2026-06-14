@@ -5,14 +5,33 @@ using YoutubeExplode.Videos;
 
 namespace Soundboword.ViewModels;
 
-public sealed partial class AddFromYouTubeViewModel : ViewModelBase
+public sealed partial class AddFromYouTubeViewModel : ViewModelBase, IDisposable
 {
+
+    private readonly IServiceScope? _serviceScope;
 
     private readonly SoundList _soundList;
 
     private CancellationTokenSource? _cts = new();
 
+    public AddFromYouTubeViewModel()
+    {
+        Search = new YouTubeSearchViewModel();
+        Video = new YouTubeVideoViewModel();
+    }
+
+    public AddFromYouTubeViewModel(IServiceProvider provider)
+    {
+        _serviceScope = provider.CreateScope();
+        Search = _serviceScope.ServiceProvider.GetRequiredService<YouTubeSearchViewModel>();
+        Video = _serviceScope.ServiceProvider.GetRequiredService<YouTubeVideoViewModel>();
+    }
+
     public AddFromYouTubeViewModel(SoundList soundList) => _soundList = soundList;
+
+    public YouTubeSearchViewModel Search { get; }
+
+    public YouTubeVideoViewModel Video { get; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsValid))]
@@ -25,6 +44,8 @@ public sealed partial class AddFromYouTubeViewModel : ViewModelBase
     public partial double Progress { get; private set; } = -1;
 
     public bool IsIndeterminate => Progress is -1;
+
+    public void Dispose() => _serviceScope?.Dispose();
 
     public event Action? Canceled;
 
