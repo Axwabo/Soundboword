@@ -57,6 +57,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         if (path == null)
             return;
         model.Path = path;
+        model.UpdatePlaybackState(SoundState.Stopped);
         IsNotFound = false;
     }
 

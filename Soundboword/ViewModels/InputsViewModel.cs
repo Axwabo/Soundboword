@@ -6,7 +6,7 @@ namespace Soundboword.ViewModels;
 public sealed partial class InputsViewModel : PageModelBase
 {
 
-    private static readonly string File = Path.Combine(UserData.Folder, "inputs.json");
+    private const string File = "inputs";
 
     private readonly List<InputMethodInterface> _all;
 
@@ -21,11 +21,11 @@ public sealed partial class InputsViewModel : PageModelBase
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
         Context = context;
         Refresh();
-        var activated = UserData.Load(File, () => new HashSet<string>());
+        var activated = UserData.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         foreach (var input in Available)
             if (activated.Contains(input.Name))
                 input.Activated = true;
-        lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name));
+        lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         context.List.ShortcutsChanged += ListOnShortcutsChanged;
     }

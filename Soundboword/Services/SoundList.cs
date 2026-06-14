@@ -6,6 +6,8 @@ namespace Soundboword.Services;
 public sealed partial class SoundList
 {
 
+    private const string FileName = "sounds";
+
     private readonly FilePicker _filePicker;
 
     public SoundList()
@@ -20,7 +22,7 @@ public sealed partial class SoundList
         _filePicker = filePicker;
         Editor = editor;
         AudioManager = audioManager;
-        foreach (var sound in UserData.LoadSounds())
+        foreach (var sound in UserData.Load(FileName, () => [], SourceGenerationContext.Default.IEnumerableSoundDto))
         {
             var soundViewModel = new SoundViewModel
             {
@@ -37,7 +39,7 @@ public sealed partial class SoundList
             Sounds.Add(soundViewModel);
         }
 
-        lifetime?.Exit += (_, _) => UserData.SaveSounds(Sounds);
+        lifetime?.Exit += (_, _) => SaveSounds();
     }
 
     public static FilePickerOpenOptions Options { get; } = new()
@@ -59,6 +61,12 @@ public sealed partial class SoundList
 
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
+    private void SaveSounds() => UserData.Save(
+        FileName,
+        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume)),
+        SourceGenerationContext.Default.IEnumerableSoundDto
+    );
+
     [RelayCommand]
     private async Task Add()
     {
@@ -73,13 +81,13 @@ public sealed partial class SoundList
                 Name = Path.GetFileNameWithoutExtension(path),
                 List = this
             });
-        UserData.SaveSounds(Sounds);
+        SaveSounds();
     }
 
     public void Delete(SoundViewModel sound)
     {
         Sounds.Remove(sound);
-        UserData.SaveSounds(Sounds);
+        SaveSounds();
     }
 
 }

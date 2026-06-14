@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization.Metadata;
+
 namespace Soundboword.Inputs;
 
 public abstract class ShortcutRepository<T> : IShortcutRepository where T : notnull
@@ -7,21 +9,21 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
     private readonly Dictionary<string, T> _map;
     private readonly Dictionary<T, HashSet<Shortcut>> _shortcuts = [];
     private readonly Func<T, string> _toFriendlyName;
+    private readonly JsonTypeInfo<Dictionary<string, T>> _typeInfo;
 
-    protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName)
+    protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName, JsonTypeInfo<Dictionary<string, T>> typeInfo)
     {
         InputMethodName = inputMethodName;
         _audioManager = audioManager;
         _toFriendlyName = toFriendlyName;
-        _map = UserData.Load(File, () => new Dictionary<string, T>());
+        _typeInfo = typeInfo;
+        _map = UserData.Load(InputMethodName, () => new Dictionary<string, T>(), typeInfo);
         foreach (var sound in soundList.Sounds)
             if (_map.TryGetValue(sound.Id, out var key))
                 Assign(key, new TriggerSoundAction(sound), null);
         if (_map.TryGetValue(StopAllSoundsAction.Instance.Id, out var stopAllKey))
             Assign(stopAllKey, StopAllSoundsAction.Instance, null);
     }
-
-    private string File => Path.Combine(UserData.Folder, $"{InputMethodName}.json");
 
     public string InputMethodName { get; }
 
@@ -42,7 +44,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         _map.Remove(action.Id);
     }
 
-    public void Commit() => UserData.Save(File, _map);
+    public void Commit() => UserData.Save(InputMethodName, _map, _typeInfo);
 
     public bool Assign(T key, ShortcutAction action, HashSet<Shortcut>? all)
     {

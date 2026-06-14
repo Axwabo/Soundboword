@@ -1,32 +1,21 @@
-using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Soundboword.Inputs.Launchpad;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Soundboword;
 
 public static class UserData
 {
 
-    private static readonly JsonSerializerOptions Options = new()
-    {
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        Converters =
-        {
-            new JsonStringEnumConverter<TriggerMode>(),
-            new JsonStringEnumConverter<LaunchpadKey>(),
-        }
-    };
-
     public static string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
-    private static string Sounds { get; } = Path.Combine(Folder, "sounds.json");
+    private static string FullPath(string name) => Path.Combine(Folder, $"{name}.json");
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
-    public static string? Load(string path)
+    public static string? Load(string name)
     {
         EnsureDirectory();
+        var path = FullPath(name);
         if (!File.Exists(path))
             return null;
         try
@@ -39,12 +28,12 @@ public static class UserData
         }
     }
 
-    public static void Save(string path, string content)
+    public static void Save(string name, string content)
     {
         EnsureDirectory();
         try
         {
-            File.WriteAllText(path, content);
+            File.WriteAllText(FullPath(name), content);
         }
         catch (Exception)
         {
@@ -52,15 +41,16 @@ public static class UserData
         }
     }
 
-    public static T Load<T>(string path, Func<T> fallback) where T : notnull
+    public static T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T> typeInfo) where T : notnull
     {
         EnsureDirectory();
+        var path = FullPath(name);
         if (!File.Exists(path))
             return fallback();
         try
         {
             using var file = File.OpenRead(path);
-            return JsonSerializer.Deserialize<T>(file, Options) ?? fallback();
+            return JsonSerializer.Deserialize(file, typeInfo) ?? fallback();
         }
         catch (Exception)
         {
@@ -68,13 +58,13 @@ public static class UserData
         }
     }
 
-    public static void Save<T>(string path, T data) where T : notnull
+    public static void Save<T>(string name, T data, JsonTypeInfo<T> typeInfo) where T : notnull
     {
         EnsureDirectory();
         try
         {
-            using var file = File.Create(path);
-            JsonSerializer.Serialize(file, data, Options);
+            using var file = File.Create(FullPath(name));
+            JsonSerializer.Serialize(file, data, typeInfo);
         }
         catch (Exception)
         {
@@ -82,9 +72,5 @@ public static class UserData
             // TODO: log somehow
         }
     }
-
-    public static IReadOnlyList<SoundDto> LoadSounds() => Load<IReadOnlyList<SoundDto>>(Sounds, () => []);
-
-    public static void SaveSounds(ObservableCollection<SoundViewModel> sounds) => Save(Sounds, sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume)));
 
 }

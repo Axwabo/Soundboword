@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace Soundboword.Inputs.Launchpad;
 
+[JsonConverter(typeof(JsonStringEnumConverter<TriggerMode>))]
 public enum LaunchpadKey
 {
 
