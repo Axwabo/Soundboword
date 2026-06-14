@@ -44,6 +44,8 @@ public sealed class YouTubeVideo : IVideo, IDisposable
 
     public string? Description => (_source as Video)?.Description;
 
+    public DateTimeOffset? UploadDate => (_source as Video)?.UploadDate;
+
     public void Dispose()
     {
         _cts.Cancel();

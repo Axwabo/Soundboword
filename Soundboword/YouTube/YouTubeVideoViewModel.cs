@@ -27,21 +27,24 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsSet))]
+    [NotifyPropertyChangedFor(nameof(IsSet), nameof(Id), nameof(Title), nameof(Author), nameof(Description), nameof(Duration), nameof(UploadDate))]
     public partial YouTubeVideo? Video { get; private set; }
 
     public bool IsSet => Video != null;
 
     public bool CanDownload => Video != null && !IsDownloading;
 
-    [ObservableProperty]
-    public partial string Id { get; private set; } = "Id";
+    public string Id => $"https://youtu.be/{Video?.Id}";
 
-    [ObservableProperty]
-    public partial string Title { get; private set; } = "Title";
+    public string Title => Video?.Title ?? "Title";
 
-    [ObservableProperty]
-    public partial string Description { get; private set; } = "";
+    public string Author => Video?.Author ?? "Author";
+
+    public string Description => Video?.Description ?? "";
+
+    public TimeSpan? Duration => Video?.Duration;
+
+    public DateTimeOffset? UploadDate => Video?.UploadDate;
 
     [ObservableProperty]
     public partial bool IsLoadingDetails { get; private set; } = true;
@@ -78,12 +81,8 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     {
         _id = video.Id;
         Video = YouTubeVideo.Create(video);
-        Id = $"https://youtu.be/{video.Id}";
-        Title = video.Title;
-        var description = video.Description;
-        Description = description ?? "";
         IsLoadingDetails = false;
-        IsLoadingDescription = description == null;
+        IsLoadingDescription = Video.Description == null;
         if (IsLoadingDescription)
             _ = LoadDescriptionAsync();
     }
@@ -92,8 +91,6 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public void Close()
     {
         Dispose();
-        Title = "Title";
-        Description = "";
         Video = null;
     }
 
@@ -139,7 +136,6 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public async Task OpenAsync(VideoId id)
     {
         _id = id;
-        Id = $"https://youtu.be/{id}";
         CancelDetails();
         IsLoadingDetails = true;
         IsLoadingDescription = true;
@@ -168,7 +164,6 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         try
         {
             var video = await _client.Videos.GetAsync(_id, token);
-            Description = video.Description;
             Video = YouTubeVideo.Merge(Video, video);
         }
         catch (OperationCanceledException)
