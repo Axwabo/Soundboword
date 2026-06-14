@@ -5,10 +5,18 @@
              xmlns:youTube="clr-namespace:Soundboword.YouTube"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
              x:Class="Soundboword.YouTube.YouTubeSearchView"
-             x:DataType="youTube:YouTubeSearchViewModel">
+             x:DataType="youTube:YouTubeSearchViewModel"
+             Container.Name="window" Container.Sizing="Width">
     <Design.DataContext>
         <youTube:YouTubeSearchViewModel />
     </Design.DataContext>
+    <UserControl.Styles>
+        <ContainerQuery Name="window" Query="max-width:300">
+            <Style Selector="ListBox UniformGrid">
+                <Setter Property="Columns" Value="1" />
+            </Style>
+        </ContainerQuery>
+    </UserControl.Styles>
     <Grid RowDefinitions="Auto,*" RowSpacing="5">
         <TextBox Name="Query" Text="{Binding Query}" PlaceholderText="Search for a video, or paste a URL" PastingFromClipboard="TextBox_OnPastingFromClipboard" />
         <ProgressBar Grid.Row="1" MaxWidth="200" IsIndeterminate="True" ProgressTextFormat="Searching..." ShowProgressText="True" IsVisible="{Binding IsSearching}" />
@@ -21,7 +29,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Image Source="{Binding Thumbnail^}" MaxHeight="200" Stretch="UniformToFill" />
+                        <Image Source="{Binding Thumbnail^}" Stretch="UniformToFill" />
                         <Label FontWeight="Bold" Content="{Binding Title}" />
                         <Label>
                             <Label.Content>
