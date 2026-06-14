@@ -1,6 +1,6 @@
 using System.Threading;
 using Avalonia.Threading;
-using YoutubeExplode.Search;
+using YoutubeExplode;
 using YoutubeExplode.Videos;
 
 namespace Soundboword.YouTube;
@@ -8,21 +8,26 @@ namespace Soundboword.YouTube;
 public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 {
 
+    private readonly YoutubeClient _client;
     private readonly SoundList _soundList;
 
     private CancellationTokenSource? _cts;
 
     private VideoId _id;
 
-    public YouTubeVideoViewModel() : this(new SoundList())
+    public YouTubeVideoViewModel() : this(new YoutubeClient(), new SoundList())
     {
     }
 
-    public YouTubeVideoViewModel(SoundList soundList) => _soundList = soundList;
+    public YouTubeVideoViewModel(YoutubeClient client, SoundList soundList)
+    {
+        _client = client;
+        _soundList = soundList;
+    }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSet))]
-    public partial VideoSearchResult? Video { get; private set; }
+    public partial YouTubeVideo? Video { get; private set; }
 
     public bool IsSet => Video != null;
 
@@ -45,7 +50,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public event Action? Completed;
 
-    public void Open(VideoSearchResult video)
+    public void Open(YouTubeVideo video)
     {
         _id = video.Id;
         Video = video;

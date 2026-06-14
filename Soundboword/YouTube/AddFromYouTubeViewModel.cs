@@ -1,3 +1,5 @@
+using YoutubeExplode;
+
 namespace Soundboword.YouTube;
 
 public sealed class AddFromYouTubeViewModel : ViewModelBase, IDisposable
@@ -8,7 +10,7 @@ public sealed class AddFromYouTubeViewModel : ViewModelBase, IDisposable
     public AddFromYouTubeViewModel()
     {
         Search = new YouTubeSearchViewModel();
-        Video = new YouTubeVideoViewModel(new SoundList());
+        Video = new YouTubeVideoViewModel(new YoutubeClient(), new SoundList());
     }
 
     public AddFromYouTubeViewModel(IServiceProvider provider)

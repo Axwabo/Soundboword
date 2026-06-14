@@ -21,11 +21,12 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
+                        <Image Source="{Binding Thumbnail^}" MaxHeight="200" Stretch="UniformToFill" />
                         <Label FontWeight="Bold" Content="{Binding Title}" />
                         <Label>
                             <Label.Content>
                                 <MultiBinding StringFormat="\{0\} \{1:hh\':\'mm\':\'ss\}">
-                                    <Binding Path="Author.ChannelTitle" />
+                                    <Binding Path="Author" />
                                     <Binding Path="Duration" />
                                 </MultiBinding>
                             </Label.Content>
