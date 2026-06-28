@@ -24,6 +24,9 @@ public sealed partial class SoundViewModel : ViewModelBase
     public partial float Volume { get; set; } = 1;
 
     [ObservableProperty]
+    public partial OtherSoundInteraction Interaction { get; set; }
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AnyPlaybacks), nameof(CanTrigger), nameof(CanRelink))]
     public partial SoundState PlaybackState { get; private set; }
 

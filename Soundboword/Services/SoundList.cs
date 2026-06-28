@@ -32,7 +32,8 @@ public sealed partial class SoundList
                 Loop = sound.Loop,
                 Volume = sound.Volume,
                 Mode = sound.Mode,
-                List = this,
+                Interaction = sound.Interaction,
+                List = this
             };
             if (!File.Exists(soundViewModel.Path))
                 soundViewModel.UpdatePlaybackState(SoundState.Error);
@@ -88,7 +89,7 @@ public sealed partial class SoundList
 
     public void SaveSounds() => UserData.Save(
         FileName,
-        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume)),
+        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume, e.Interaction)),
         SourceGenerationContext.Default.IEnumerableSoundDto
     );
 

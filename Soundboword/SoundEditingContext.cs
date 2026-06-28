@@ -31,6 +31,16 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
+    public bool Loop
+    {
+        get => Model?.Loop ?? false;
+        set
+        {
+            Model?.Loop = value;
+            OnPropertyChanged();
+        }
+    }
+
     public float Volume
     {
         get => Model?.Volume ?? 1;
@@ -41,12 +51,12 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
-    public bool Loop
+    public OtherSoundInteraction Interaction
     {
-        get => Model?.Loop ?? false;
+        get => Model?.Interaction ?? OtherSoundInteraction.Nothing;
         set
         {
-            Model?.Loop = value;
+            Model?.Interaction = value;
             OnPropertyChanged();
         }
     }

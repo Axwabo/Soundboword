@@ -44,6 +44,8 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+        <Label>Interaction With Other Sounds:</Label>
+        <ComboBox SelectedItem="{Binding Path=Context.Interaction}" HorizontalAlignment="Stretch" ItemsSource="{x:Static models:InteractionExtensions.Interactions}" />
         <Label FontWeight="Bold">Shortcuts:</Label>
         <Panel>
             <Label IsVisible="{Binding !Active.Count}">No shortcuts assigned</Label>
