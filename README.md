@@ -16,6 +16,8 @@ Windows support is partial, but it's expected to work.
 MacOS support is not provided. You can compile the app yourself, and while it might work,
 functionality will be limited (no shortcuts).
 
+[^1]: Tested on Fedora KDE 43 
+
 # Installation
 
 [//]: # (TODO: Linux installation steps)
