@@ -11,6 +11,7 @@ using SoundFlow.Structs;
 
 namespace Soundboword.Services;
 
+[RegisterSingleton]
 public sealed class SoundFlowDeviceManager : IDisposable
 {
 

@@ -3,6 +3,7 @@ using Avalonia.Threading;
 
 namespace Soundboword.Services;
 
+[RegisterSingleton]
 public sealed partial class FilePicker : ObservableObject
 {
 

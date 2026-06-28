@@ -3,6 +3,7 @@ using Soundboword.Inputs;
 
 namespace Soundboword.Services;
 
+[RegisterSingleton]
 public sealed class ShortcutList
 {
 

@@ -1,5 +1,6 @@
 namespace Soundboword.Inputs.Launchpad;
 
+[RegisterSingleton<IShortcutRepository>]
 public sealed class LaunchpadShortcutRepository : ShortcutRepository<LaunchpadKey>
 {
 
