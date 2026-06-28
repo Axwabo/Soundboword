@@ -3,6 +3,7 @@ using Avalonia.Platform.Storage;
 
 namespace Soundboword.Services;
 
+[RegisterSingleton]
 public sealed partial class SoundList
 {
 

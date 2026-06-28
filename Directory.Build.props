@@ -6,6 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Injectio" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Using Include="System" />
         <Using Include="System.Collections.Generic" />
         <Using Include="System.Collections.ObjectModel" />
@@ -15,9 +19,13 @@
         <Using Include="System.Threading.Tasks" />
         <Using Include="Avalonia" />
         <Using Include="Avalonia.Controls" />
+
         <Using Include="CommunityToolkit.Mvvm.ComponentModel" />
         <Using Include="CommunityToolkit.Mvvm.Input" />
+
+        <Using Include="Injectio.Attributes" />
         <Using Include="Microsoft.Extensions.DependencyInjection" />
+
         <Using Include="Soundboword.Models" />
         <Using Include="Soundboword.Services" />
         <Using Include="Soundboword.ViewModels" />

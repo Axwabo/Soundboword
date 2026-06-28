@@ -1,6 +1,7 @@
 namespace Soundboword;
 
 // TODO: thread safety
+[RegisterSingleton]
 public sealed class AudioManager
 {
 

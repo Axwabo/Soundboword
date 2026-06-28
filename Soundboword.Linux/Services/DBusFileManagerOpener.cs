@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 namespace Soundboword.Linux.Services;
 
+[RegisterSingleton<IFileManagerOpener>]
 public sealed class DBusFileManagerOpener : IFileManagerOpener
 {
 
