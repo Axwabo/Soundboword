@@ -1,27 +1,14 @@
-using SoundFlow.Enums;
-using SoundFlow.Structs;
-
 namespace Soundboword;
 
 // TODO: thread safety
 public sealed class AudioManager
 {
 
-    private static readonly AudioFormat Format = new()
-    {
-        Format = SampleFormat.F32,
-        SampleRate = 48000,
-        Channels = 2
-    };
-
     private readonly SoundFlowDeviceManager _deviceManager;
 
     private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
 
-    public AudioManager(SoundFlowDeviceManager deviceManager)
-    {
-        _deviceManager = deviceManager;
-    }
+    public AudioManager(SoundFlowDeviceManager deviceManager) => _deviceManager = deviceManager;
 
     public ObservableCollection<SoundPlayback> AllSounds { get; } = [];
 
@@ -39,10 +26,7 @@ public sealed class AudioManager
                 TogglePause(sound);
                 break;
             case TriggerMode.StartStop when _sounds.TryGetValue(sound, out var list):
-                StopAll(list);
-                sound.PropertyChanged -= SoundOnPropertyChanged;
-                sound.UpdatePlaybackState(SoundState.Stopped);
-                _sounds.Remove(sound);
+                StopAll(sound, list);
                 break;
             case TriggerMode.StartRestart when _sounds.TryGetValue(sound, out var list):
                 foreach (var played in list)
@@ -55,11 +39,29 @@ public sealed class AudioManager
         }
     }
 
+    private void StopAll(SoundViewModel sound, List<SoundPlayback> list)
+    {
+        StopAll(list);
+        sound.PropertyChanged -= SoundOnPropertyChanged;
+        sound.UpdatePlaybackState(SoundState.Stopped);
+        _sounds.Remove(sound);
+        ResumeOthers(sound);
+    }
+
     public void TogglePause(SoundViewModel sound)
     {
         if (!_sounds.TryGetValue(sound, out var list))
             return;
-        var pause = sound.PlaybackState == SoundState.Playing;
+        if (sound.PlaybackState == SoundState.Playing)
+            sound.Pause(IPlaybackSuspender.User);
+        else
+            sound.Resume(IPlaybackSuspender.User);
+        UpdatePausedState(sound, list);
+    }
+
+    private static void UpdatePausedState(SoundViewModel sound, List<SoundPlayback> list)
+    {
+        var pause = sound.IsPaused;
         foreach (var playback in list)
             if (pause)
                 playback.Player.Pause();
@@ -98,10 +100,38 @@ public sealed class AudioManager
         list.Add(soundPlayback);
         AllSounds.Add(soundPlayback);
         soundPlayback.Player.PlaybackEnded += RemoveSoundOnEnd;
+        ApplyInteraction(sound);
         if (sound.PlaybackState == SoundState.Paused)
             return;
         soundPlayback.Player.Play();
         sound.UpdatePlaybackState(SoundState.Playing);
+    }
+
+    private void ApplyInteraction(SoundViewModel sound)
+    {
+        switch (sound.Interaction)
+        {
+            case OtherSoundInteraction.Nothing:
+                break;
+            case OtherSoundInteraction.Stop:
+                foreach (var (other, list) in _sounds.ToDictionary())
+                    if (other != sound)
+                        StopAll(other, list);
+                break;
+            case OtherSoundInteraction.Pause:
+                foreach (var (other, list) in _sounds)
+                {
+                    if (other == sound)
+                        continue;
+                    other.Pause(sound);
+                    UpdatePausedState(other, list);
+                }
+
+                break;
+            case OtherSoundInteraction.Mute:
+                // TODO
+                break;
+        }
     }
 
     public void StopAll()
@@ -141,6 +171,7 @@ public sealed class AudioManager
         sound.PropertyChanged -= SoundOnPropertyChanged;
         sound.UpdatePlaybackState(SoundState.Stopped);
         _sounds.Remove(sound);
+        ResumeOthers(sound);
     }
 
     public void Stop(SoundPlayback playback)
@@ -183,6 +214,16 @@ public sealed class AudioManager
         StopAll(list);
         sound.PropertyChanged -= SoundOnPropertyChanged;
         sound.UpdatePlaybackState(SoundState.Stopped);
+        ResumeOthers(sound);
+    }
+
+    private void ResumeOthers(SoundViewModel sound)
+    {
+        foreach (var (other, playbacks) in _sounds)
+        {
+            other.Resume(sound);
+            UpdatePausedState(other, playbacks);
+        }
     }
 
 }

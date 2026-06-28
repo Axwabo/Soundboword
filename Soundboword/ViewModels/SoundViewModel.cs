@@ -2,8 +2,10 @@ using Avalonia.Threading;
 
 namespace Soundboword.ViewModels;
 
-public sealed partial class SoundViewModel : ViewModelBase
+public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
 {
+
+    private readonly HashSet<IPlaybackSuspender> _suspenders = [];
 
     public required SoundId Id { get; init; }
 
@@ -36,6 +38,17 @@ public sealed partial class SoundViewModel : ViewModelBase
 
     public bool CanRelink => PlaybackState is SoundState.Stopped or SoundState.Error;
 
+    public bool IsPaused
+    {
+        get
+        {
+            lock (_suspenders)
+            {
+                return _suspenders.Count != 0;
+            }
+        }
+    }
+
     [RelayCommand]
     private void Trigger() => List.AudioManager.Trigger(this);
 
@@ -52,6 +65,31 @@ public sealed partial class SoundViewModel : ViewModelBase
     [RelayCommand]
     private void Configure() => List.Editor.Open(this);
 
-    public void UpdatePlaybackState(SoundState state) => Dispatcher.UIThread.InvokeOrPost(() => PlaybackState = state);
+    public void UpdatePlaybackState(SoundState state) => Dispatcher.UIThread.InvokeOrPost(() =>
+    {
+        PlaybackState = state;
+        if (state != SoundState.Stopped)
+            return;
+        lock (_suspenders)
+        {
+            _suspenders.Clear();
+        }
+    });
+
+    public void Pause(IPlaybackSuspender suspender)
+    {
+        lock (_suspenders)
+        {
+            _suspenders.Add(suspender);
+        }
+    }
+
+    public void Resume(IPlaybackSuspender suspender)
+    {
+        lock (_suspenders)
+        {
+            _suspenders.Remove(suspender);
+        }
+    }
 
 }
