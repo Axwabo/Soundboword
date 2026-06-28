@@ -15,7 +15,7 @@
         <x:Double x:Key="TabItemHeaderFontSize">18</x:Double>
     </Window.Resources>
     <Panel>
-        <TabControl TabStripPlacement="Left" Padding="5" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+        <TabControl IsTabStop="True" TabStripPlacement="Left" Padding="5" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
             <TabItem Header="🔊 Sounds">
                 <UserControl Content="{Binding Board}" />
             </TabItem>
@@ -28,11 +28,11 @@
             <TabItem Header="🎛️ Inputs">
                 <UserControl Content="{Binding Inputs}" />
             </TabItem>
-            <TabItem Header="⚙️ Settings">
+            <TabItem Header=" ⚙️ Settings">
                 <UserControl Content="{Binding Preferences}" />
             </TabItem>
         </TabControl>
-        <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
+        <Panel Grid.Column="0" Grid.ColumnSpan="2" Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
             <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
         </Panel>
     </Panel>
