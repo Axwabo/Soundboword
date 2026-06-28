@@ -28,6 +28,9 @@
             <TabItem Header="🎛️ Inputs">
                 <UserControl Content="{Binding Inputs}" />
             </TabItem>
+            <TabItem Header="⚙️ Settings">
+                <UserControl Content="{Binding Preferences}" />
+            </TabItem>
         </TabControl>
         <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
             <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>

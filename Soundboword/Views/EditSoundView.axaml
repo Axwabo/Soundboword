@@ -37,13 +37,7 @@
         </Grid>
         <TextBlock IsVisible="{Binding IsNotFound}" TextWrapping="Wrap" Foreground="Red" FontWeight="SemiBold" MaxWidth="300">File not found!</TextBlock>
         <Label>Trigger Mode:</Label>
-        <ComboBox SelectedItem="{Binding Path=Context.TriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}" HorizontalAlignment="Stretch">
-            <ComboBox.ItemTemplate>
-                <DataTemplate DataType="models:TriggerMode">
-                    <TextBlock Text="{Binding Converter={StaticResource PlaybackMode}}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <ComboBox SelectedItem="{Binding Path=Context.TriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}" HorizontalAlignment="Stretch" DisplayMemberBinding="{Binding Converter={StaticResource PlaybackMode}}" />
         <Label>Interaction With Other Sounds:</Label>
         <ComboBox SelectedItem="{Binding Path=Context.Interaction}" HorizontalAlignment="Stretch" ItemsSource="{x:Static models:InteractionExtensions.Interactions}" />
         <Label FontWeight="Bold">Shortcuts:</Label>

@@ -1,6 +1,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
+using Soundboword.Settings;
 using Soundboword.Views;
 using Soundboword.YouTube;
 
@@ -21,6 +22,7 @@ public sealed class App : Application
             .AddView<PlaybacksView, PlaybacksViewModel>()
             .AddView<InputsView, InputsViewModel>()
             .AddView<EditSoundView, EditSoundViewModel>()
+            .AddView<PreferencesView, Preferences>()
             .AddViewLocator<SoundView, SoundViewModel>()
             .AddScoped<AddFromYouTubeViewModel>()
             .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()

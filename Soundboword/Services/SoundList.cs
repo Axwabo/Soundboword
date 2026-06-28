@@ -1,5 +1,6 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using Soundboword.Settings;
 
 namespace Soundboword.Services;
 
@@ -11,16 +12,20 @@ public sealed partial class SoundList
 
     private readonly FilePicker _filePicker;
 
+    private readonly Preferences _preferences;
+
     public SoundList()
     {
         AudioManager = new AudioManager(new SoundFlowDeviceManager());
         _filePicker = new FilePicker();
+        _preferences = new Preferences();
         Editor = new SoundEditingContext();
     }
 
-    public SoundList(FilePicker filePicker, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
+    public SoundList(FilePicker filePicker, Preferences preferences, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
     {
         _filePicker = filePicker;
+        _preferences = preferences;
         Editor = editor;
         AudioManager = audioManager;
         foreach (var sound in UserData.Load(FileName, () => [], SourceGenerationContext.Default.IEnumerableSoundDto))
@@ -79,7 +84,8 @@ public sealed partial class SoundList
         Id = Guid.NewGuid(),
         Path = path,
         Name = name,
-        List = this
+        List = this,
+        Mode = _preferences.DefaultTriggerMode
     });
 
     public void Delete(SoundViewModel sound)
