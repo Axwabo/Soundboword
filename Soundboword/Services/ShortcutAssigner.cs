@@ -1,6 +1,6 @@
 namespace Soundboword.Services;
 
-[RegisterSingleton]
+[RegisterSingleton(Registration = RegistrationStrategy.Self)]
 public sealed partial class ShortcutAssigner : ObservableObject
 {
 

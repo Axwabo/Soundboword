@@ -1,6 +1,6 @@
 namespace Soundboword;
 
-[RegisterSingleton]
+[RegisterSingleton(Registration = RegistrationStrategy.Self)]
 public sealed partial class SoundEditingContext : ObservableObject
 {
 
