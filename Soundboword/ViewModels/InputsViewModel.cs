@@ -18,14 +18,14 @@ public sealed partial class InputsViewModel : PageModelBase
 
     public InputsViewModel(IClassicDesktopStyleApplicationLifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
     {
+        var prefs = UserData.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
         Context = context;
         Refresh();
-        var activated = UserData.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         foreach (var input in Available)
-            if (activated.Contains(input.Name))
+            if (prefs.Remove(input.Name))
                 input.Activated = true;
-        lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name), SourceGenerationContext.Default.IEnumerableString);
+        lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         context.List.ShortcutsChanged += ListOnShortcutsChanged;
     }
