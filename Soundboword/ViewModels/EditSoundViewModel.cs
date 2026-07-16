@@ -62,6 +62,12 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void OpenEditor()
+    {
+        // TODO
+    }
+
+    [RelayCommand]
     private void TogglePause()
     {
         if (Context.Model != null)
