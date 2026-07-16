@@ -6,36 +6,28 @@ namespace Soundboword.ViewModels;
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
 
-    public MainWindowViewModel()
+    public MainWindowViewModel() : this(new BoardViewModel(),
+        new DevicesViewModel(new SoundFlowDeviceManager()),
+        new PlaybacksViewModel(),
+        new InputsViewModel(),
+        new Preferences(),
+        new FilePicker(),
+        new ShortcutAssigner())
     {
-        Board = new BoardViewModel();
-        Devices = new DevicesViewModel(new SoundFlowDeviceManager());
-        Playbacks = new PlaybacksViewModel();
-        Inputs = new InputsViewModel();
-        Preferences = new Preferences();
-        FilePicker = new FilePicker();
-        ShortcutAssigner = new ShortcutAssigner();
     }
 
     public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, Preferences preferences, FilePicker filePicker, ShortcutAssigner shortcutAssigner)
     {
-        Board = board;
-        Devices = devices;
-        Playbacks = playbacks;
-        Inputs = inputs;
-        Preferences = preferences;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
+        Pages.Add(new TabItemViewModel("Sounds", "🔊", board));
+        Pages.Add(new TabItemViewModel("Devices", "🎧", devices));
+        Pages.Add(new TabItemViewModel("Playbacks", "🎚️", playbacks));
+        Pages.Add(new TabItemViewModel("Inputs", "🎛️", inputs));
+        Pages.Add(new TabItemViewModel("Settings", "⚙️", preferences));
     }
 
-    public BoardViewModel Board { get; }
-
-    public DevicesViewModel Devices { get; }
-
-    public PlaybacksViewModel Playbacks { get; }
-
-    public InputsViewModel Inputs { get; }
-    public Preferences Preferences { get; }
+    public List<TabItemViewModel> Pages { get; } = [];
 
     public FilePicker FilePicker { get; }
 

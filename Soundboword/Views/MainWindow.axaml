@@ -15,22 +15,20 @@
         <x:Double x:Key="TabItemHeaderFontSize">18</x:Double>
     </Window.Resources>
     <Panel>
-        <TabControl TabStripPlacement="Left" Padding="5" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-            <TabItem Header="🔊 Sounds">
-                <UserControl Content="{Binding Board}" />
-            </TabItem>
-            <TabItem Header="🎧 Devices">
-                <UserControl Content="{Binding Devices}" />
-            </TabItem>
-            <TabItem Header="🎚️  Playbacks">
-                <UserControl Content="{Binding Playbacks}" />
-            </TabItem>
-            <TabItem Header="🎛️ Inputs">
-                <UserControl Content="{Binding Inputs}" />
-            </TabItem>
-            <TabItem Header="⚙️ Settings">
-                <UserControl Content="{Binding Preferences}" />
-            </TabItem>
+        <TabControl TabStripPlacement="Left" Padding="5" ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="30,Auto">
+                        <Label Content="{Binding Icon}" HorizontalContentAlignment="Center" />
+                        <Label Grid.Column="1" Content="{Binding Header}" VerticalContentAlignment="Center" />
+                    </Grid>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="vm:TabItemViewModel">
+                    <ContentControl Content="{Binding Content}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
         <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
             <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
