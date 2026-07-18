@@ -54,8 +54,8 @@
         <Rectangle Grid.Row="4" Grid.Column="0" Classes="loading" IsVisible="{Binding IsLoadingStreams}" MinHeight="60" />
         <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal" Spacing="10">
             <Label VerticalContentAlignment="Center">Format:</Label>
-            <RadioButton IsChecked="True">mp3</RadioButton>
-            <RadioButton>wav</RadioButton>
+            <RadioButton IsChecked="{Binding Mp3}">mp3</RadioButton>
+            <RadioButton IsCancel="{Binding Wav}">wav</RadioButton>
         </StackPanel>
         <controls:Thumbnail Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" DataContext="{Binding Video}" MaxHeight="150" />
         <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">

@@ -71,7 +71,10 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public partial AudioOnlyStreamInfo? SelectedStream { get; set; }
 
     [ObservableProperty]
-    public partial Container SelectedContainer { get; set; } = Container.Mp3;
+    public partial bool Mp3 { get; set; } = true;
+
+    [ObservableProperty]
+    public partial bool Wav { get; set; }
 
     public void Dispose()
     {
@@ -118,7 +121,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         {
             var token = _download.Token;
             var progress = new Progress<double>(d => Dispatcher.UIThread.Post(() => Progress = d));
-            var path = await YouTubeCache.CacheAsync(_id, SelectedStream, progress, Container.Mp3, token);
+            var path = await YouTubeCache.CacheAsync(_id, SelectedStream, progress, Wav ? new Container("wav") : Container.Mp3, token);
             _soundList.Add(path, Title);
             _soundList.SaveSounds();
             Completed?.Invoke();
