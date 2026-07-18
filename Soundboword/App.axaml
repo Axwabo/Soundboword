@@ -20,6 +20,7 @@
     </Application.Styles>
 
     <Application.Resources>
+        <converters:AudioOnlyStreamConverter x:Key="AudioOnlyStream" />
         <converters:TriggerModeConverter x:Key="PlaybackMode" />
         <converters:SoundStateConverter x:Key="SoundState" />
         <SolidColorBrush x:Key="Playing" Color="#1100ff00" />

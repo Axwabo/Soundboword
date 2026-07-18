@@ -42,8 +42,6 @@ public sealed class YouTubeVideo : IVideo, IDisposable
 
     public Task<Bitmap?> Thumbnail { get; }
 
-    public string? Description => (_source as Video)?.Description;
-
     public DateTimeOffset? UploadDate => (_source as Video)?.UploadDate;
 
     public void Dispose()
@@ -67,7 +65,5 @@ public sealed class YouTubeVideo : IVideo, IDisposable
     IReadOnlyList<Thumbnail> IVideo.Thumbnails => _source?.Thumbnails ?? ReadOnlyCollection<Thumbnail>.Empty;
 
     public static YouTubeVideo Create(IVideo video) => video as YouTubeVideo ?? new YouTubeVideo(video);
-
-    public static YouTubeVideo Merge(YouTubeVideo? video, Video full) => video == null || video == Loading ? new YouTubeVideo(full) : new YouTubeVideo(full, video.Thumbnail);
 
 }

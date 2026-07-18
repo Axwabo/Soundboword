@@ -2,6 +2,9 @@ using System.Threading;
 using Avalonia.Threading;
 using YoutubeExplode;
 using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.ClosedCaptions;
+using YoutubeExplode.Videos.Streams;
+using Container = YoutubeExplode.Videos.Streams.Container;
 
 namespace Soundboword.YouTube;
 
@@ -18,6 +21,8 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public YouTubeVideoViewModel() : this(new YoutubeClient(), new SoundList())
     {
+        Streams.Add(new AudioOnlyStreamInfo("", Container.Mp3, new FileSize(10000), new Bitrate(10000), "aac", null, null));
+        Streams.Add(new AudioOnlyStreamInfo("", Container.WebM, new FileSize(3000), new Bitrate(8000), "idk", new Language("en-US", "English madafaka"), null));
     }
 
     public YouTubeVideoViewModel(YoutubeClient client, SoundList soundList)
@@ -27,7 +32,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsSet), nameof(Id), nameof(Title), nameof(Author), nameof(Description), nameof(Duration), nameof(UploadDate))]
+    [NotifyPropertyChangedFor(nameof(IsSet), nameof(Id), nameof(Title), nameof(Author), nameof(Duration), nameof(UploadDate))]
     public partial YouTubeVideo? Video { get; private set; }
 
     public bool IsSet => Video != null;
@@ -40,8 +45,6 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public string Author => Video?.Author ?? "Author";
 
-    public string Description => Video?.Description ?? "";
-
     public TimeSpan Duration => Video?.Duration ?? TimeSpan.Zero;
 
     public DateTimeOffset UploadDate => Video?.UploadDate ?? DateTimeOffset.UnixEpoch;
@@ -50,7 +53,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public partial bool IsLoadingDetails { get; private set; } = true;
 
     [ObservableProperty]
-    public partial bool IsLoadingDescription { get; private set; } = true;
+    public partial bool IsLoadingStreams { get; private set; } = true;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
@@ -62,8 +65,18 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public bool IsIndeterminate => double.IsNaN(Progress);
 
+    public ObservableCollection<AudioOnlyStreamInfo> Streams { get; } = [];
+
+    [ObservableProperty]
+    public partial AudioOnlyStreamInfo? SelectedStream { get; set; }
+
+    [ObservableProperty]
+    public partial Container SelectedContainer { get; set; } = Container.Mp3;
+
     public void Dispose()
     {
+        SelectedStream = null;
+        Streams.Clear();
         CancelDetails();
         CancelDownload();
     }
@@ -82,9 +95,9 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         _id = video.Id;
         Video = YouTubeVideo.Create(video);
         IsLoadingDetails = false;
-        IsLoadingDescription = Video.Description == null;
-        if (IsLoadingDescription)
-            _ = LoadDescriptionAsync();
+        IsLoadingStreams = Streams.Count == 0;
+        if (IsLoadingStreams)
+            _ = LoadStreamsAsync();
     }
 
     [RelayCommand]
@@ -105,7 +118,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         {
             var token = _download.Token;
             var progress = new Progress<double>(d => Dispatcher.UIThread.Post(() => Progress = d));
-            var path = await YouTubeCache.CacheAsync(_id, progress, token);
+            var path = await YouTubeCache.CacheAsync(_id, SelectedStream, progress, Container.Mp3, token);
             _soundList.Add(path, Title);
             _soundList.SaveSounds();
             Completed?.Invoke();
@@ -138,7 +151,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         _id = id;
         CancelDetails();
         IsLoadingDetails = true;
-        IsLoadingDescription = true;
+        IsLoadingStreams = true;
         Video = YouTubeVideo.Loading;
         _details = new CancellationTokenSource();
         var token = _details.Token;
@@ -151,27 +164,28 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         }
         finally
         {
-            IsLoadingDetails = IsLoadingDescription = false;
+            IsLoadingDetails = false;
         }
     }
 
-    private async Task LoadDescriptionAsync()
+    private async Task LoadStreamsAsync()
     {
         CancelDetails();
         _details = new CancellationTokenSource();
         var token = _details.Token;
-        IsLoadingDescription = true;
+        IsLoadingStreams = true;
         try
         {
-            var video = await _client.Videos.GetAsync(_id, token);
-            Video = YouTubeVideo.Merge(Video, video);
+            var manifest = await _client.Videos.Streams.GetManifestAsync(_id, token);
+            foreach (var info in manifest.GetAudioOnlyStreams())
+                Streams.Add(info);
         }
         catch (OperationCanceledException)
         {
         }
         finally
         {
-            IsLoadingDescription = false;
+            IsLoadingStreams = false;
         }
     }
 

@@ -10,7 +10,7 @@
     <Design.DataContext>
         <youTube:YouTubeVideoViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" RowSpacing="3" ColumnSpacing="3">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" RowSpacing="3" ColumnSpacing="3">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="300" Width="*" />
             <ColumnDefinition MinWidth="100" Width="Auto" />
@@ -35,17 +35,32 @@
             <Label>•</Label>
             <Panel>
                 <Label Content="{Binding UploadDate, StringFormat=d}" />
-                <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDescription}" />
+                <Rectangle Classes="loading" IsVisible="{Binding IsLoadingStreams}" />
             </Panel>
         </StackPanel>
-        <ScrollViewer Grid.Row="4" Grid.Column="0" IsVisible="{Binding !IsLoadingDescription}">
-            <TextBlock TextWrapping="Wrap" Text="{Binding Description}" />
-        </ScrollViewer>
-        <Rectangle Grid.Row="4" Grid.Column="0" Classes="loading" IsVisible="{Binding IsLoadingDescription}" MinHeight="60" />
-        <controls:Thumbnail Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" DataContext="{Binding Video}" MaxHeight="200" />
-        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
+        <Grid Grid.Row="4" Grid.Column="0" RowDefinitions="Auto,*" IsVisible="{Binding !IsLoadingStreams}">
+            <Label>Stream to download:</Label>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Streams}" SelectedItem="{Binding SelectedStream}" Background="Transparent">
+                <ListBox.Resources>
+                    <Thickness x:Key="ListBoxItemPadding">5</Thickness>
+                </ListBox.Resources>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton Content="{Binding Converter={StaticResource AudioOnlyStream}}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Rectangle Grid.Row="4" Grid.Column="0" Classes="loading" IsVisible="{Binding IsLoadingStreams}" MinHeight="60" />
+        <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal" Spacing="10">
+            <Label VerticalContentAlignment="Center">Format:</Label>
+            <RadioButton IsChecked="True">mp3</RadioButton>
+            <RadioButton>wav</RadioButton>
+        </StackPanel>
+        <controls:Thumbnail Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" DataContext="{Binding Video}" MaxHeight="150" />
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
             <Button Command="{Binding DownloadCommand}" HotKey="Enter">Download</Button>
-            <Button Command="{Binding CancelDownloadCommand}" IsEnabled="{Binding CanDownload}">Cancel</Button>
+            <Button Command="{Binding CancelDownloadCommand}" IsEnabled="{Binding !CanDownload}">Cancel</Button>
             <ProgressBar IsVisible="{Binding IsDownloading}" Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" ShowProgressText="True" ProgressTextFormat="\{1:0\}%" Maximum="1" />
         </StackPanel>
     </Grid>
