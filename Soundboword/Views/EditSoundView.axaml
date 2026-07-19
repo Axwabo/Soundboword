@@ -21,7 +21,10 @@
     </UserControl.Styles>
     <StackPanel Orientation="Vertical" Spacing="3">
         <TextBox Text="{Binding Context.Name}" />
-        <Label Content="{Binding Context.Volume, StringFormat=Volume: \{0:P0\}}" />
+        <StackPanel Orientation="Horizontal">
+            <Label VerticalAlignment="Center">Volume:</Label>
+            <NumericUpDown ShowButtonSpinner="False" Value="{Binding Context.Volume}" FormatString="P0" Minimum="0" Maximum="1.5" Increment="0.1" ClipValueToMinMax="True" />
+        </StackPanel>
         <Slider Margin="0" Padding="0" Minimum="0" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Value="{Binding Context.Volume}" />
         <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*,*,*" RowSpacing="3" ColumnSpacing="3">
             <ToggleButton Classes="icon" IsChecked="{Binding Context.Loop}" ToolTip.Tip="{Binding Context.Loop, StringFormat=Loop: \{0\}}">🔂</ToggleButton>
