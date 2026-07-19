@@ -6,10 +6,16 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     private readonly ShortcutAssigner? _assigner;
 
-    public SoundEditingContext(ShortcutAssigner? assigner = null) => _assigner = assigner;
+    public SoundEditingContext(FilePicker filePicker, ShortcutAssigner? assigner = null)
+    {
+        FilePicker = filePicker;
+        _assigner = assigner;
+    }
+
+    public FilePicker FilePicker { get; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(Loop), nameof(Interaction), nameof(CanRelink))]
+    [NotifyPropertyChangedFor(nameof(Name), nameof(TriggerMode), nameof(Volume), nameof(Loop), nameof(Interaction), nameof(CanRelink), nameof(IsNotFound))]
     public partial SoundViewModel? Model { get; private set; }
 
     public string Name
@@ -63,6 +69,8 @@ public sealed partial class SoundEditingContext : ObservableObject
     }
 
     public bool CanRelink => Model?.CanRelink ?? false;
+
+    public bool IsNotFound => Model?.IsNotFound ?? false;
 
     public void Open(SoundViewModel model)
     {

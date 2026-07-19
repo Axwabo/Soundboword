@@ -10,6 +10,19 @@ public sealed partial class SoundList
 
     private const string FileName = "sounds";
 
+    public static FilePickerOpenOptions Options { get; } = new()
+    {
+        Title = "Pick a sound",
+        FileTypeFilter =
+        [
+            new FilePickerFileType("Audio files (mp3, wav)")
+            {
+                Patterns = ["*.mp3", "*.wav"],
+                MimeTypes = ["audio/mpeg", "audio/wav"]
+            }
+        ]
+    };
+
     private readonly FilePicker _filePicker;
 
     private readonly Preferences _preferences;
@@ -19,7 +32,7 @@ public sealed partial class SoundList
         AudioManager = new AudioManager(new SoundFlowDeviceManager());
         _filePicker = new FilePicker();
         _preferences = new Preferences();
-        Editor = new SoundEditingContext();
+        Editor = new SoundEditingContext(_filePicker);
     }
 
     public SoundList(FilePicker filePicker, Preferences preferences, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
@@ -42,25 +55,12 @@ public sealed partial class SoundList
                 List = this
             };
             if (!File.Exists(soundViewModel.Path))
-                soundViewModel.UpdatePlaybackState(SoundState.Error);
+                soundViewModel.UpdatePlaybackState(SoundState.NotFound);
             Sounds.Add(soundViewModel);
         }
 
         lifetime?.Exit += (_, _) => SaveSounds();
     }
-
-    public static FilePickerOpenOptions Options { get; } = new()
-    {
-        Title = "Pick a sound",
-        FileTypeFilter =
-        [
-            new FilePickerFileType("Audio files (mp3, wav)")
-            {
-                Patterns = ["*.mp3", "*.wav"],
-                MimeTypes = ["audio/mpeg", "audio/wav"]
-            }
-        ]
-    };
 
     public AudioManager AudioManager { get; }
 

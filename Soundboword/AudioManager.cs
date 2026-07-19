@@ -5,6 +5,17 @@ namespace Soundboword;
 public sealed class AudioManager
 {
 
+    private static void UpdatePausedState(SoundViewModel sound, List<SoundPlayback> list)
+    {
+        var pause = sound.IsPaused;
+        foreach (var playback in list)
+            if (pause)
+                playback.Player.Pause();
+            else
+                playback.Player.Play();
+        sound.UpdatePlaybackState(pause ? SoundState.Paused : SoundState.Playing);
+    }
+
     private readonly SoundFlowDeviceManager _deviceManager;
 
     private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
@@ -60,17 +71,6 @@ public sealed class AudioManager
         UpdatePausedState(sound, list);
     }
 
-    private static void UpdatePausedState(SoundViewModel sound, List<SoundPlayback> list)
-    {
-        var pause = sound.IsPaused;
-        foreach (var playback in list)
-            if (pause)
-                playback.Player.Pause();
-            else
-                playback.Player.Play();
-        sound.UpdatePlaybackState(pause ? SoundState.Paused : SoundState.Playing);
-    }
-
     private void StopAll(List<SoundPlayback> list)
     {
         foreach (var played in list)
@@ -87,7 +87,7 @@ public sealed class AudioManager
     {
         if (!File.Exists(sound.Path))
         {
-            sound.UpdatePlaybackState(SoundState.Error);
+            sound.UpdatePlaybackState(SoundState.NotFound);
             return;
         }
 

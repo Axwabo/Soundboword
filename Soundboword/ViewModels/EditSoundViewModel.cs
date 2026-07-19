@@ -7,23 +7,20 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
     private readonly AudioManager _audioManager;
-    private readonly FilePicker _filePicker;
     private readonly IFileManagerOpener? _opener;
 
     private readonly TopLevel? _topLevel;
 
     public EditSoundViewModel()
     {
-        Context = new SoundEditingContext();
-        _filePicker = new FilePicker();
+        Context = new SoundEditingContext(new FilePicker());
         _audioManager = new AudioManager(new SoundFlowDeviceManager());
         Shortcuts = new ShortcutList(null, new ShortcutAssigner());
     }
 
-    public EditSoundViewModel(TopLevel topLevel, FilePicker filePicker, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
+    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
     {
         _topLevel = topLevel;
-        _filePicker = filePicker;
         _opener = opener;
         _audioManager = audioManager;
         Shortcuts = shortcuts;
@@ -38,9 +35,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public ObservableCollection<Shortcut> Active { get; } = [];
 
-    [ObservableProperty]
-    public partial bool IsNotFound { get; private set; }
-
     [RelayCommand]
     private void Stop()
     {
@@ -51,14 +45,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private async Task Relink()
     {
-        if (Context.Model is not { } model)
-            return;
-        var path = await _filePicker.PickOne(SoundList.Options);
-        if (path == null)
-            return;
-        model.Path = path;
-        model.UpdatePlaybackState(SoundState.Stopped);
-        IsNotFound = false;
+        if (Context.Model is { } model)
+            await model.Relink();
     }
 
     [RelayCommand]
@@ -108,10 +96,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(SoundEditingContext.Model))
-            return;
-        UpdateActiveShortcuts();
-        IsNotFound = Context.Model is { } model && !File.Exists(model.Path);
+        if (e.PropertyName == nameof(SoundEditingContext.Model))
+            UpdateActiveShortcuts();
     }
 
     private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);

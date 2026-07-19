@@ -29,14 +29,16 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
     public partial OtherSoundInteraction Interaction { get; set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AnyPlaybacks), nameof(CanTrigger), nameof(CanRelink))]
+    [NotifyPropertyChangedFor(nameof(AnyPlaybacks), nameof(CanTrigger), nameof(CanRelink), nameof(IsNotFound))]
     public partial SoundState PlaybackState { get; private set; }
 
     public bool AnyPlaybacks => PlaybackState is SoundState.Playing or SoundState.Paused;
 
-    public bool CanTrigger => PlaybackState != SoundState.Error;
+    public bool CanTrigger => PlaybackState != SoundState.NotFound;
 
-    public bool CanRelink => PlaybackState is SoundState.Stopped or SoundState.Error;
+    public bool CanRelink => PlaybackState is SoundState.Stopped or SoundState.NotFound;
+
+    public bool IsNotFound => PlaybackState == SoundState.NotFound;
 
     public bool IsPaused
     {
@@ -60,6 +62,16 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
     {
         List.Editor.Open(this);
         List.Editor.StartAssigning();
+    }
+
+    [RelayCommand]
+    public async Task Relink()
+    {
+        var file = await List.Editor.FilePicker.PickOne(SoundList.Options);
+        if (file == null)
+            return;
+        Path = file;
+        UpdatePlaybackState(SoundState.Stopped);
     }
 
     [RelayCommand]

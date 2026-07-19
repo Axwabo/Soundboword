@@ -6,6 +6,6 @@ public enum SoundState
     Stopped,
     Playing,
     Paused,
-    Error
+    NotFound
 
 }

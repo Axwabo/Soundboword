@@ -16,7 +16,7 @@ public sealed class SoundStateConverter : IValueConverter
     {
         SoundState.Playing => Playing,
         SoundState.Paused => Paused,
-        SoundState.Error => Error,
+        SoundState.NotFound => Error,
         _ => null
     };
 
