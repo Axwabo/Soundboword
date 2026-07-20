@@ -13,4 +13,21 @@ public partial class BoardView : UserControl
             board.Editor.Context.Close();
     }
 
+    private void OnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = e.DataTransfer.Formats.Contains(DataFormat.File) ? DragDropEffects.Copy : DragDropEffects.None;
+    }
+
+    private void OnDrop(object? sender, DragEventArgs e)
+    {
+        if (!e.DataTransfer.Formats.Contains(DataFormat.File)) return;
+        var files = e.DataTransfer.TryGetFiles();
+        if (files != null)
+        {
+            foreach (var file in files)
+            {
+            }
+        }
+    }
+
 }

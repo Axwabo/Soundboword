@@ -22,6 +22,9 @@ public sealed partial class BoardViewModel : PageModelBase
 
     public EditSoundViewModel Editor { get; }
 
+    [ObservableProperty]
+    public partial bool DragOver { get; set; }
+
     [RelayCommand]
     private void StopAll() => List.AudioManager.StopAll();
 

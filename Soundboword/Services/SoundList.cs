@@ -69,14 +69,19 @@ public sealed partial class SoundList
     public ObservableCollection<SoundViewModel> Sounds { get; } = [];
 
     [RelayCommand]
-    private async Task Add()
+    private async Task Add() => Add(await _filePicker.PickMany(Options));
+
+    public void Add(IEnumerable<string> paths)
     {
-        var list = await _filePicker.PickMany(Options);
-        if (list.Count == 0)
-            return;
-        foreach (var path in list)
+        var any = false;
+        foreach (var path in paths)
+        {
+            any = true;
             Add(path, Path.GetFileNameWithoutExtension(path));
-        SaveSounds();
+        }
+
+        if (any)
+            SaveSounds();
     }
 
     public void Add(string path, string name) => Sounds.Add(new SoundViewModel
