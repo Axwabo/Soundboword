@@ -7,6 +7,20 @@ namespace Soundboword.Linux;
 public static class DBusExtensions
 {
 
+    private const string Bus = "org.freedesktop.portal.Desktop";
+    private const string Path = "/org/freedesktop/portal/desktop";
+
+    extension(Dictionary<string, VariantValue> dictionary)
+    {
+
+        public Dictionary<string, VariantValue> WithSessionHandleToken()
+        {
+            dictionary["session_handle_token"] = DBusConnection.GenerateToken();
+            return dictionary;
+        }
+
+    }
+
     extension(DBusConnection connection)
     {
 
@@ -14,12 +28,14 @@ public static class DBusExtensions
 
         public string Sender => (connection.UniqueName ?? "").TrimStart(':').Replace('.', '_');
 
+        internal GlobalShortcuts CreateShortcuts() => new(connection, Bus, Path);
+
         public async Task<Response> RequestAsync(string sender, Func<Dictionary<string, VariantValue>, Task<ObjectPath>> send)
         {
             // ReSharper disable once InvokeAsExtensionMemberFromSameClass
             var handleToken = GenerateToken();
-            ObjectPath expectedPath = $"{DestkopPortal.Path}/{sender}/{handleToken}";
-            var request = new Request(connection, DestkopPortal.Bus, expectedPath);
+            ObjectPath expectedPath = $"{Path}/request/{sender}/{handleToken}";
+            var request = new Request(connection, Bus, expectedPath);
             var tcs = new TaskCompletionSource<Response>();
             using var watcher = await request.WatchResponseAsync(tcs.SetResult, false);
             var objectPath = await send(new Dictionary<string, VariantValue>
