@@ -4,6 +4,7 @@ using Tmds.DBus.Protocol;
 
 namespace Soundboword.Linux.Services;
 
+[RegisterSingleton<IShortcutRepository>]
 public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
 {
 
