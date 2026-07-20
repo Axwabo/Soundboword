@@ -37,7 +37,7 @@ public sealed class GlobalShortcutsPortal
 
     public string ParentWindow => _topLevel.TryGetPlatformHandle() switch
     {
-        {Handle: var handle, HandleDescriptor: "X11"} => $"x11:{handle}",
+        {Handle: var handle, HandleDescriptor: "XID"} => $"x11:{handle}",
         // TODO: Wayland when Avalonia officially supports it
         _ => ""
     };

@@ -40,6 +40,8 @@ public static class DBusExtensions
             var tcs = new TaskCompletionSource<PortalResponse>();
             cancellationToken.Register(() =>
             {
+                if (tcs.Task.IsCompleted)
+                    return;
                 request.CloseAsync();
                 tcs.SetResult((1, []));
             });
