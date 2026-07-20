@@ -77,4 +77,9 @@ public sealed class GlobalShortcutsInput : IInputMethod
             Dispatcher.UIThread.InvokeOrPost(ShortcutList.NotifyShortcutsChanged);
     }
 
+    private async Task ConfigureAsync()
+    {
+        _portal.RequestAsync((shortcuts, options) => shortcuts.)
+    }
+
 }

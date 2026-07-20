@@ -7,6 +7,8 @@ public interface IInputFactory
 
     bool IsAvailable { get; }
 
+    IAsyncRelayCommand? Configure => null;
+
     Task<IInputMethod?> ActivateAsync();
 
 }

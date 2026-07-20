@@ -9,10 +9,12 @@ public sealed partial class InputEditingContext : ObservableObject
     public ShortcutList List { get; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Name))]
+    [NotifyPropertyChangedFor(nameof(Name), nameof(Configure))]
     public partial InputMethodInterface? Interface { get; private set; }
 
     public string? Name => Interface?.Name;
+
+    public IAsyncRelayCommand? Configure => Interface?.ConfigureMethod;
 
     public void Open(InputMethodInterface method)
     {
