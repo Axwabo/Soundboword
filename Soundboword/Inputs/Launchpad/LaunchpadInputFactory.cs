@@ -1,6 +1,6 @@
 namespace Soundboword.Inputs.Launchpad;
 
-[RegisterSingleton<IInputFactory>]
+[RegisterSingleton<IInputFactory>(Duplicate = DuplicateStrategy.Append)]
 public sealed class LaunchpadInputFactory : IInputFactory
 {
 
