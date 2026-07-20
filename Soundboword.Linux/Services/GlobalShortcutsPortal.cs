@@ -12,8 +12,11 @@ public sealed class GlobalShortcutsPortal
     private readonly string? _sender;
     private readonly GlobalShortcuts? _shortcuts;
 
-    public GlobalShortcutsPortal()
+    private readonly TopLevel _topLevel;
+
+    public GlobalShortcutsPortal(TopLevel topLevel)
     {
+        _topLevel = topLevel;
         try
         {
             _connection = new DBusConnection(new DBusConnectionOptions(DBusAddress.Session!) {AutoConnect = false});
@@ -31,6 +34,13 @@ public sealed class GlobalShortcutsPortal
     }
 
     public Task<ObjectPath> SessionHandle { get; }
+
+    public string ParentWindow => _topLevel.TryGetPlatformHandle() switch
+    {
+        {Handle: var handle, HandleDescriptor: "X11"} => $"x11:{handle}",
+        // TODO: Wayland when Avalonia officially supports it
+        _ => ""
+    };
 
     [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
     public bool IsAvailable { get; }
