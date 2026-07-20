@@ -44,7 +44,7 @@ public sealed class GlobalShortcutsFactory : IInputFactory
         });*/
     }
 
-    public string Name => "XDG Global Shortcuts";
+    public string Name => GlobalShortcutsInput.Name;
 
     [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
     public bool IsAvailable { get; }

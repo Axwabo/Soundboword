@@ -6,8 +6,6 @@ namespace Soundboword;
 public static class UserData
 {
 
-    public static string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
-
     private static string FullPath(string name, bool json) => Path.Combine(Folder, $"{name}.{(json ? "json" : "txt")}");
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
@@ -41,8 +39,10 @@ public static class UserData
         }
     }
 
-    public static T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T> typeInfo) where T : notnull
+    public static T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T>? typeInfo) where T : notnull
     {
+        if (typeInfo == null)
+            return fallback();
         EnsureDirectory();
         var path = FullPath(name, true);
         if (!File.Exists(path))
@@ -58,8 +58,10 @@ public static class UserData
         }
     }
 
-    public static void Save<T>(string name, T data, JsonTypeInfo<T> typeInfo) where T : notnull
+    public static void Save<T>(string name, T data, JsonTypeInfo<T>? typeInfo) where T : notnull
     {
+        if (typeInfo == null)
+            return;
         EnsureDirectory();
         try
         {
@@ -72,5 +74,7 @@ public static class UserData
             // TODO: log somehow
         }
     }
+
+    public static string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
 }

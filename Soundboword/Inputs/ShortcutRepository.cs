@@ -9,9 +9,9 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
     private readonly Dictionary<string, T> _map;
     private readonly Dictionary<T, HashSet<Shortcut>> _shortcuts = [];
     private readonly Func<T, string> _toFriendlyName;
-    private readonly JsonTypeInfo<Dictionary<string, T>> _typeInfo;
+    private readonly JsonTypeInfo<Dictionary<string, T>>? _typeInfo;
 
-    protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName, JsonTypeInfo<Dictionary<string, T>> typeInfo)
+    protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName, JsonTypeInfo<Dictionary<string, T>>? typeInfo)
     {
         InputMethodName = inputMethodName;
         _audioManager = audioManager;
