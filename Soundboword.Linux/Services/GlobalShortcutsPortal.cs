@@ -40,6 +40,15 @@ public sealed class GlobalShortcutsPortal
             ? _connection.RequestAsync(_sender, _shortcuts, send)
             : throw new InvalidOperationException("Portal unavailable");
 
+    internal async ValueTask<IDisposable> WatchActivatedAsync(Action<string> callback)
+        => IsAvailable
+            ? await _shortcuts.WatchActivatedAsync(tuple =>
+            {
+                if (SessionHandle.IsCompletedSuccessfully && SessionHandle.Result == tuple.SessionHandle)
+                    callback(tuple.ShortcutId);
+            })
+            : throw new InvalidOperationException("Portal unavailable");
+
     private async Task<ObjectPath> CreateSessionAsync()
     {
         var (response, results) = await RequestAsync((shortcuts, options) => shortcuts.CreateSessionAsync(options.WithSessionHandleToken())).ConfigureAwait(false);

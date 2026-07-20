@@ -27,7 +27,7 @@ public sealed partial class InputsViewModel : PageModelBase
                 input.Activated = true;
         lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
-        context.List.ShortcutsChanged += ListOnShortcutsChanged;
+        ShortcutList.ShortcutsChanged += ListOnShortcutsChanged;
     }
 
     public InputEditingContext Context { get; }

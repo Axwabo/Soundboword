@@ -7,6 +7,8 @@ namespace Soundboword.Services;
 public sealed class ShortcutList
 {
 
+    public static void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
+
     private readonly HashSet<Shortcut> _all = [];
 
     private readonly List<IShortcutRepository> _repositories;
@@ -16,11 +18,7 @@ public sealed class ShortcutList
         Assigner = assigner;
         _repositories = repositories.ToList();
         foreach (var repository in _repositories)
-        {
-            repository.List = this;
             _all.UnionWith(repository.All);
-        }
-
         lifetime?.Exit += (_, _) =>
         {
             foreach (var repository in _repositories)
@@ -30,7 +28,7 @@ public sealed class ShortcutList
 
     public ShortcutAssigner Assigner { get; }
 
-    public event Action? ShortcutsChanged;
+    public static event Action? ShortcutsChanged;
 
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
     {
@@ -80,7 +78,5 @@ public sealed class ShortcutList
         if (removed != 0)
             NotifyShortcutsChanged();
     }
-
-    public void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
 
 }

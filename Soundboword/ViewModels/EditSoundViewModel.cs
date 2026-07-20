@@ -26,7 +26,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Shortcuts = shortcuts;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
-        Shortcuts.ShortcutsChanged += ShortcutsOnShortcutsChanged;
+        ShortcutList.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
 
     public ShortcutList Shortcuts { get; }

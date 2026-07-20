@@ -33,7 +33,7 @@ public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
             map[id] = assigned;
         }
 
-        Dispatcher.UIThread.InvokeOrPost(() => InitializeMap(map, soundList));
+        Dispatcher.UIThread.InvokeOrPost(() => InitializeMap(map, soundList, true));
     }
 
 }

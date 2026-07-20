@@ -8,8 +8,11 @@ public sealed class GlobalShortcutsFactory : IInputFactory
 
     private readonly GlobalShortcutsPortal _portal;
 
-    public GlobalShortcutsFactory(GlobalShortcutsPortal portal)
+    private readonly ShortcutList _shortcuts;
+
+    public GlobalShortcutsFactory(ShortcutList shortcuts, GlobalShortcutsPortal portal)
     {
+        _shortcuts = shortcuts;
         _portal = portal;
         IsAvailable = _portal.IsAvailable;
     }
@@ -20,8 +23,10 @@ public sealed class GlobalShortcutsFactory : IInputFactory
 
     public async Task<IInputMethod?> ActivateAsync()
     {
-        await Task.Delay(1000);
-        return null;
+        if (!_portal.IsAvailable)
+            return null;
+        var disposable = await _portal.WatchActivatedAsync(s => _shortcuts.Trigger(s, GlobalShortcutsInput.Name));
+        return new GlobalShortcutsInput(disposable);
     }
 
 }

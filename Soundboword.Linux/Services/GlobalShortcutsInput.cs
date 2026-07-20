@@ -7,8 +7,10 @@ public sealed class GlobalShortcutsInput : IInputMethod
 
     public const string Name = "XDG Global Shortcuts";
 
-    public void Dispose()
-    {
-    }
+    private readonly IDisposable _disposable;
+
+    public GlobalShortcutsInput(IDisposable disposable) => _disposable = disposable;
+
+    public void Dispose() => _disposable.Dispose();
 
 }
