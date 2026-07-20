@@ -11,7 +11,7 @@ public sealed class GlobalShortcutsInput : IInputMethod
 
     private static (string Id, Dictionary<string, VariantValue>) ToShortcut(ShortcutAction action) => (action.Id, new Dictionary<string, VariantValue>
     {
-        {"description", action.ToString()}
+        {"description", action.Description}
     });
 
     private readonly ShortcutAssigner _assigner;
