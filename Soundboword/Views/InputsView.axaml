@@ -51,7 +51,6 @@
                 <Label FontWeight="Normal">Stop All Sounds</Label>
                 <ToggleButton IsChecked="{Binding Assigner.IsAssigning}">Add Shortcut</ToggleButton>
                 <Button Command="{Binding RemoveShortcutCommand}">Remove Shortcut</Button>
-                <Button Command="{Binding Context.Configure}">Configure</Button>
                 <Border Padding="3" Background="#22ffaa00" IsVisible="{Binding !!StopAllShortcut}">
                     <Label Content="{Binding StopAllShortcut}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
                 </Border>

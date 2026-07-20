@@ -38,8 +38,6 @@ public sealed partial class InputMethodInterface : ObservableObject
     [ObservableProperty]
     public partial bool Activating { get; private set; }
 
-    public IAsyncRelayCommand? ConfigureMethod => _inputFactory.Configure;
-
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(Activated))
