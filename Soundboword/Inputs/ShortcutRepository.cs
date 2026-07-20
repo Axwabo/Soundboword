@@ -71,12 +71,21 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         return set.Add(shortcut);
     }
 
-    public void Trigger(T key)
+    public virtual void Trigger(T key)
     {
         if (!_shortcuts.TryGetValue(key, out var list))
             return;
         foreach (var shortcut in list)
             shortcut.Trigger(_audioManager);
+    }
+
+    protected void Trigger(string name, string id)
+    {
+        if (!_map.TryGetValue(name, out var key) || !_shortcuts.TryGetValue(key, out var list))
+            return;
+        foreach (var shortcut in list)
+            if (shortcut.Action.Id == id)
+                shortcut.Trigger(_audioManager);
     }
 
     private void Unbind(T assigned, ShortcutAction action, HashSet<Shortcut> all)

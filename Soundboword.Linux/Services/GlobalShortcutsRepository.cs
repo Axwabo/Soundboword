@@ -18,6 +18,8 @@ public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
             _ = LoadMapAsync(portal, soundList);
     }
 
+    public override void Trigger(string key) => Trigger(key, key);
+
     private async Task LoadMapAsync(GlobalShortcutsPortal portal, SoundList soundList)
     {
         var handle = await portal.SessionHandle.ConfigureAwait(false);
