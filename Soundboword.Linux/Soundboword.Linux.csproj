@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Tmds.DBus.Generator" />
+        <PackageReference Include="Tmds.DBus.Generator" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="DBusXml/*.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
+        <!--        <AdditionalFiles Include="DBusXml/*.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />-->
     </ItemGroup>
 
     <ItemGroup>
