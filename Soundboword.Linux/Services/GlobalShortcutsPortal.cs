@@ -35,9 +35,9 @@ public sealed class GlobalShortcutsPortal
     [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
     public bool IsAvailable { get; }
 
-    internal Task<PortalResponse> RequestAsync(SendPortalRequest send)
+    internal Task<PortalResponse> RequestAsync(SendPortalRequest send, CancellationToken cancellationToken = default)
         => IsAvailable
-            ? _connection.RequestAsync(_sender, _shortcuts, send)
+            ? _connection.RequestAsync(_sender, _shortcuts, send, cancellationToken)
             : throw new InvalidOperationException("Portal unavailable");
 
     internal async ValueTask<IDisposable> WatchActivatedAsync(Action<string> callback)

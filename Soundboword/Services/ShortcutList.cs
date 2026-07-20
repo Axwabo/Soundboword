@@ -45,6 +45,14 @@ public sealed class ShortcutList
         return null;
     }
 
+    public IEnumerable<Shortcut> ForRepository(string name)
+    {
+        foreach (var repository in _repositories)
+            if (repository.InputMethodName == name)
+                return repository.All;
+        return [];
+    }
+
     public void Trigger<T>(T key, string inputMethod) where T : notnull
     {
         if (!Assigner.IsAssigning)

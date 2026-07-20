@@ -31,14 +31,21 @@ public static class DBusExtensions
 
         internal GlobalShortcuts CreateShortcuts() => new(connection, Bus, Path);
 
-        internal async Task<PortalResponse> RequestAsync(string sender, GlobalShortcuts shortcuts, SendPortalRequest send)
+        internal async Task<PortalResponse> RequestAsync(string sender, GlobalShortcuts shortcuts, SendPortalRequest send, CancellationToken cancellationToken = default)
         {
             // ReSharper disable once InvokeAsExtensionMemberFromSameClass
             var handleToken = GenerateToken();
             ObjectPath expectedPath = $"{Path}/request/{sender}/{handleToken}";
             var request = new Request(connection, Bus, expectedPath);
             var tcs = new TaskCompletionSource<PortalResponse>();
-            using var watcher = await request.WatchResponseAsync(tcs.SetResult, false);
+            cancellationToken.Register(() =>
+            {
+                request.CloseAsync();
+                tcs.SetResult((1, []));
+            });
+            using var watcher = await request.WatchResponseAsync(result => tcs.SetResult(cancellationToken.IsCancellationRequested ? (1, []) : result), false);
+            if (cancellationToken.IsCancellationRequested)
+                return (1, []);
             var objectPath = await send(shortcuts, new Dictionary<string, VariantValue>
             {
                 {"handle_token", handleToken}
