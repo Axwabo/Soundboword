@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using Soundboword.Inputs;
 using Soundboword.Inputs.Launchpad;
 
@@ -46,7 +47,7 @@ public sealed partial class InputMethodInterface : ObservableObject
         {
             _method = _inputFactory.Activate();
             if (_method == null)
-                Activated = false;
+                Dispatcher.UIThread.Post(() => Activated = false);
         }
         else
         {
