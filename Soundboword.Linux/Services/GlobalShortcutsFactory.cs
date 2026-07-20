@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Soundboword.Generated;
 using Soundboword.Inputs;
 using Tmds.DBus.Protocol;
@@ -14,11 +15,20 @@ public sealed class GlobalShortcutsFactory : IInputFactory
 
     public GlobalShortcutsFactory()
     {
-        _connection = new DBusConnection(new DBusConnectionOptions(DBusAddress.Session!) {AutoConnect = false});
-        _connection.ConnectAsync().GetAwaiter().GetResult();
-        _sender = _connection.Sender;
-        Console.WriteLine(_sender);
-        _shortcuts = _connection.CreateShortcuts();
+        try
+        {
+            _connection = new DBusConnection(new DBusConnectionOptions(DBusAddress.Session!) {AutoConnect = false});
+            _connection.ConnectAsync().AsTask().Wait();
+            _sender = _connection.Sender;
+            _shortcuts = _connection.CreateShortcuts();
+            IsAvailable = true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        /*Console.WriteLine(_sender);
         _connection.RequestAsync(_sender, values => _shortcuts.CreateSessionAsync(values.WithSessionHandleToken())).ContinueWith(task =>
         {
             try
@@ -31,12 +41,13 @@ public sealed class GlobalShortcutsFactory : IInputFactory
             {
                 Console.WriteLine(e);
             }
-        });
+        });*/
     }
 
     public string Name => "XDG Global Shortcuts";
 
-    public bool IsAvailable => _connection != null;
+    [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
+    public bool IsAvailable { get; }
 
     public IInputMethod? Activate() => null;
 
