@@ -49,6 +49,10 @@ public sealed class GlobalShortcutsFactory : IInputFactory
     [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
     public bool IsAvailable { get; }
 
-    public IInputMethod? Activate() => null;
+    public async Task<IInputMethod?> ActivateAsync()
+    {
+        await Task.Delay(1000);
+        return null;
+    }
 
 }

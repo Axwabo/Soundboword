@@ -35,6 +35,9 @@ public sealed partial class InputMethodInterface : ObservableObject
     [ObservableProperty]
     public partial bool Activated { get; set; }
 
+    [ObservableProperty]
+    public partial bool Activating { get; private set; }
+
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(Activated))
@@ -44,11 +47,7 @@ public sealed partial class InputMethodInterface : ObservableObject
         }
 
         if (Activated)
-        {
-            _method = _inputFactory.Activate();
-            if (_method == null)
-                Dispatcher.UIThread.Post(() => Activated = false);
-        }
+            _ = ActivateAsync();
         else
         {
             _method?.Dispose();
@@ -63,5 +62,20 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     [RelayCommand]
     private void Configure() => _context.Open(this);
+
+    private async Task ActivateAsync()
+    {
+        Activating = true;
+        try
+        {
+            var method = await _inputFactory.ActivateAsync();
+            _method = method;
+            Dispatcher.UIThread.InvokeOrPost(() => Activated = method != null);
+        }
+        finally
+        {
+            Activating = false;
+        }
+    }
 
 }

@@ -7,6 +7,6 @@ public interface IInputFactory
 
     bool IsAvailable { get; }
 
-    IInputMethod? Activate();
+    Task<IInputMethod?> ActivateAsync();
 
 }

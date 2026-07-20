@@ -27,14 +27,14 @@ public sealed class LaunchpadInputFactory : IInputFactory
         }
     }
 
-    public IInputMethod? Activate()
+    public Task<IInputMethod?> ActivateAsync()
     {
         if (_deviceManager.Midi is not { } midi)
-            return null;
+            return Task.FromResult<IInputMethod?>(null);
         foreach (var input in midi.AvailableInputs)
             if (input.Name.Contains(LaunchpadInput.Name))
-                return new LaunchpadInput(midi, input, _shortcuts);
-        return null;
+                return Task.FromResult<IInputMethod?>(new LaunchpadInput(midi, input, _shortcuts));
+        return Task.FromResult<IInputMethod?>(null);
     }
 
 }
