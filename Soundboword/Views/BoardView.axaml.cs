@@ -27,7 +27,10 @@ public sealed partial class BoardView : UserControl
     private BoardViewModel? Model => DataContext as BoardViewModel;
 
     private void InputElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-        => Model?.Editor.Context.Close();
+    {
+        if (e.Source == sender)
+            Model?.Editor.Context.Close();
+    }
 
     private void OnDragOver(object? sender, DragEventArgs e)
     {
