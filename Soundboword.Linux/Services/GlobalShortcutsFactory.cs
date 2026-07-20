@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using Soundboword.Inputs;
 
 namespace Soundboword.Linux.Services;
@@ -25,7 +26,7 @@ public sealed class GlobalShortcutsFactory : IInputFactory
     {
         if (!_portal.IsAvailable)
             return null;
-        var disposable = await _portal.WatchActivatedAsync(s => _shortcuts.Trigger(s, GlobalShortcutsInput.Name));
+        var disposable = await _portal.WatchActivatedAsync(s => Dispatcher.UIThread.Post(() => _shortcuts.Trigger(s, GlobalShortcutsInput.Name)));
         return new GlobalShortcutsInput(disposable, _portal, _shortcuts);
     }
 
