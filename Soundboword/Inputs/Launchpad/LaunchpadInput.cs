@@ -21,7 +21,11 @@ public sealed class LaunchpadInput : IInputMethod
         _node.OnMessageOutput += OnNodeOnOnMessageOutput;
     }
 
-    public void Dispose() => _node.OnMessageOutput -= OnNodeOnOnMessageOutput;
+    public ValueTask DisposeAsync()
+    {
+        _node.OnMessageOutput -= OnNodeOnOnMessageOutput;
+        return ValueTask.CompletedTask;
+    }
 
     private void OnNodeOnOnMessageOutput(MidiMessage message)
     {

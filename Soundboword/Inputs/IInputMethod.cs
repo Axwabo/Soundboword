@@ -1,3 +1,3 @@
 namespace Soundboword.Inputs;
 
-public interface IInputMethod : IDisposable;
+public interface IInputMethod : IAsyncDisposable;

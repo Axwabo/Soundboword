@@ -36,7 +36,7 @@ public sealed partial class InputMethodInterface : ObservableObject
     public partial bool Activated { get; set; }
 
     [ObservableProperty]
-    public partial bool Activating { get; private set; }
+    public partial bool Toggling { get; private set; }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -46,14 +46,7 @@ public sealed partial class InputMethodInterface : ObservableObject
             return;
         }
 
-        if (Activated)
-            _ = ActivateAsync();
-        else
-        {
-            _method?.Dispose();
-            _method = null;
-        }
-
+        _ = Activated ? ActivateAsync() : DeactivateAsync();
         base.OnPropertyChanged(e);
     }
 
@@ -65,7 +58,7 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     private async Task ActivateAsync()
     {
-        Activating = true;
+        Toggling = true;
         try
         {
             var method = await _inputFactory.ActivateAsync();
@@ -74,7 +67,22 @@ public sealed partial class InputMethodInterface : ObservableObject
         }
         finally
         {
-            Activating = false;
+            Toggling = false;
+        }
+    }
+
+    private async Task DeactivateAsync()
+    {
+        Toggling = true;
+        try
+        {
+            if (_method is { } method)
+                await method.DisposeAsync();
+            Dispatcher.UIThread.InvokeOrPost(() => Activated = false);
+        }
+        finally
+        {
+            Toggling = false;
         }
     }
 

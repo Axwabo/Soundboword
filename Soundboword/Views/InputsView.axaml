@@ -35,7 +35,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="models:InputMethodInterface">
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                        <ToggleSwitch IsChecked="{Binding Activated}" IsEnabled="{Binding !Activating}" OnContent="{Binding Name}" OffContent="{Binding Name}" />
+                        <ToggleSwitch IsChecked="{Binding Activated}" IsEnabled="{Binding !Toggling}" OnContent="{Binding Name}" OffContent="{Binding Name}" />
                         <Button Command="{Binding ConfigureCommand}">⚙️</Button>
                     </StackPanel>
                 </DataTemplate>
