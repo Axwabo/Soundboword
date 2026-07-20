@@ -1,7 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-using Soundboword.Generated;
 using Soundboword.Inputs;
-using Tmds.DBus.Protocol;
 
 namespace Soundboword.Linux.Services;
 
@@ -9,44 +6,16 @@ namespace Soundboword.Linux.Services;
 public sealed class GlobalShortcutsFactory : IInputFactory
 {
 
-    private readonly DBusConnection? _connection;
-    private readonly string? _sender;
-    private readonly GlobalShortcuts? _shortcuts;
+    private readonly GlobalShortcutsPortal _portal;
 
-    public GlobalShortcutsFactory()
+    public GlobalShortcutsFactory(GlobalShortcutsPortal portal)
     {
-        try
-        {
-            _connection = new DBusConnection(new DBusConnectionOptions(DBusAddress.Session!) {AutoConnect = false});
-            _connection.ConnectAsync().AsTask().Wait();
-            _sender = _connection.Sender;
-            _shortcuts = _connection.CreateShortcuts();
-            IsAvailable = true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-
-        /*Console.WriteLine(_sender);
-        _connection.RequestAsync(_sender, values => _shortcuts.CreateSessionAsync(values.WithSessionHandleToken())).ContinueWith(task =>
-        {
-            try
-            {
-                var (response, results) = task.Result;
-                Console.WriteLine(response);
-                Console.WriteLine(results);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        });*/
+        _portal = portal;
+        IsAvailable = _portal.IsAvailable;
     }
 
     public string Name => GlobalShortcutsInput.Name;
 
-    [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
     public bool IsAvailable { get; }
 
     public async Task<IInputMethod?> ActivateAsync()

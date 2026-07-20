@@ -18,12 +18,10 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         _toFriendlyName = toFriendlyName;
         _typeInfo = typeInfo;
         _map = UserData.Load(InputMethodName, () => new Dictionary<string, T>(), typeInfo);
-        foreach (var sound in soundList.Sounds)
-            if (_map.TryGetValue(sound.Id, out var key))
-                Assign(key, new TriggerSoundAction(sound), null);
-        if (_map.TryGetValue(StopAllSoundsAction.Instance.Id, out var stopAllKey))
-            Assign(stopAllKey, StopAllSoundsAction.Instance, null);
+        InitializeMap(_map, soundList);
     }
+
+    public virtual ShortcutList? List { get; set; }
 
     public string InputMethodName { get; }
 
@@ -45,6 +43,15 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
     }
 
     public void Commit() => UserData.Save(InputMethodName, _map, _typeInfo);
+
+    protected void InitializeMap(Dictionary<string, T> dictionary, SoundList soundList)
+    {
+        foreach (var sound in soundList.Sounds)
+            if (dictionary.TryGetValue(sound.Id, out var key))
+                Assign(key, new TriggerSoundAction(sound), null);
+        if (dictionary.TryGetValue(StopAllSoundsAction.Instance.Id, out var stopAllKey))
+            Assign(stopAllKey, StopAllSoundsAction.Instance, null);
+    }
 
     public bool Assign(T key, ShortcutAction action, HashSet<Shortcut>? all)
     {

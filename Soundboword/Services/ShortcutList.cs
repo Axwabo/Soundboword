@@ -16,7 +16,11 @@ public sealed class ShortcutList
         Assigner = assigner;
         _repositories = repositories.ToList();
         foreach (var repository in _repositories)
+        {
+            repository.List = this;
             _all.UnionWith(repository.All);
+        }
+
         lifetime?.Exit += (_, _) =>
         {
             foreach (var repository in _repositories)
@@ -63,7 +67,7 @@ public sealed class ShortcutList
             if (repository is ShortcutRepository<T> implementation)
                 changed |= implementation.Assign(key, action, _all);
         if (changed)
-            ShortcutsChanged?.Invoke();
+            NotifyShortcutsChanged();
     }
 
     public void Remove(ShortcutAction action)
@@ -74,7 +78,9 @@ public sealed class ShortcutList
             repository.RemoveAll(action);
         var removed = _all.RemoveWhere(e => e.Action == action);
         if (removed != 0)
-            ShortcutsChanged?.Invoke();
+            NotifyShortcutsChanged();
     }
+
+    public void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
 
 }

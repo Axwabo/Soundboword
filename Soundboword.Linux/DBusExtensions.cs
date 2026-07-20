@@ -1,8 +1,9 @@
 using Soundboword.Generated;
 using Tmds.DBus.Protocol;
-using Response = (uint Response, System.Collections.Generic.Dictionary<string, Tmds.DBus.Protocol.VariantValue> Results);
 
 namespace Soundboword.Linux;
+
+internal delegate Task<ObjectPath> SendPortalRequest(GlobalShortcuts shortcuts, Dictionary<string, VariantValue> options);
 
 public static class DBusExtensions
 {
@@ -30,15 +31,15 @@ public static class DBusExtensions
 
         internal GlobalShortcuts CreateShortcuts() => new(connection, Bus, Path);
 
-        public async Task<Response> RequestAsync(string sender, Func<Dictionary<string, VariantValue>, Task<ObjectPath>> send)
+        internal async Task<PortalResponse> RequestAsync(string sender, GlobalShortcuts shortcuts, SendPortalRequest send)
         {
             // ReSharper disable once InvokeAsExtensionMemberFromSameClass
             var handleToken = GenerateToken();
             ObjectPath expectedPath = $"{Path}/request/{sender}/{handleToken}";
             var request = new Request(connection, Bus, expectedPath);
-            var tcs = new TaskCompletionSource<Response>();
+            var tcs = new TaskCompletionSource<PortalResponse>();
             using var watcher = await request.WatchResponseAsync(tcs.SetResult, false);
-            var objectPath = await send(new Dictionary<string, VariantValue>
+            var objectPath = await send(shortcuts, new Dictionary<string, VariantValue>
             {
                 {"handle_token", handleToken}
             }).ConfigureAwait(false);
