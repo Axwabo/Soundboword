@@ -66,8 +66,12 @@ public sealed class ShortcutList
         if (Assigner.InputMethodFilter is { } filter && filter != inputMethod)
             return;
         Assigner.IsAssigning = false;
-        if (Assigner.Target is not { } action)
-            return;
+        if (Assigner.Target is { } action)
+            Assign(key, action);
+    }
+
+    public void Assign<T>(T key, ShortcutAction action) where T : notnull
+    {
         var changed = false;
         foreach (var repository in _repositories)
             if (repository is ShortcutRepository<T> implementation)

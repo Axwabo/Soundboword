@@ -8,6 +8,21 @@ namespace Soundboword.Linux.Services;
 public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
 {
 
+    public static Dictionary<string, string> CreateShortcutMap(Dictionary<string, VariantValue> results)
+    {
+        var map = new Dictionary<string, string>();
+        var shortcuts = results["shortcuts"].GetArray<VariantValue>();
+        foreach (var value in shortcuts)
+        {
+            var id = value.GetItem(0).GetString();
+            var properties = value.GetItem(1).GetDictionary<string, VariantValue>();
+            var assigned = properties["trigger_description"].GetString();
+            map[id] = assigned;
+        }
+
+        return map;
+    }
+
     public GlobalShortcutsRepository(GlobalShortcutsPortal portal, AudioManager audioManager, SoundList soundList) : base(audioManager,
         soundList,
         GlobalShortcutsInput.Name,
@@ -26,16 +41,7 @@ public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
         var (response, results) = await portal.RequestAsync((shortcuts, options) => shortcuts.ListShortcutsAsync(handle, options)).ConfigureAwait(false);
         if (response != 0)
             return;
-        var map = new Dictionary<string, string>();
-        var shortcuts = results["shortcuts"].GetArray<VariantValue>();
-        foreach (var value in shortcuts)
-        {
-            var id = value.GetItem(0).GetString();
-            var properties = value.GetItem(1).GetDictionary<string, VariantValue>();
-            var assigned = properties["trigger_description"].GetString();
-            map[id] = assigned;
-        }
-
+        var map = CreateShortcutMap(results);
         Dispatcher.UIThread.InvokeOrPost(() => InitializeMap(map, soundList, true));
     }
 
