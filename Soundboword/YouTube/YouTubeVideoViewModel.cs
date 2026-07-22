@@ -98,6 +98,8 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         _id = video.Id;
         Video = YouTubeVideo.Create(video);
         IsLoadingDetails = false;
+        if (IsLoadingStreams)
+            return;
         IsLoadingStreams = Streams.Count == 0;
         if (IsLoadingStreams)
             _ = LoadStreamsAsync();
@@ -152,15 +154,13 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public async Task OpenAsync(VideoId id)
     {
         _id = id;
-        CancelDetails();
         IsLoadingDetails = true;
         IsLoadingStreams = true;
         Video = YouTubeVideo.Loading;
-        _details = new CancellationTokenSource();
-        var token = _details.Token;
         try
         {
-            Open(await _client.Videos.GetAsync(id, token));
+            _ = LoadStreamsAsync();
+            Open(await _client.Videos.GetAsync(id, _details!.Token));
         }
         catch (OperationCanceledException)
         {
