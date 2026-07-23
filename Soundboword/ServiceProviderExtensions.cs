@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Templates;
 
 namespace Soundboword;
@@ -5,22 +6,22 @@ namespace Soundboword;
 public static class ServiceProviderExtensions
 {
 
-    extension<TView>(IServiceCollection collection) where TView : Control, new()
+    extension<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TView>(IServiceCollection collection) where TView : Control, new()
     {
 
-        public IServiceCollection AddView<TViewModel>() where TViewModel : ViewModelBase, new()
+        public IServiceCollection AddView<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewModel>() where TViewModel : ViewModelBase, new()
         {
             collection.AddSingleton<TViewModel>();
             return collection.AddViewLocator<TView, TViewModel>();
         }
 
-        public IServiceCollection AddScopedView<TViewModel>() where TViewModel : ViewModelBase, new()
+        public IServiceCollection AddScopedView<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewModel>() where TViewModel : ViewModelBase, new()
         {
             collection.AddScoped<TViewModel>();
             return collection.AddViewLocator<TView, TViewModel>();
         }
 
-        public IServiceCollection AddViewLocator<TViewModel>() where TViewModel : ViewModelBase
+        public IServiceCollection AddViewLocator<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewModel>() where TViewModel : ViewModelBase
             => collection.AddSingleton<IDataTemplate>(new ViewLocator<TView, TViewModel>());
 
     }
