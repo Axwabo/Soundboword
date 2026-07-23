@@ -1,4 +1,4 @@
-using CliWrap;
+using System.Diagnostics;
 
 namespace Soundboword.Linux.Services;
 
@@ -11,11 +11,7 @@ public sealed class DBusFileManagerOpener : IFileManagerOpener
 
     public void Open(string path)
     {
-        using var wrap = Cli.Wrap("dbus-send")
-            .WithArguments(string.Format(Format, path))
-            .WithStandardOutputPipe(PipeTarget.Null)
-            .ExecuteAsync();
-        wrap.Task.Wait();
+        using var process = Process.Start(new ProcessStartInfo("dbus-send", string.Format(Format, path)) {RedirectStandardOutput = true});
     }
 
 }
