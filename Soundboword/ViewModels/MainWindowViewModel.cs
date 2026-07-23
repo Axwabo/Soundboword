@@ -16,7 +16,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
     }
 
-    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, Preferences preferences, FilePicker filePicker, ShortcutAssigner shortcutAssigner)
+    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, Preferences preferences, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null)
     {
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
@@ -24,6 +24,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Pages.Add(new TabItemViewModel("Devices", "🎧", devices));
         Pages.Add(new TabItemViewModel("Playbacks", "🎚️", playbacks));
         Pages.Add(new TabItemViewModel("Inputs", "🎛️", inputs));
+        Pages.AddRange(provider?.GetAdditionalTabs() ?? []);
         Pages.Add(new TabItemViewModel("Settings", "⚙️", preferences));
     }
 
