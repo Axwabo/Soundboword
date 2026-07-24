@@ -84,10 +84,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
         if (!IsInitialized)
             return;
         if (_playback != null)
-        {
             _playback = _engine.SwitchDevice(_playback, info);
-            DeviceSwitched?.Invoke();
-        }
         else
         {
             _playback = _engine.InitializePlaybackDevice(info, Format);
@@ -95,6 +92,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
         }
 
         SelectedDevice = info;
+        DeviceSwitched?.Invoke();
     }
 
     public void SwitchToDefaultDevice()

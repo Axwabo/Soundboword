@@ -56,7 +56,7 @@ public static class PipeWireObjectReader
         {
             if (type is Link)
                 nodes.Add(new PipeWireLink(p1, p2));
-            else if (type is Node && p3 != null)
+            else if (type is Node)
                 nodes.Add(new PipeWireNode(id, p1, p2, p3));
             else if (int.TryParse(p3, out var portId))
                 nodes.Add(new PipeWirePort(id, p1, p2, portId));

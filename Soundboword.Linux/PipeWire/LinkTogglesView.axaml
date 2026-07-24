@@ -9,7 +9,7 @@
              x:DataType="pipeWire:LinkTogglesViewModel">
     <StackPanel>
         <controls:DataToggle Text="🔊 -&gt; 🎧" ToolTip.Tip="Hear Sounds (Sounds to Output Device)" />
-        <controls:DataToggle Text="🔊 -&gt; 📣" ToolTip.Tip="Sounds to Virtual Microphone" />
+        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.PlaybackToVirtual}" Text="🔊 -&gt; 📣" ToolTip.Tip="Sounds to Virtual Microphone" />
         <pipeWire:NodeLinkToggle DataContext="{Binding Manager.PhysicalToVirtual}" Text="🎤 -&gt; 📣" ToolTip.Tip="Physical Mic to Virtual Microphone" />
         <controls:DataToggle Text="🎤 -&gt; 🎧" ToolTip.Tip="Hear Myself (Microphone to Output Device)" />
     </StackPanel>

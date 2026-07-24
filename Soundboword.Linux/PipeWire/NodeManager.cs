@@ -35,6 +35,9 @@ public sealed partial class NodeManager : ObservableObject
     [ObservableProperty]
     public partial NodeLinkManager? PhysicalToVirtual { get; private set; }
 
+    [ObservableProperty]
+    public partial NodeLinkManager? PlaybackToVirtual { get; private set; }
+
     public async Task Refresh()
     {
         _sinks.Clear();
@@ -49,8 +52,12 @@ public sealed partial class NodeManager : ObservableObject
         RefreshObjects(objects, links);
         Ports.Sort(PortComparison);
         PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
-        if (PhysicalMicrophone is not null && MicNode is not null)
+        if (MicNode is null)
+            return;
+        if (PhysicalMicrophone is not null)
             PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, links);
+        if (PlaybackNode is not null)
+            PlaybackToVirtual = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, links);
     }
 
     private void RefreshObjects(List<PipeWireObject> objects, List<PipeWireLink> links)
@@ -90,6 +97,7 @@ public sealed partial class NodeManager : ObservableObject
     private void OutputManagerOnDeviceSwitched()
     {
         PhysicalToVirtual?.EnsureState();
+        PlaybackToVirtual?.EnsureState();
     }
 
 }
