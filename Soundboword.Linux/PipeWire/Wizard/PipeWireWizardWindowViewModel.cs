@@ -25,14 +25,6 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         throw new FileNotFoundException("Could not find the configuration template");
     }
 
-    private static async Task RunAsync()
-    {
-        var directory = Path.Combine(Config, Directories);
-        Directory.CreateDirectory(directory);
-        await WriteFileAsync(directory);
-        await PipeWireCli.RestartAsync();
-    }
-
     private static async Task WaitForRestartAsync(SoundFlowDeviceManager manager)
     {
         var count = manager.Devices.Count;
@@ -46,21 +38,30 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         }
     }
 
+    private static void DisableInputs(InputsViewModel inputs, HashSet<InputMethodInterface> disabled)
+    {
+        foreach (var method in inputs.Available)
+        {
+            if (!method.Activated)
+                continue;
+            method.Activated = false;
+            disabled.Add(method);
+        }
+    }
+
     private static string Config => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-    private readonly AudioManager? _audioManager;
-    private readonly DevicesViewModel? _devices;
+    private readonly RestartContext? _context;
 
     private readonly PipeWireWizardWindow? _window;
 
-    public PipeWireWizardWindowViewModel() : this(null, null, null)
+    public PipeWireWizardWindowViewModel() : this(null, null)
     {
     }
 
-    public PipeWireWizardWindowViewModel(PipeWireWizardWindow? window, AudioManager? audioManager, DevicesViewModel? devices)
+    public PipeWireWizardWindowViewModel(PipeWireWizardWindow? window, RestartContext? context)
     {
         _window = window;
-        _audioManager = audioManager;
-        _devices = devices;
+        _context = context;
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         TargetDirectory = Path.Combine(Config.Replace(home, "~"), Directories);
     }
@@ -70,13 +71,20 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Run()
     {
-        if (_window == null || _audioManager == null || _devices == null)
+        if (_window == null || _context is not var (audio, devices, inputs))
             return;
+        var restartAttempted = false;
+        var disabled = new HashSet<InputMethodInterface>();
         try
         {
-            _audioManager.StopAll();
-            _devices.DeviceManager.Dispose();
-            await RunAsync();
+            audio.StopAll();
+            var directory = Path.Combine(Config, Directories);
+            Directory.CreateDirectory(directory);
+            await WriteFileAsync(directory);
+            restartAttempted = true;
+            DisableInputs(inputs, disabled);
+            devices.DeviceManager.Dispose();
+            await PipeWireCli.RestartAsync();
             _window.Close();
         }
         catch (Exception e)
@@ -86,16 +94,20 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
                 : e.Message;
             await ErrorDialogWindow.ShowAsync(error, _window);
         }
-        finally
-        {
-            _devices.DeviceManager.InitializeEngine();
-            await WaitForRestartAsync(_devices.DeviceManager);
-            _devices.Refresh();
-            if (_devices.DeviceManager.Devices.Count == 0)
-                _devices.DeviceManager.SwitchToDefaultDevice();
-            else
-                _devices.SwitchToSelected();
-        }
+
+        if (!restartAttempted)
+            return;
+        devices.DeviceManager.InitializeEngine();
+        await WaitForRestartAsync(devices.DeviceManager);
+        devices.Refresh();
+        if (devices.DeviceManager.Devices.Count == 0)
+            devices.DeviceManager.SwitchToDefaultDevice();
+        else
+            devices.SwitchToSelected();
+        inputs.Refresh();
+        foreach (var method in inputs.Available)
+            if (disabled.Contains(method))
+                method.Activated = true;
     }
 
 }

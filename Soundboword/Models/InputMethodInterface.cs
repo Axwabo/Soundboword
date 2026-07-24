@@ -24,7 +24,6 @@ public sealed partial class InputMethodInterface : ObservableObject
     {
         _inputFactory = inputFactory;
         _context = context;
-        Refresh();
     }
 
     public string Name => _inputFactory.Name;
@@ -58,7 +57,7 @@ public sealed partial class InputMethodInterface : ObservableObject
     }
 
     [RelayCommand]
-    private void Refresh() => IsAvailable = _inputFactory.IsAvailable;
+    public void Refresh() => IsAvailable = _inputFactory.IsAvailable;
 
     [RelayCommand]
     private void Configure() => _context.Open(this);

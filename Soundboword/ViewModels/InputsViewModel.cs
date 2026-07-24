@@ -42,15 +42,18 @@ public sealed partial class InputsViewModel : PageModelBase
     public partial string? StopAllShortcut { get; private set; }
 
     [RelayCommand]
-    private void Refresh()
+    public void Refresh()
     {
         Available.Clear();
         Unavailable.Clear();
         foreach (var method in _all)
+        {
+            method.Refresh();
             if (method.IsAvailable)
                 Available.Add(method);
             else
                 Unavailable.Add(method);
+        }
     }
 
     [RelayCommand]

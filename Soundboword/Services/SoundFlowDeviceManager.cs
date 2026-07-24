@@ -68,6 +68,8 @@ public sealed class SoundFlowDeviceManager : IDisposable
     [MemberNotNull(nameof(_engine))]
     public void InitializeEngine()
     {
+        if (IsInitialized)
+            return;
         _engine = new MiniAudioEngine();
         _engine.UsePortMidi();
         _engine.UpdateAudioDevicesInfo();

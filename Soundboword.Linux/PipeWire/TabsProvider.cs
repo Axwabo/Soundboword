@@ -4,20 +4,18 @@ namespace Soundboword.Linux.PipeWire;
 public sealed class TabsProvider : ITabsProvider
 {
 
-    private readonly AudioManager _audioManager;
-
     private readonly PipeWireCli _cli;
-    private readonly DevicesViewModel _devices;
+
+    private readonly RestartContext _context;
     private readonly TopLevel _topLevel;
 
-    public TabsProvider(PipeWireCli cli, TopLevel topLevel, AudioManager audioManager, DevicesViewModel devices)
+    public TabsProvider(PipeWireCli cli, TopLevel topLevel, AudioManager audioManager, DevicesViewModel devices, InputsViewModel inputs)
     {
         _cli = cli;
         _topLevel = topLevel;
-        _audioManager = audioManager;
-        _devices = devices;
+        _context = new RestartContext(audioManager, devices, inputs);
     }
 
-    public IEnumerable<TabItemViewModel> AdditionalTabs => [new("PipeWire", "🔌", new PipeWireTabViewModel(_cli, _topLevel, _audioManager, _devices))];
+    public IEnumerable<TabItemViewModel> AdditionalTabs => [new("PipeWire", "🔌", new PipeWireTabViewModel(_cli, _topLevel, _context))];
 
 }
