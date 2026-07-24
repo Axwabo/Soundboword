@@ -5,20 +5,12 @@ public sealed class PipeWireTabViewModel : ViewModelBase
 
     private readonly PipeWireCli? _cli;
 
-    public PipeWireTabViewModel() => IsAvailable = Task.FromResult<string>("Preview");
-
-    public PipeWireTabViewModel(PipeWireCli cli)
+    public PipeWireTabViewModel()
     {
-        _cli = cli;
-        IsAvailable = Sus(cli);
     }
 
-    public Task<string> IsAvailable { get; }
+    public PipeWireTabViewModel(PipeWireCli cli) => _cli = cli;
 
-    private async Task<string> Sus(PipeWireCli cli)
-    {
-        var available = await cli.IsAvailable;
-        return available.ToString();
-    }
+    public Task<bool>? IsAvailable => _cli?.IsAvailable;
 
 }
