@@ -1,5 +1,3 @@
-using CliWrap;
-
 namespace Soundboword.Linux.PipeWire.Wizard;
 
 public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
@@ -29,7 +27,6 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
 
     private static async Task RunAsync()
     {
-        await Cli.Wrap("sussy").ExecuteAsync();
         var directory = Path.Combine(Config, Directories);
         Directory.CreateDirectory(directory);
         await WriteFileAsync(directory);
