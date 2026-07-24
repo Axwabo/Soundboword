@@ -43,15 +43,11 @@ public static class PipeWireNodeReader
         var type = line.IndexOf(Type);
         if (comma == -1 || type == -1)
             return false;
-        if (!line[(type + Type.Length)..].Trim().SequenceEqual(InterfaceNode))
-        {
-            id = null;
-            return false;
-        }
-
         if (id != null && @class != null && description != null && @class.StartsWith("Audio/"))
             nodes.Add(new PipeWireNode(id, @class, description));
-        id = line[Id.Length..comma].Trim().ToString();
+        id = line[(type + Type.Length)..].Trim().SequenceEqual(InterfaceNode)
+            ? line[Id.Length..comma].Trim().ToString()
+            : null;
         @class = null;
         description = null;
         return true;
