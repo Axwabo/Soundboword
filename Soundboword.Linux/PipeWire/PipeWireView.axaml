@@ -31,7 +31,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <ToggleSwitch IsEnabled="{Binding !TogglingPassthrough}" IsChecked="{Binding PhysicalMicrophonePassthrough}" Command="{Binding ToggleMicrophonePassthroughCommand}" OnContent="Physical Microphone Passthrough" OffContent="Physical Microphone Passthrough" />
+                    <ToggleSwitch IsEnabled="{Binding !TogglingPassthrough}" IsChecked="{Binding PhysicalMicrophonePassthrough, Mode=OneWay}" Command="{Binding ToggleMicrophonePassthroughCommand}" OnContent="Physical Microphone Passthrough" OffContent="Physical Microphone Passthrough" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

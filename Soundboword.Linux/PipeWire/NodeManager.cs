@@ -31,7 +31,8 @@ public sealed partial class NodeManager : ObservableObject
         MicNode = null;
         PlaybackNode = null;
         await _cli.IsAvailable;
-        foreach (var pwObj in await PipeWireCli.ListObjectsAsync())
+        var objects = await PipeWireCli.ListObjectsAsync();
+        foreach (var pwObj in objects)
             switch (pwObj)
             {
                 case PipeWireNode {Class: "Stream/Output/Audio", Name: var name} node when name.StartsWith("Soundboword"):
