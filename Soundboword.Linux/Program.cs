@@ -15,6 +15,7 @@ internal static class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
         => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux()
-            .AddView<PipeWireView, PipeWireTabViewModel>());
+            .AddView<PipeWireView, PipeWireTabViewModel>()
+            .AddView<LinkTogglesView, LinkTogglesViewModel>());
 
 }

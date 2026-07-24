@@ -16,10 +16,11 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
     }
 
-    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, Preferences preferences, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null)
+    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, Preferences preferences, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null, TabListToggles? toggles = null)
     {
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
+        Toggles = toggles;
         Pages.Add(new TabItemViewModel("Sounds", "🔊", board));
         Pages.Add(new TabItemViewModel("Devices", "🎧", devices));
         Pages.Add(new TabItemViewModel("Playbacks", "🎚️", playbacks));
@@ -33,6 +34,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public FilePicker FilePicker { get; }
 
     public ShortcutAssigner ShortcutAssigner { get; }
+
+    public TabListToggles? Toggles { get; }
 
     [ObservableProperty]
     public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
