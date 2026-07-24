@@ -17,7 +17,7 @@ public static class PipeWireNodeReader
         while (!string.IsNullOrWhiteSpace(line = reader.ReadLine()))
         {
             var span = line.AsSpan().Trim();
-            if (BeginNewDevice(span, ref id, ref @class, ref description, nodes))
+            if (BeginNewDevice(span, ref id, ref @class, ref description, nodes) || id == null)
                 continue;
             var equals = span.IndexOf('=');
             if (equals == -1)
@@ -31,7 +31,7 @@ public static class PipeWireNodeReader
 
     private static void DetectProperty(ReadOnlySpan<char> line, int equals, string propertyName, ref string? value)
     {
-        if (line[..equals].Trim() == propertyName)
+        if (line[..equals].Trim().SequenceEqual(propertyName))
             value = line[(equals + 1)..].Trim().Trim('"').ToString();
     }
 
@@ -41,7 +41,7 @@ public static class PipeWireNodeReader
             return false;
         var comma = line.IndexOf(',');
         var type = line.IndexOf(Type);
-        if (comma == -1 || type == -1 || line[(type + Type.Length)..].Trim() != InterfaceNode)
+        if (comma == -1 || type == -1 || !line[(type + Type.Length)..].Trim().SequenceEqual(InterfaceNode))
             return false;
         if (id != null && @class != null && description != null && @class.StartsWith("Audio/"))
             nodes.Add(new PipeWireNode(id, @class, description));
