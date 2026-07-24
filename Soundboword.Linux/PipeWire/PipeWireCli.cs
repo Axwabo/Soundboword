@@ -14,6 +14,7 @@ public sealed class PipeWireCli
         {
             var stdout = new StringBuilder();
             var result = await Cli.Wrap("pw-cli")
+                .WithArguments("--version")
                 .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdout))
                 .WithStandardErrorPipe(PipeTarget.Null)
                 .ExecuteBufferedAsync();
