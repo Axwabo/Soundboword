@@ -23,10 +23,8 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     [RelayCommand]
     private async Task LaunchWizard()
     {
-        if (_topLevel is not Window parent)
-            return;
-        var wizard = new PipeWireWizardWindow();
-        await wizard.ShowDialog(parent);
+        if (_topLevel is Window parent)
+            await PipeWireWizardWindow.ShowDialogAsync(parent);
     }
 
 }
