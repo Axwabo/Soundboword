@@ -11,12 +11,18 @@ public sealed partial class NodeManager : ObservableObject
 
     private readonly List<PipeWireNode> _sinks = [];
 
+    private Task? _relinkTask;
+
     public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager)
     {
         _cli = cli;
         _outputManager = outputManager;
         _ = Refresh();
-        outputManager.DeviceSwitched += OutputManagerOnDeviceSwitched;
+        outputManager.DeviceSwitched += () =>
+        {
+            if (_relinkTask is not {IsCompleted: false})
+                _relinkTask = RelinkAfterDeviceSwitch();
+        };
     }
 
     public ObservableCollection<PipeWireNode> Sources { get; } = [];
@@ -102,10 +108,11 @@ public sealed partial class NodeManager : ObservableObject
             }
     }
 
-    private void OutputManagerOnDeviceSwitched()
+    private async Task RelinkAfterDeviceSwitch()
     {
-        MicPassthrough?.EnsureState();
-        MicSounds?.EnsureState();
+        await Task.Delay(100);
+        if (MicSounds != null)
+            await MicSounds.EnsureState();
         var output = _outputManager.SelectedDevice.Name;
         foreach (var node in _sinks)
         {
@@ -113,16 +120,28 @@ public sealed partial class NodeManager : ObservableObject
                 continue;
             if (node == OutputNode)
                 break;
-            var linked = HearSounds?.IsLinked ?? true;
-            HearSounds?.ToggleLink(false);
-            if (PlaybackNode is not null)
-                HearSounds = NodeLinkManager.Create(PlaybackNode, node, Ports, []);
-            HearSounds?.ToggleLink(linked);
-            OutputNode = node;
+            await Relink(node);
             return;
         }
 
-        HearSounds?.EnsureState();
+        if (HearSounds != null)
+            await HearSounds.EnsureState();
+    }
+
+    private async Task Relink(PipeWireNode node)
+    {
+        var linked = HearSounds?.IsLinked ?? true;
+        if (HearSounds != null)
+            await HearSounds.ToggleLink(false);
+        OutputNode = node;
+        if (PlaybackNode is not null)
+        {
+            var links = await PipeWireCli.ListLinksAsync();
+            HearSounds = NodeLinkManager.Create(PlaybackNode, node, Ports, links);
+        }
+
+        if (HearSounds != null)
+            await HearSounds.ToggleLink(linked);
     }
 
 }

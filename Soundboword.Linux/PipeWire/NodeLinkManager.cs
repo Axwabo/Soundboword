@@ -63,6 +63,6 @@ public sealed partial class NodeLinkManager : ObservableObject
         }
     }
 
-    public void EnsureState() => _ = ToggleLink(IsLinked);
+    public Task EnsureState() => _ = ToggleLink(IsLinked);
 
 }
