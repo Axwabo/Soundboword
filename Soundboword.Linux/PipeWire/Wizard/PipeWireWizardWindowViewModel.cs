@@ -44,7 +44,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         {
             if (!method.Activated)
                 continue;
-            method.Activated = false;
+            method.SetActivated(false);
             disabled.Add(method);
         }
     }
@@ -108,7 +108,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         inputs.Refresh();
         foreach (var method in inputs.Available)
             if (disabled.Contains(method))
-                method.Activated = true;
+                method.SetActivated(true);
     }
 
 }

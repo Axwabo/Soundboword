@@ -32,28 +32,29 @@ public sealed partial class InputMethodInterface : ObservableObject
     public partial bool IsAvailable { get; private set; }
 
     [ObservableProperty]
-    public partial bool Activated { get; set; }
+    public partial bool Activated { get; private set; }
 
     [ObservableProperty]
-    public partial bool Activating { get; private set; }
+    public partial bool ActivationPending { get; private set; }
 
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    [RelayCommand]
+    private void Toggle()
     {
-        if (e.PropertyName != nameof(Activated))
-        {
-            base.OnPropertyChanged(e);
+        if (ActivationPending)
             return;
-        }
-
-        if (Activated)
+        if (!Activated)
             _ = ActivateAsync();
         else
         {
             _method?.Dispose();
             _method = null;
         }
+    }
 
-        base.OnPropertyChanged(e);
+    public void SetActivated(bool activated)
+    {
+        if (activated != Activated)
+            Toggle();
     }
 
     [RelayCommand]
@@ -64,7 +65,9 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     private async Task ActivateAsync()
     {
-        Activating = true;
+        if (ActivationPending)
+            return;
+        ActivationPending = true;
         try
         {
             var method = await _inputFactory.ActivateAsync();
@@ -73,7 +76,7 @@ public sealed partial class InputMethodInterface : ObservableObject
         }
         finally
         {
-            Activating = false;
+            ActivationPending = false;
         }
     }
 

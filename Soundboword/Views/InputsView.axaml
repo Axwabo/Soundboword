@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
              xmlns:models="clr-namespace:Soundboword.Models"
+             xmlns:controls="clr-namespace:Soundboword.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Views.InputsView"
              x:DataType="viewModels:InputsViewModel">
@@ -35,7 +36,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="models:InputMethodInterface">
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                        <ToggleSwitch IsChecked="{Binding Activated}" IsEnabled="{Binding !Activating}" OnContent="{Binding Name}" OffContent="{Binding Name}" />
+                        <controls:DataToggle IsEnabled="{Binding !ActivationPending}" IsChecked="{Binding Activated}" Text="{Binding Name}" Command="{Binding ToggleCommand}" />
                         <Button Command="{Binding ConfigureCommand}">⚙️</Button>
                     </StackPanel>
                 </DataTemplate>

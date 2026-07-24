@@ -8,18 +8,22 @@ public sealed class DataToggle : ToggleSwitch
     public object? Text
     {
         get => GetValue(TextProperty);
-        set
-        {
-            SetValue(TextProperty, value);
-            OnContent = value;
-            OffContent = value;
-        }
+        set => SetValue(TextProperty, value);
     }
 
     protected override Type StyleKeyOverride => typeof(ToggleSwitch);
 
     protected override void Toggle()
     {
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property != TextProperty)
+            return;
+        OnContent = change.NewValue;
+        OffContent = change.NewValue;
     }
 
 }

@@ -24,7 +24,7 @@ public sealed partial class InputsViewModel : PageModelBase
         Refresh();
         foreach (var input in Available)
             if (prefs.Remove(input.Name))
-                input.Activated = true;
+                input.SetActivated(true);
         lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         ShortcutList.ShortcutsChanged += ListOnShortcutsChanged;
