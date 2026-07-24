@@ -26,6 +26,10 @@ public sealed class PipeWireCli
         }
     }
 
+    public static async Task RestartAsync() => await Cli.Wrap("systemctl")
+        .WithArguments(["--user", "restart", "pipewire", "pipewire-pulse", "wireplumber"])
+        .ExecuteAsync();
+
     public Task<bool> IsAvailable { get; } = DetectPipeWireAsync();
 
 }

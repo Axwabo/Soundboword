@@ -15,5 +15,10 @@
     <Panel>
         <Label Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=True}">Detecting PipeWire...</Label>
         <TextBlock Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=False}" TextWrapping="Wrap">Could not detect PipeWire</TextBlock>
+        <ScrollViewer IsVisible="{Binding IsAvailable^, FallbackValue=False}">
+            <StackPanel Spacing="5">
+                <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
+            </StackPanel>
+        </ScrollViewer>
     </Panel>
 </UserControl>

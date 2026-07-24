@@ -24,7 +24,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Pages.Add(new TabItemViewModel("Devices", "🎧", devices));
         Pages.Add(new TabItemViewModel("Playbacks", "🎚️", playbacks));
         Pages.Add(new TabItemViewModel("Inputs", "🎛️", inputs));
-        Pages.AddRange(provider?.GetAdditionalTabs() ?? []);
+        Pages.AddRange(provider?.AdditionalTabs ?? []);
         Pages.Add(new TabItemViewModel("Settings", "⚙️", preferences));
     }
 

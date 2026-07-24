@@ -12,11 +12,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="DBusXml/*.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
+        <ProjectReference Include="..\Soundboword\Soundboword.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Soundboword\Soundboword.csproj" />
+        <AdditionalFiles Include="DBusXml/*.xml" Namespace="Soundboword.Generated" DBusGeneratorMode="Proxy" />
+        <EmbeddedResource Include="PipeWire/Wizard/Soundboword.conf" />
     </ItemGroup>
 
 </Project>
