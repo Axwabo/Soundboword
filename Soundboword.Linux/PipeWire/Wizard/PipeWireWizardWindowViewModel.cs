@@ -33,6 +33,19 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         await PipeWireCli.RestartAsync();
     }
 
+    private static async Task WaitForRestartAsync(SoundFlowDeviceManager manager)
+    {
+        var count = manager.Devices.Count;
+        for (var i = 0; i < 10; i++)
+        {
+            await Task.Delay(500);
+            manager.RefreshAudioDevices();
+            manager.RefreshMidiInputs();
+            if (manager.Devices.Count != count)
+                break;
+        }
+    }
+
     private static string Config => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     private readonly AudioManager? _audioManager;
     private readonly DevicesViewModel? _devices;
@@ -76,8 +89,12 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         finally
         {
             _devices.DeviceManager.InitializeEngine();
-            if (!_devices.Refresh(false))
+            await WaitForRestartAsync(_devices.DeviceManager);
+            _devices.Refresh();
+            if (_devices.DeviceManager.Devices.Count == 0)
                 _devices.DeviceManager.SwitchToDefaultDevice();
+            else
+                _devices.SwitchToSelected();
         }
     }
 

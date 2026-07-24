@@ -22,22 +22,21 @@ public sealed partial class DevicesViewModel : ViewModelBase
     {
         base.OnPropertyChanged(e);
         if (!_isRefreshing && e.PropertyName == nameof(SelectedDeviceIndex))
-            DeviceManager.SwitchDevice(DeviceManager.Devices[SelectedDeviceIndex]);
+            SwitchToSelected();
     }
+
+    public void SwitchToSelected() => DeviceManager.SwitchDevice(DeviceManager.Devices[SelectedDeviceIndex]);
 
     [RelayCommand]
-    private void Refresh() => Refresh(true);
-
-    public bool Refresh(bool doNotSwitch)
+    public void Refresh()
     {
-        _isRefreshing = doNotSwitch;
+        _isRefreshing = true;
         DeviceManager.RefreshAudioDevices();
-        var success = UpdateSelected();
+        UpdateSelected();
         _isRefreshing = false;
-        return success;
     }
 
-    private bool UpdateSelected()
+    private void UpdateSelected()
     {
         var deviceName = DeviceManager.SelectedDevice.Name;
         for (var i = 0; i < DeviceManager.Devices.Count; i++)
@@ -45,10 +44,8 @@ public sealed partial class DevicesViewModel : ViewModelBase
             if (DeviceManager.Devices[i].Name != deviceName)
                 continue;
             SelectedDeviceIndex = i;
-            return true;
+            break;
         }
-
-        return false;
     }
 
 }
