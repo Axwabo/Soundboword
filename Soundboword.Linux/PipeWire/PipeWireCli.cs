@@ -47,12 +47,13 @@ public sealed class PipeWireCli
         }
     }
 
-    public static async Task<bool> ConnectAsync(string sourcePort, string destinationPort)
+    public static async Task<bool> LinkAsync(string sourcePort, string destinationPort, bool disconnect)
     {
         var result = await Cli.Wrap("pw-link")
-            .WithArguments([sourcePort, destinationPort])
+            .WithArguments(disconnect ? ["-d", sourcePort, destinationPort] : [sourcePort, destinationPort])
             .WithValidation(CommandResultValidation.None)
-            .ExecuteAsync();
+            .ExecuteAsync()
+            .ConfigureAwait(false);
         return result.IsSuccess;
     }
 

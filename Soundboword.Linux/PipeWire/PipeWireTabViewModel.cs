@@ -47,6 +47,7 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     private async Task ToggleMicrophonePassthrough()
     {
         TogglingPassthrough = true;
+        var disconnect = PhysicalMicrophonePassthrough;
         var passthrough = false;
         try
         {
@@ -60,9 +61,9 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
             virtualPorts.Sort(PortComparison);
             var tasks = new Task<bool>[physicalPorts.Count];
             for (var i = 0; i < tasks.Length; i++)
-                tasks[i] = PipeWireCli.ConnectAsync(physicalPorts[i].Id, virtualPorts[i].Id);
+                tasks[i] = PipeWireCli.LinkAsync(physicalPorts[i].Id, virtualPorts[i].Id, disconnect);
             var results = await Task.WhenAll(tasks);
-            passthrough = results.All(e => e);
+            passthrough = results.All(e => e != disconnect);
         }
         finally
         {
