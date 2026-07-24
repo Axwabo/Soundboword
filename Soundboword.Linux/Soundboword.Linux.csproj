@@ -19,8 +19,4 @@
         <ProjectReference Include="..\Soundboword\Soundboword.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="PipeWire\" />
-    </ItemGroup>
-
 </Project>

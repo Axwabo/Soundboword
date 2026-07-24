@@ -1,4 +1,6 @@
-﻿namespace Soundboword.Linux;
+﻿using Soundboword.Linux.PipeWire;
+
+namespace Soundboword.Linux;
 
 internal static class Program
 {
@@ -12,6 +14,7 @@ internal static class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux());
+        => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux()
+            .AddView<PipeWireView, PipeWireTabViewModel>());
 
 }
