@@ -30,6 +30,12 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5">
+            <ToggleSwitch OffContent="🔊 -&gt; 🎧" ToolTip.Tip="Hear Sounds (Sounds to Output Device)" />
+            <ToggleSwitch OffContent="🔊 -&gt; 📣" ToolTip.Tip="Sounds to Virtual Microphone" />
+            <ToggleSwitch OffContent="🎤 -&gt; 🎧" ToolTip.Tip="Hear Myself (Microphone to Output Device)" />
+            <ToggleSwitch OffContent="🎤 -&gt; 📣" ToolTip.Tip="Physical Mic to Virtual Microphone" />
+        </StackPanel>
         <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
             <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
         </Panel>
