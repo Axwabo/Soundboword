@@ -65,6 +65,8 @@ public sealed class SoundFlowDeviceManager : IDisposable
         _engine = null;
     }
 
+    public event Action? DeviceSwitched;
+
     [MemberNotNull(nameof(_engine))]
     public void InitializeEngine()
     {
@@ -82,7 +84,10 @@ public sealed class SoundFlowDeviceManager : IDisposable
         if (!IsInitialized)
             return;
         if (_playback != null)
+        {
             _playback = _engine.SwitchDevice(_playback, info);
+            DeviceSwitched?.Invoke();
+        }
         else
         {
             _playback = _engine.InitializePlaybackDevice(info, Format);

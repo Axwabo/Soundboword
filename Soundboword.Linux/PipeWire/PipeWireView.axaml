@@ -24,7 +24,7 @@
                 <TextBlock IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNull}}" Foreground="Red" FontWeight="Bold" Text="The Soundboword Microphone could not be found!&#10;Launch the wizard to set it up." />
                 <StackPanel Spacing="5" IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNotNull}}">
                     <Label>Physical Microphone:</Label>
-                    <ListBox ItemsSource="{Binding NodeManager.Microphones}" SelectedItem="{Binding NodeManager.PhysicalMicrophone}" SelectionMode="Single, AlwaysSelected" Background="Transparent">
+                    <ListBox ItemsSource="{Binding NodeManager.Sources}" SelectedItem="{Binding NodeManager.PhysicalMicrophone}" SelectionMode="Single, AlwaysSelected" Background="Transparent">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <RadioButton IsHitTestVisible="False" Content="{Binding Description}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />

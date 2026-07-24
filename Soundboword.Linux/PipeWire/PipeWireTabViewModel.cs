@@ -12,7 +12,7 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     public PipeWireTabViewModel()
     {
         _cli = new PipeWireCli();
-        NodeManager = new NodeManager(_cli);
+        NodeManager = new NodeManager(_cli, new SoundFlowDeviceManager());
     }
 
     public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context)
@@ -21,14 +21,11 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
         _topLevel = topLevel;
         _context = context;
         NodeManager = context.NodeManager;
-        NodeManager.ObjectsRefreshed += SelectFirstNode;
     }
 
     public NodeManager NodeManager { get; }
 
     public Task<bool> IsAvailable => _cli.IsAvailable;
-
-    private void SelectFirstNode() => NodeManager.PhysicalMicrophone ??= NodeManager.Microphones[0];
 
     [RelayCommand]
     private async Task LaunchWizard()

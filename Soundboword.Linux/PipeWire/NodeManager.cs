@@ -1,5 +1,3 @@
-using Avalonia.Threading;
-
 namespace Soundboword.Linux.PipeWire;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
@@ -9,19 +7,25 @@ public sealed partial class NodeManager : ObservableObject
     private static readonly Comparison<PipeWirePort> PortComparison = (a, b) => a.PortId.CompareTo(b.PortId);
 
     private readonly PipeWireCli _cli;
+    private readonly SoundFlowDeviceManager _outputManager;
 
-    public NodeManager(PipeWireCli cli)
+    private readonly List<PipeWireNode> _sinks = [];
+
+    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager)
     {
         _cli = cli;
+        _outputManager = outputManager;
         _ = Refresh();
+        outputManager.DeviceSwitched += OutputManagerOnDeviceSwitched;
     }
+
+    public ObservableCollection<PipeWireNode> Sources { get; } = [];
 
     public List<PipeWirePort> Ports { get; } = [];
 
-    public ObservableCollection<PipeWireNode> Microphones { get; } = [];
+    public PipeWireNode? MicNode { get; private set; }
 
-    [ObservableProperty]
-    public partial PipeWireNode? MicNode { get; private set; }
+    public PipeWireNode? OutputNode { get; private set; }
 
     [ObservableProperty]
     public partial PipeWireNode? PhysicalMicrophone { get; set; }
@@ -31,29 +35,48 @@ public sealed partial class NodeManager : ObservableObject
     [ObservableProperty]
     public partial NodeLinkManager? PhysicalToVirtual { get; private set; }
 
-    public event Action? ObjectsRefreshed;
-
     public async Task Refresh()
     {
+        _sinks.Clear();
+        Sources.Clear();
         Ports.Clear();
-        Microphones.Clear();
         MicNode = null;
         PlaybackNode = null;
+        OutputNode = null;
         await _cli.IsAvailable;
         var objects = await PipeWireCli.ListObjectsAsync();
         var links = new List<PipeWireLink>();
+        RefreshObjects(objects, links);
+        Ports.Sort(PortComparison);
+        PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
+        if (PhysicalMicrophone is not null && MicNode is not null)
+            PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, links);
+    }
+
+    private void RefreshObjects(List<PipeWireObject> objects, List<PipeWireLink> links)
+    {
+        var selectedOutput = _outputManager.SelectedDevice.Name;
         foreach (var pwObj in objects)
             switch (pwObj)
             {
-                case PipeWireNode {Class: "Stream/Output/Audio", Name: var name} node when name.StartsWith("Soundboword"):
-                    PlaybackNode = node;
+                case PipeWireNode {Class: "Stream/Output/Audio"} playback when playback.Name.StartsWith("Soundboword"):
+                    PlaybackNode = playback;
                     break;
-                case PipeWireNode {Class: "Audio/Source/Virtual", Name: "Soundboword-Mic", Description: "Soundboword Microphone"} node:
-                    MicNode = node;
+                case PipeWireNode {Class: "Audio/Source/Virtual", Name: "Soundboword-Mic", Description: "Soundboword Microphone"} mic:
+                    MicNode = mic;
                     break;
-                // TODO: should we allow duplex devices?
-                case PipeWireNode {Class: "Audio/Source" or "Audio/Duplex"} node:
-                    Microphones.Add(node);
+                case PipeWireNode {Class: "Audio/Duplex"} duplex:
+                    Sources.Add(duplex);
+                    if (duplex.Description == selectedOutput)
+                        OutputNode = duplex;
+                    break;
+                case PipeWireNode {Class: "Audio/Sink"} sink:
+                    _sinks.Add(sink);
+                    if (sink.Description == selectedOutput)
+                        OutputNode = sink;
+                    break;
+                case PipeWireNode {Class: "Audio/Source"} source:
+                    Sources.Add(source);
                     break;
                 case PipeWirePort port:
                     Ports.Add(port);
@@ -62,12 +85,11 @@ public sealed partial class NodeManager : ObservableObject
                     links.Add(link);
                     break;
             }
+    }
 
-        Ports.Sort(PortComparison);
-        if (ObjectsRefreshed != null)
-            Dispatcher.UIThread.InvokeOrPost(ObjectsRefreshed);
-        if (PhysicalMicrophone is not null && MicNode is not null)
-            PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, links);
+    private void OutputManagerOnDeviceSwitched()
+    {
+        PhysicalToVirtual?.EnsureState();
     }
 
 }
