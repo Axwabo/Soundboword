@@ -1,3 +1,5 @@
+using Avalonia.Threading;
+
 namespace Soundboword.Linux.PipeWire;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
@@ -14,6 +16,8 @@ public sealed partial class NodeManager : ObservableObject
         _ = Refresh();
     }
 
+    public List<PipeWirePort> Ports { get; } = [];
+
     public ObservableCollection<PipeWireNode> Microphones { get; } = [];
 
     [ObservableProperty]
@@ -27,14 +31,16 @@ public sealed partial class NodeManager : ObservableObject
     [ObservableProperty]
     public partial NodeLinkManager? PhysicalToVirtual { get; private set; }
 
+    public event Action? ObjectsRefreshed;
+
     public async Task Refresh()
     {
+        Ports.Clear();
         Microphones.Clear();
         MicNode = null;
         PlaybackNode = null;
         await _cli.IsAvailable;
         var objects = await PipeWireCli.ListObjectsAsync();
-        var ports = new List<PipeWirePort>();
         foreach (var pwObj in objects)
             switch (pwObj)
             {
@@ -49,13 +55,15 @@ public sealed partial class NodeManager : ObservableObject
                     Microphones.Add(node);
                     break;
                 case PipeWirePort port:
-                    ports.Add(port);
+                    Ports.Add(port);
                     break;
             }
 
-        ports.Sort(PortComparison);
+        Ports.Sort(PortComparison);
+        if (ObjectsRefreshed != null)
+            Dispatcher.UIThread.InvokeOrPost(ObjectsRefreshed);
         if (PhysicalMicrophone is not null && MicNode is not null)
-            PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, ports);
+            PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports);
     }
 
 }

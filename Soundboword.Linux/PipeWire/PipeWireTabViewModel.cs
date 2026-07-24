@@ -21,11 +21,14 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
         _topLevel = topLevel;
         _context = context;
         NodeManager = context.NodeManager;
+        NodeManager.ObjectsRefreshed += SelectFirstNode;
     }
 
     public NodeManager NodeManager { get; }
 
     public Task<bool> IsAvailable => _cli.IsAvailable;
+
+    private void SelectFirstNode() => NodeManager.PhysicalMicrophone ??= NodeManager.Microphones[0];
 
     [RelayCommand]
     private async Task LaunchWizard()

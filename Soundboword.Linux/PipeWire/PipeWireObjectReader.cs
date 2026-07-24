@@ -14,6 +14,8 @@ public static class PipeWireObjectReader
     private const string Direction = "port.direction";
     private const string PortId = "port.id";
 
+    private const string To = "|->";
+
     public static List<PipeWireObject> ReadObjectsAsync(ReadOnlySpan<char> info)
     {
         var nodes = new List<PipeWireObject>();
@@ -65,13 +67,26 @@ public static class PipeWireObjectReader
         return true;
     }
 
-    public static HashSet<PipeWireLink> ReadLinksAsync(ReadOnlySpan<char> info)
+    public static List<PipeWireLink> ReadLinksAsync(ReadOnlySpan<char> info)
     {
+        var list = new List<PipeWireLink>();
         foreach (var range in info.Split('\n'))
         {
+            var span = info[range].Trim();
+            var arrow = span.IndexOf(To);
+            if (arrow == -1)
+                continue;
+            var afterArrow = span[(arrow + To.Length)..].Trim();
+            var toSpace = afterArrow.IndexOf(' ');
+            if (toSpace == -1)
+                continue;
+            // TODO: that's the link ID :sob:
+            var output = span[..arrow].Trim();
+            var input = afterArrow[..toSpace].Trim();
+            list.Add(new PipeWireLink(output.ToString(), input.ToString()));
         }
 
-        return [];
+        return list;
     }
 
 }

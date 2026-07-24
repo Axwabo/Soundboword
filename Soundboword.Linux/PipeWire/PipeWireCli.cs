@@ -48,7 +48,7 @@ public sealed class PipeWireCli
         }
     }
 
-    public static async Task<IReadOnlyCollection<PipeWireLink>> ListLinksAsync()
+    public static async Task<List<PipeWireLink>> ListLinksAsync()
     {
         try
         {
@@ -63,10 +63,10 @@ public sealed class PipeWireCli
         }
     }
 
-    public static async Task<bool> LinkAsync(string sourcePort, string destinationPort, bool disconnect)
+    public static async Task<bool> LinkAsync(string outputPort, string inputPort, bool disconnect)
     {
         var result = await Cli.Wrap("pw-link")
-            .WithArguments(disconnect ? ["-d", sourcePort, destinationPort] : [sourcePort, destinationPort])
+            .WithArguments(disconnect ? ["-d", outputPort, inputPort] : [outputPort, inputPort])
             .WithValidation(CommandResultValidation.None)
             .ExecuteAsync()
             .ConfigureAwait(false);

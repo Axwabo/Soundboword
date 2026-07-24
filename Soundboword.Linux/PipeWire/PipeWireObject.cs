@@ -6,4 +6,4 @@ public sealed record PipeWireNode(string Id, string Class, string Name, string D
 
 public sealed record PipeWirePort(string Id, string Node, string Direction, int PortId) : PipeWireObject;
 
-public sealed record PipeWireLink(string Id, string OutputPort, string InputPort) : PipeWireObject;
+public sealed record PipeWireLink(string OutputPort, string InputPort) : PipeWireObject;

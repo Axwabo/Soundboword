@@ -5,30 +5,26 @@ public sealed partial class NodeLinkManager : ObservableObject
 
     public static NodeLinkManager? Create(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> ports)
     {
-        var sources = new List<PipeWirePort>();
-        var destinations = new List<PipeWirePort>();
+        var outputs = new List<string>();
+        var inputs = new List<string>();
         foreach (var port in ports)
             if (port.Direction == "out" && port.Node == source.Id)
-                sources.Add(port);
+                outputs.Add(port.Id);
             else if (port.Direction == "in" && port.Node == destination.Id)
-                destinations.Add(port);
-        return sources.Count != 0 && sources.Count == destinations.Count
-            ? new NodeLinkManager(source, destination, sources, destinations)
+                inputs.Add(port.Id);
+        return outputs.Count != 0 && outputs.Count == inputs.Count
+            ? new NodeLinkManager(outputs, inputs)
             : null;
     }
 
-    private readonly PipeWireNode _destination;
-    private readonly List<PipeWirePort> _destinations;
+    private readonly List<string> _inputs;
 
-    private readonly PipeWireNode _source;
-    private readonly List<PipeWirePort> _sources;
+    private readonly List<string> _outputs;
 
-    private NodeLinkManager(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> sources, List<PipeWirePort> destinations)
+    private NodeLinkManager(List<string> outputs, List<string> inputs)
     {
-        _source = source;
-        _destination = destination;
-        _sources = sources;
-        _destinations = destinations;
+        _outputs = outputs;
+        _inputs = inputs;
     }
 
     [ObservableProperty]
@@ -42,6 +38,20 @@ public sealed partial class NodeLinkManager : ObservableObject
     {
         InProgress = true;
         var links = await PipeWireCli.ListLinksAsync();
+        var disconnect = false;
+        foreach (var link in links)
+        {
+            if (!_outputs.Contains(link.OutputPort) || !_inputs.Contains(link.InputPort))
+                continue;
+            disconnect = true;
+            break;
+        }
+
+        var success = false;
+        for (var i = 0; i < _inputs.Count; i++)
+            success |= await PipeWireCli.LinkAsync(_outputs[i], _inputs[i], disconnect);
+        if (success)
+            IsLinked = !disconnect;
         InProgress = false;
     }
 
