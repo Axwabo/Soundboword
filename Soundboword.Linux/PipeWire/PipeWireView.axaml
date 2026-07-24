@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pipeWire="clr-namespace:Soundboword.Linux.PipeWire"
+             xmlns:controls="clr-namespace:Soundboword.Controls;assembly=Soundboword"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Linux.PipeWire.PipeWireView"
              x:DataType="pipeWire:PipeWireTabViewModel">
@@ -31,7 +32,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <ToggleSwitch IsEnabled="{Binding !TogglingPassthrough}" IsChecked="{Binding PhysicalMicrophonePassthrough, Mode=OneWay}" Command="{Binding ToggleMicrophonePassthroughCommand}" OnContent="Physical Microphone Passthrough" OffContent="Physical Microphone Passthrough" />
+                    <controls:DataToggle IsEnabled="{Binding !TogglingPassthrough}" IsChecked="{Binding PhysicalMicrophonePassthrough}" Command="{Binding ToggleMicrophonePassthroughCommand}" Text="Physical Microphone Passthrough" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
