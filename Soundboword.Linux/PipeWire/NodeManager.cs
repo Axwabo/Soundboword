@@ -14,8 +14,6 @@ public sealed partial class NodeManager : ObservableObject
         _ = Refresh();
     }
 
-    public List<PipeWirePort> Ports { get; } = [];
-
     public ObservableCollection<PipeWireNode> Microphones { get; } = [];
 
     [ObservableProperty]
@@ -26,14 +24,17 @@ public sealed partial class NodeManager : ObservableObject
 
     public PipeWireNode? PlaybackNode { get; private set; }
 
+    [ObservableProperty]
+    public partial NodeLinkManager? PhysicalToVirtual { get; private set; }
+
     public async Task Refresh()
     {
-        Ports.Clear();
         Microphones.Clear();
         MicNode = null;
         PlaybackNode = null;
         await _cli.IsAvailable;
         var objects = await PipeWireCli.ListObjectsAsync();
+        var ports = new List<PipeWirePort>();
         foreach (var pwObj in objects)
             switch (pwObj)
             {
@@ -48,11 +49,13 @@ public sealed partial class NodeManager : ObservableObject
                     Microphones.Add(node);
                     break;
                 case PipeWirePort port:
-                    Ports.Add(port);
+                    ports.Add(port);
                     break;
             }
 
-        Ports.Sort(PortComparison);
+        ports.Sort(PortComparison);
+        if (PhysicalMicrophone is not null && MicNode is not null)
+            PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, ports);
     }
 
 }

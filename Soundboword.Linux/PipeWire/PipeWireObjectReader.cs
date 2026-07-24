@@ -70,6 +70,8 @@ public static class PipeWireObjectReader
         foreach (var range in info.Split('\n'))
         {
         }
+
+        return [];
     }
 
 }

@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Soundboword.Controls;assembly=Soundboword"
+             xmlns:pipeWire="clr-namespace:Soundboword.Linux.PipeWire"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Linux.PipeWire.NodeLinkToggle"
+             x:DataType="pipeWire:NodeLinkManager">
+    <controls:DataToggle IsEnabled="{Binding !InProgress}"
+                         IsChecked="{Binding IsLinked}"
+                         Command="{Binding ToggleLinkCommand}"
+                         Name="Toggle" />
+</UserControl>

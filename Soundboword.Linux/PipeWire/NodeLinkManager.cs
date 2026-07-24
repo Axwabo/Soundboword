@@ -40,7 +40,9 @@ public sealed partial class NodeLinkManager : ObservableObject
     [RelayCommand]
     private async Task ToggleLink()
     {
+        InProgress = true;
         var links = await PipeWireCli.ListLinksAsync();
+        InProgress = false;
     }
 
 }
