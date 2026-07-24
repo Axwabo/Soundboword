@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wizard="clr-namespace:Soundboword.Linux.PipeWire.Wizard"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+        x:Class="Soundboword.Linux.PipeWire.Wizard.ErrorDialogWindow"
+        x:DataType="wizard:ErrorDialogViewModel"
+        Title="PipeWire Wizard Error"
+        Width="400" Height="300">
+    <Design.DataContext>
+        <wizard:ErrorDialogViewModel Error="Among us in real life&#10;Sus sus" />
+    </Design.DataContext>
+    <StackPanel Margin="10" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Text="{Binding Error}" Foreground="Red" FontWeight="Bold" TextWrapping="Wrap" />
+        <Button Click="Button_OnClick" HorizontalAlignment="Center" HotKey="Escape">OK</Button>
+    </StackPanel>
+</Window>

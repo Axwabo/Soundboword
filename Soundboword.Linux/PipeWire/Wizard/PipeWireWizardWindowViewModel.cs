@@ -1,3 +1,5 @@
+using CliWrap;
+
 namespace Soundboword.Linux.PipeWire.Wizard;
 
 public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
@@ -27,6 +29,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
 
     private static async Task RunAsync()
     {
+        await Cli.Wrap("sussy").ExecuteAsync();
         var directory = Path.Combine(Config, Directories);
         Directory.CreateDirectory(directory);
         await WriteFileAsync(directory);
@@ -50,15 +53,11 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
 
     public string TargetDirectory { get; }
 
-    [ObservableProperty]
-    public partial string? Error { get; private set; }
-
     [RelayCommand]
     private async Task Run()
     {
         if (_window == null)
             return;
-        Error = "";
         try
         {
             await RunAsync();
@@ -66,9 +65,10 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
         }
         catch (Exception e)
         {
-            Error = e is {InnerException.Message: var message}
+            var error = e is {InnerException.Message: var message}
                 ? $"{e.Message}\n\n{message}"
                 : e.Message;
+            await ErrorDialogWindow.ShowAsync(error, _window);
         }
     }
 

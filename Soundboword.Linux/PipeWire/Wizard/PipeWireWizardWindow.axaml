@@ -26,7 +26,6 @@
             <Label>3. Run</Label>
             <Label FontWeight="SemiBold">systemctl --user restart pipewire pipewire-pulse wireplumber</Label>
         </StackPanel>
-        <Button Command="{Binding RunCommand}" HorizontalAlignment="Center">Run</Button>
-        <TextBlock Text="{Binding Error}" Foreground="Red" TextWrapping="Wrap"></TextBlock>
+        <Button Command="{Binding RunCommand}" HorizontalAlignment="Center" HotKey="Enter">Run</Button>
     </StackPanel>
 </Window>
