@@ -6,5 +6,14 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Linux.PipeWire.PipeWireView"
              x:DataType="pipeWire:PipeWireTabViewModel">
-    <Label Content="{Binding IsAvailable^, FallbackValue=Loading...}" />
+    <UserControl.Styles>
+        <Style Selector=":is(Control).center">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+    <Panel>
+        <Label Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=True}">Detecting PipeWire...</Label>
+        <TextBlock Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=False}" TextWrapping="Wrap">Could not detect PipeWire</TextBlock>
+    </Panel>
 </UserControl>
