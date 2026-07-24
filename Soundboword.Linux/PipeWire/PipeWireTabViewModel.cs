@@ -27,11 +27,23 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
 
     public Task<bool> IsAvailable => _cli.IsAvailable;
 
+    [ObservableProperty]
+    public partial bool PhysicalMicrophonePassthrough { get; private set; }
+
+    [ObservableProperty]
+    public partial bool TogglingPassthrough { get; private set; }
+
     [RelayCommand]
     private async Task LaunchWizard()
     {
         if (_topLevel is Window parent && _context is not null)
             await PipeWireWizardWindow.ShowDialogAsync(parent, _context);
+    }
+
+    [RelayCommand]
+    private async Task ToggleMicrophonePassthrough()
+    {
+        TogglingPassthrough = true;
     }
 
 }

@@ -10,14 +10,13 @@ public static class PipeWireNodeReader
     private const string Name = "node.name";
     private const string Description = "node.description";
 
-    public static List<PipeWireNode> ReadAudioNodesAsync(StringReader reader)
+    public static List<PipeWireNode> ReadNodesAsync(string info)
     {
         var nodes = new List<PipeWireNode>();
         string? id = null, @class = null, name = null, description = null;
-        string? line;
-        while (!string.IsNullOrWhiteSpace(line = reader.ReadLine()))
+        foreach (var line in info.AsSpan().Split('\n'))
         {
-            var span = line.AsSpan().Trim();
+            var span = info[line].Trim();
             if (BeginNewDevice(span, ref id, ref @class, ref name, ref description, nodes) || id == null)
                 continue;
             var equals = span.IndexOf('=');
@@ -45,7 +44,7 @@ public static class PipeWireNodeReader
         var type = line.IndexOf(Type);
         if (comma == -1 || type == -1)
             return false;
-        if (id != null && @class != null && name != null && description != null && @class.StartsWith("Audio/"))
+        if (id != null && @class != null && name != null && description != null)
             nodes.Add(new PipeWireNode(id, @class, name, description));
         id = line[(type + Type.Length)..].Trim().SequenceEqual(InterfaceNode)
             ? line[Id.Length..comma].Trim().ToString()

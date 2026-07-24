@@ -12,30 +12,37 @@ public sealed partial class NodeManager : ObservableObject
         _ = Refresh();
     }
 
-    public ObservableCollection<PipeWireNode> Nodes { get; } = [];
-
     public ObservableCollection<PipeWireNode> Microphones { get; } = [];
 
     [ObservableProperty]
-    public partial PipeWireNode? SoundbowordNode { get; private set; }
+    public partial PipeWireNode? MicNode { get; private set; }
+
+    [ObservableProperty]
+    public partial PipeWireNode? PlaybackNode { get; private set; }
 
     [ObservableProperty]
     public partial PipeWireNode? PhysicalMicrophone { get; set; }
 
     public async Task Refresh()
     {
-        Nodes.Clear();
         Microphones.Clear();
-        SoundbowordNode = null;
+        MicNode = null;
+        PlaybackNode = null;
         await _cli.IsAvailable;
         foreach (var node in await PipeWireCli.ListNodesAsync())
-        {
-            Nodes.Add(node);
-            if (node is {Name: "Soundboword-Mic", Description: "Soundboword Microphone"})
-                SoundbowordNode = node;
-            else if (node.Class is "Audio/Source" or "Audio/Duplex") // TODO: should we allow duplex devices?
-                Microphones.Add(node);
-        }
+            switch (node.Class)
+            {
+                case "Stream/Output/Audio" when node.Name.StartsWith("Soundboword"):
+                    PlaybackNode = node;
+                    break;
+                case "Audio/Source/Virtual" when node is {Name: "Soundboword-Mic", Description: "Soundboword Microphone"}:
+                    MicNode = node;
+                    break;
+                // TODO: should we allow duplex devices?
+                case "Audio/Source" or "Audio/Duplex":
+                    Microphones.Add(node);
+                    break;
+            }
     }
 
 }

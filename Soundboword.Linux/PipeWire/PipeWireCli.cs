@@ -39,8 +39,7 @@ public sealed class PipeWireCli
             var result = await Cli.Wrap(PwCli)
                 .WithArguments("ls")
                 .ExecuteBufferedAsync();
-            using var reader = new StringReader(result.StandardOutput);
-            return PipeWireNodeReader.ReadAudioNodesAsync(reader);
+            return PipeWireNodeReader.ReadNodesAsync(result.StandardOutput);
         }
         catch
         {
