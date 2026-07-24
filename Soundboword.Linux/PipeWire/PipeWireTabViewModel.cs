@@ -16,9 +16,19 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     {
         _cli = cli;
         _topLevel = topLevel;
+        _ = ListNodes();
     }
 
     public Task<bool>? IsAvailable => _cli?.IsAvailable;
+
+    public ObservableCollection<PipeWireNode> Nodes { get; } = [];
+
+    private async Task ListNodes()
+    {
+        var nodes = await PipeWireCli.ListNodesAsync();
+        foreach (var pipeWireNode in nodes)
+            Nodes.Add(pipeWireNode);
+    }
 
     [RelayCommand]
     private async Task LaunchWizard()

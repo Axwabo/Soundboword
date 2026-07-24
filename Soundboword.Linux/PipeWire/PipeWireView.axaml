@@ -14,10 +14,11 @@
     </UserControl.Styles>
     <Panel>
         <Label Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=True}">Detecting PipeWire...</Label>
-        <TextBlock Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=False}" TextWrapping="Wrap">Could not detect PipeWire</TextBlock>
+        <TextBlock Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=False}" TextWrapping="Wrap" TextAlignment="Center" Text="Could not detect PipeWire&#10;Make sure that pw-cli and pw-link are available" />
         <ScrollViewer IsVisible="{Binding IsAvailable^, FallbackValue=False}">
             <StackPanel Spacing="5">
                 <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
+                <ItemsControl ItemsSource="{Binding Nodes}" />
             </StackPanel>
         </ScrollViewer>
     </Panel>
