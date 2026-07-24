@@ -47,10 +47,7 @@ public sealed partial class NodeLinkManager : ObservableObject
         InProgress = true;
         try
         {
-            var links = await PipeWireCli.ListLinksAsync();
-            var disconnect = IsConnected(links, _outputs, _inputs);
-            if (target != null && disconnect != target)
-                return;
+            var disconnect = target ?? IsConnected(await PipeWireCli.ListLinksAsync(), _outputs, _inputs);
             var success = false;
             for (var i = 0; i < _inputs.Count; i++)
                 success |= await PipeWireCli.LinkAsync(_outputs[i], _inputs[i], disconnect);

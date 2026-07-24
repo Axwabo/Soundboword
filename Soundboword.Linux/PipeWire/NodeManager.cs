@@ -110,7 +110,6 @@ public sealed partial class NodeManager : ObservableObject
 
     private async Task RelinkAfterDeviceSwitch()
     {
-        await Task.Delay(100);
         if (MicSounds != null)
             await MicSounds.EnsureState();
         var output = _outputManager.SelectedDevice.Name;
@@ -131,8 +130,6 @@ public sealed partial class NodeManager : ObservableObject
     private async Task Relink(PipeWireNode node)
     {
         var linked = HearSounds?.IsLinked ?? true;
-        if (HearSounds != null)
-            await HearSounds.ToggleLink(false);
         OutputNode = node;
         if (PlaybackNode is not null)
         {
