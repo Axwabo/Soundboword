@@ -38,7 +38,7 @@ public sealed class PipeWireCli
         try
         {
             var result = await Cli.Wrap(PwCli)
-                .WithArguments("ls")
+                .WithArguments(["ls"])
                 .ExecuteBufferedAsync();
             return PipeWireObjectReader.ReadObjectsAsync(result.StandardOutput);
         }
