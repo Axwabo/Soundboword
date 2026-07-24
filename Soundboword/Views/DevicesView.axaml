@@ -9,12 +9,13 @@
     <Design.DataContext>
         <viewModels:DevicesViewModel />
     </Design.DataContext>
-    <StackPanel Spacing="3">
+    <StackPanel Spacing="5">
         <Button Command="{Binding RefreshCommand}">Refresh Playback Devices</Button>
+        <Label>Output Device:</Label>
         <ListBox ItemsSource="{Binding DeviceManager.Devices}" SelectionMode="AlwaysSelected,Single" Background="Transparent" SelectedIndex="{Binding SelectedDeviceIndex}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <RadioButton Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                    <RadioButton IsHitTestVisible="False" Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
