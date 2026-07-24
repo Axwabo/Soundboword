@@ -2,15 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls="clr-namespace:Soundboword.Controls;assembly=Soundboword"
              xmlns:pipeWire="clr-namespace:Soundboword.Linux.PipeWire"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Linux.PipeWire.LinkTogglesView"
              x:DataType="pipeWire:LinkTogglesViewModel">
     <StackPanel>
-        <controls:DataToggle Text="🔊 -&gt; 🎧" ToolTip.Tip="Hear Sounds (Sounds to Output Device)" />
-        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.PlaybackToVirtual}" Text="🔊 -&gt; 📣" ToolTip.Tip="Sounds to Virtual Microphone" />
-        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.PhysicalToVirtual}" Text="🎤 -&gt; 📣" ToolTip.Tip="Physical Mic to Virtual Microphone" />
-        <controls:DataToggle Text="🎤 -&gt; 🎧" ToolTip.Tip="Hear Myself (Microphone to Output Device)" />
+        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.HearSounds}" Text="🔊 -&gt; 🎧" ToolTip.Tip="Hear Sounds (Sounds to Output Device)" />
+        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.MicSounds}" Text="🔊 -&gt; 📣" ToolTip.Tip="Mic Sounds (Sounds to Virtual Microphone)" />
+        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.MicPassthrough}" Text="🎤 -&gt; 📣" ToolTip.Tip="Mic Passthrough (Physical Microphone to Virtual Microphone)" />
+        <pipeWire:NodeLinkToggle DataContext="{Binding Manager.HearMyself}" Text="🎤 -&gt; 🎧" ToolTip.Tip="Hear Myself (Physical Microphone to Output Device)" />
     </StackPanel>
 </UserControl>

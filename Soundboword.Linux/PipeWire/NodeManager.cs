@@ -25,18 +25,24 @@ public sealed partial class NodeManager : ObservableObject
 
     public PipeWireNode? MicNode { get; private set; }
 
-    public PipeWireNode? OutputNode { get; private set; }
+    private PipeWireNode? OutputNode { get; set; }
+
+    private PipeWireNode? PlaybackNode { get; set; }
 
     [ObservableProperty]
     public partial PipeWireNode? PhysicalMicrophone { get; set; }
 
-    public PipeWireNode? PlaybackNode { get; private set; }
+    [ObservableProperty]
+    public partial NodeLinkManager? HearSounds { get; private set; }
 
     [ObservableProperty]
-    public partial NodeLinkManager? PhysicalToVirtual { get; private set; }
+    public partial NodeLinkManager? MicSounds { get; private set; }
 
     [ObservableProperty]
-    public partial NodeLinkManager? PlaybackToVirtual { get; private set; }
+    public partial NodeLinkManager? MicPassthrough { get; private set; }
+
+    [ObservableProperty]
+    public partial NodeLinkManager? HearMyself { get; private set; }
 
     public async Task Refresh()
     {
@@ -52,12 +58,14 @@ public sealed partial class NodeManager : ObservableObject
         RefreshObjects(objects, links);
         Ports.Sort(PortComparison);
         PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
-        if (MicNode is null)
-            return;
-        if (PhysicalMicrophone is not null)
-            PhysicalToVirtual = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, links);
-        if (PlaybackNode is not null)
-            PlaybackToVirtual = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, links);
+        if (PlaybackNode is not null && OutputNode is not null)
+            HearSounds = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, links);
+        if (PlaybackNode is not null && MicNode is not null)
+            MicSounds = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, links);
+        if (PhysicalMicrophone is not null && MicNode is not null)
+            MicPassthrough = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, links);
+        if (PhysicalMicrophone is not null && OutputNode is not null)
+            HearMyself = NodeLinkManager.Create(PhysicalMicrophone, OutputNode, Ports, links);
     }
 
     private void RefreshObjects(List<PipeWireObject> objects, List<PipeWireLink> links)
@@ -96,8 +104,25 @@ public sealed partial class NodeManager : ObservableObject
 
     private void OutputManagerOnDeviceSwitched()
     {
-        PhysicalToVirtual?.EnsureState();
-        PlaybackToVirtual?.EnsureState();
+        MicPassthrough?.EnsureState();
+        MicSounds?.EnsureState();
+        var output = _outputManager.SelectedDevice.Name;
+        foreach (var node in _sinks)
+        {
+            if (node.Description != output)
+                continue;
+            if (node == OutputNode)
+                break;
+            var linked = HearSounds?.IsLinked ?? true;
+            HearSounds?.ToggleLink(false);
+            if (PlaybackNode is not null)
+                HearSounds = NodeLinkManager.Create(PlaybackNode, node, Ports, []);
+            HearSounds?.ToggleLink(linked);
+            OutputNode = node;
+            return;
+        }
+
+        HearSounds?.EnsureState();
     }
 
 }

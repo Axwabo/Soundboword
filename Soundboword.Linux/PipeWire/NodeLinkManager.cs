@@ -42,7 +42,7 @@ public sealed partial class NodeLinkManager : ObservableObject
     public partial bool InProgress { get; private set; }
 
     [RelayCommand]
-    private async Task ToggleLink(bool? target = null)
+    public async Task ToggleLink(bool? target = null)
     {
         InProgress = true;
         try
