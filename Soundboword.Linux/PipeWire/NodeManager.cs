@@ -116,7 +116,33 @@ public sealed partial class NodeManager : ObservableObject
         var objects = await PipeWireCli.ListObjectsAsync();
         var links = new List<PipeWireLink>();
         var mic = Task.CompletedTask;
+        var hearSounds = Task.CompletedTask;
         var micSoundsOn = MicSounds?.IsLinked ?? true;
+        RefreshPlaybackAndPortsAndLinks(objects, links);
+        if (PlaybackNode is not null && MicNode is not null)
+        {
+            MicSounds = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, links);
+            mic = MicSounds?.ToggleLink(micSoundsOn, links) ?? Task.CompletedTask;
+        }
+        else
+            MicSounds = null;
+
+        var output = _outputManager.SelectedDevice.Name;
+        foreach (var node in _sinks)
+        {
+            if (node.Description != output)
+                continue;
+            hearSounds = node == OutputNode
+                ? HearSounds?.EnsureState(links) ?? Task.CompletedTask
+                : Relink(node, links);
+            break;
+        }
+
+        await Task.WhenAll(mic, hearSounds);
+    }
+
+    private void RefreshPlaybackAndPortsAndLinks(List<PipeWireObject> objects, List<PipeWireLink> links)
+    {
         PlaybackNode = null;
         Ports.Clear();
         foreach (var pwObj in objects)
@@ -134,32 +160,6 @@ public sealed partial class NodeManager : ObservableObject
             }
 
         Ports.Sort(PortComparison);
-        if (PlaybackNode is not null && MicNode is not null)
-        {
-            MicSounds = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, links);
-            mic = MicSounds?.ToggleLink(micSoundsOn, links) ?? Task.CompletedTask;
-        }
-        else
-            MicSounds = null;
-
-        var output = _outputManager.SelectedDevice.Name;
-        foreach (var node in _sinks)
-        {
-            if (node.Description != output)
-                continue;
-            if (node == OutputNode)
-                break;
-            await Task.WhenAll(
-                mic,
-                Relink(node, links)
-            );
-            return;
-        }
-
-        await Task.WhenAll(
-            mic,
-            HearSounds?.EnsureState(links) ?? Task.CompletedTask
-        );
     }
 
     private async Task Relink(PipeWireNode node, List<PipeWireLink> links)
