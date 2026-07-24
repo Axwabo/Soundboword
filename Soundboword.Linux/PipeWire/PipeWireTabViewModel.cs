@@ -58,14 +58,16 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
                 return;
             physicalPorts.Sort(PortComparison);
             virtualPorts.Sort(PortComparison);
-            passthrough = true;
-            for (var i = 0; i < physicalPorts.Count; i++)
-                passthrough &= await PipeWireCli.ConnectAsync(physicalPorts[i].Id, virtualPorts[i].Id);
+            var tasks = new Task<bool>[physicalPorts.Count];
+            for (var i = 0; i < tasks.Length; i++)
+                tasks[i] = PipeWireCli.ConnectAsync(physicalPorts[i].Id, virtualPorts[i].Id);
+            var results = await Task.WhenAll(tasks);
+            passthrough = results.All(e => e);
         }
         finally
         {
             TogglingPassthrough = false;
-            Dispatcher.UIThread.Post(() => PhysicalMicrophonePassthrough = passthrough);
+            Dispatcher.UIThread.InvokeOrPost(() => PhysicalMicrophonePassthrough = passthrough);
         }
     }
 
