@@ -4,11 +4,7 @@ namespace Soundboword.Linux.PipeWire;
 public sealed partial class NodeManager : ObservableObject
 {
 
-    private readonly PipeWireCli? _cli;
-
-    public NodeManager()
-    {
-    }
+    private readonly PipeWireCli _cli;
 
     public NodeManager(PipeWireCli cli)
     {
@@ -18,14 +14,18 @@ public sealed partial class NodeManager : ObservableObject
 
     public ObservableCollection<PipeWireNode> Nodes { get; } = [];
 
+    public ObservableCollection<PipeWireNode> Microphones { get; } = [];
+
     [ObservableProperty]
     public partial PipeWireNode? SoundbowordNode { get; private set; }
 
+    [ObservableProperty]
+    public partial PipeWireNode? PhysicalMicrophone { get; set; }
+
     public async Task Refresh()
     {
-        if (_cli == null)
-            return;
         Nodes.Clear();
+        Microphones.Clear();
         SoundbowordNode = null;
         await _cli.IsAvailable;
         foreach (var node in await PipeWireCli.ListNodesAsync())
@@ -33,6 +33,8 @@ public sealed partial class NodeManager : ObservableObject
             Nodes.Add(node);
             if (node is {Name: "Soundboword-Mic", Description: "Soundboword Microphone"})
                 SoundbowordNode = node;
+            else if (node.Class is "Audio/Source" or "Audio/Duplex") // TODO: should we allow duplex devices?
+                Microphones.Add(node);
         }
     }
 

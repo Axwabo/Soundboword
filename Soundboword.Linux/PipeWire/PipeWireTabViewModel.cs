@@ -12,7 +12,7 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     public PipeWireTabViewModel()
     {
         _cli = new PipeWireCli();
-        NodeManager = new NodeManager();
+        NodeManager = new NodeManager(_cli);
     }
 
     public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context)

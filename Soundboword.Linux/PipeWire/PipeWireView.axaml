@@ -22,7 +22,16 @@
             <StackPanel Spacing="5">
                 <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
                 <TextBlock IsVisible="{Binding NodeManager.SoundbowordNode, Converter={x:Static ObjectConverters.IsNull}}" Foreground="Red" FontWeight="Bold" Text="The Soundboword Microphone could not be found!&#10;Launch the wizard to set it up." />
-                <ItemsControl ItemsSource="{Binding NodeManager.Nodes}" />
+                <StackPanel Spacing="5" IsVisible="{Binding NodeManager.SoundbowordNode, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <Label>Physical microphone:</Label>
+                    <ListBox ItemsSource="{Binding NodeManager.Microphones}" SelectedItem="{Binding NodeManager.PhysicalMicrophone}" SelectionMode="Single, AlwaysSelected">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Content="{Binding Description}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Panel>
