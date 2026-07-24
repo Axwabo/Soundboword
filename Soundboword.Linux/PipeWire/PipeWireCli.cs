@@ -32,14 +32,14 @@ public sealed class PipeWireCli
         .WithArguments(["--user", "restart", "pipewire", "pipewire-pulse", "wireplumber"])
         .ExecuteAsync();
 
-    public static async Task<List<PipeWireNode>> ListNodesAsync()
+    public static async Task<List<PipeWireObject>> ListObjectsAsync()
     {
         try
         {
             var result = await Cli.Wrap(PwCli)
                 .WithArguments("ls")
                 .ExecuteBufferedAsync();
-            return PipeWireNodeReader.ReadNodesAsync(result.StandardOutput);
+            return PipeWireObjectReader.ReadObjectsAsync(result.StandardOutput);
         }
         catch
         {

@@ -12,35 +12,40 @@ public sealed partial class NodeManager : ObservableObject
         _ = Refresh();
     }
 
+    public List<PipeWirePort> Ports { get; } = [];
+
     public ObservableCollection<PipeWireNode> Microphones { get; } = [];
 
     [ObservableProperty]
     public partial PipeWireNode? MicNode { get; private set; }
 
     [ObservableProperty]
-    public partial PipeWireNode? PlaybackNode { get; private set; }
-
-    [ObservableProperty]
     public partial PipeWireNode? PhysicalMicrophone { get; set; }
+
+    public PipeWireNode? PlaybackNode { get; private set; }
 
     public async Task Refresh()
     {
+        Ports.Clear();
         Microphones.Clear();
         MicNode = null;
         PlaybackNode = null;
         await _cli.IsAvailable;
-        foreach (var node in await PipeWireCli.ListNodesAsync())
-            switch (node.Class)
+        foreach (var pwObj in await PipeWireCli.ListObjectsAsync())
+            switch (pwObj)
             {
-                case "Stream/Output/Audio" when node.Name.StartsWith("Soundboword"):
+                case PipeWireNode {Class: "Stream/Output/Audio", Name: var name} node when name.StartsWith("Soundboword"):
                     PlaybackNode = node;
                     break;
-                case "Audio/Source/Virtual" when node is {Name: "Soundboword-Mic", Description: "Soundboword Microphone"}:
+                case PipeWireNode {Class: "Audio/Source/Virtual", Name: "Soundboword-Mic", Description: "Soundboword Microphone"} node:
                     MicNode = node;
                     break;
                 // TODO: should we allow duplex devices?
-                case "Audio/Source" or "Audio/Duplex":
+                case PipeWireNode {Class: "Audio/Source" or "Audio/Duplex"} node:
                     Microphones.Add(node);
+                    break;
+                case PipeWirePort port:
+                    Ports.Add(port);
                     break;
             }
     }
