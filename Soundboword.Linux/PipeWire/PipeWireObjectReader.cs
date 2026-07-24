@@ -70,9 +70,18 @@ public static class PipeWireObjectReader
     public static List<PipeWireLink> ReadLinksAsync(ReadOnlySpan<char> info)
     {
         var list = new List<PipeWireLink>();
+        var id = "";
         foreach (var range in info.Split('\n'))
         {
             var span = info[range].Trim();
+            if (span.IndexOf('|') == -1)
+            {
+                var space = span.IndexOf(' ');
+                if (space != -1)
+                    id = span[..space].ToString();
+                continue;
+            }
+
             var arrow = span.IndexOf(To);
             if (arrow == -1)
                 continue;
@@ -80,10 +89,8 @@ public static class PipeWireObjectReader
             var toSpace = afterArrow.IndexOf(' ');
             if (toSpace == -1)
                 continue;
-            // TODO: that's the link ID :sob:
-            var output = span[..arrow].Trim();
             var input = afterArrow[..toSpace].Trim();
-            list.Add(new PipeWireLink(output.ToString(), input.ToString()));
+            list.Add(new PipeWireLink(id, input.ToString()));
         }
 
         return list;
