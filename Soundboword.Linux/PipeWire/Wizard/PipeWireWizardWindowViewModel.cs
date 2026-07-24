@@ -19,7 +19,18 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
                 continue;
             await using var file = File.Create(Path.Combine(directory, FileName));
             await resourceStream.CopyToAsync(file);
+            return;
         }
+
+        throw new FileNotFoundException("Could not find the configuration template");
+    }
+
+    private static async Task RunAsync()
+    {
+        var directory = Path.Combine(Config, Directories);
+        Directory.CreateDirectory(directory);
+        await WriteFileAsync(directory);
+        await PipeWireCli.RestartAsync();
     }
 
     private static string Config => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -39,18 +50,26 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
 
     public string TargetDirectory { get; }
 
-    public string TargetFile => FileName;
+    [ObservableProperty]
+    public partial string? Error { get; private set; }
 
     [RelayCommand]
     private async Task Run()
     {
         if (_window == null)
             return;
-        var directory = Path.Combine(Config, Directories);
-        Directory.CreateDirectory(directory);
-        await WriteFileAsync(directory);
-        await PipeWireCli.RestartAsync();
-        _window.Close();
+        Error = "";
+        try
+        {
+            await RunAsync();
+            _window.Close();
+        }
+        catch (Exception e)
+        {
+            Error = e is {InnerException.Message: var message}
+                ? $"{e.Message}\n\n{message}"
+                : e.Message;
+        }
     }
 
 }

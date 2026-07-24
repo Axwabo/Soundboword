@@ -3,19 +3,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wizard="clr-namespace:Soundboword.Linux.PipeWire.Wizard"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
         x:Class="Soundboword.Linux.PipeWire.Wizard.PipeWireWizardWindow"
         x:DataType="wizard:PipeWireWizardWindowViewModel"
         Title="PipeWire Wizard"
-        Width="600" Height="400">
+        Width="600" Height="300"
+        Padding="5">
     <Design.DataContext>
         <wizard:PipeWireWizardWindowViewModel />
     </Design.DataContext>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5">
         <Label HorizontalAlignment="Center">The wizard will:</Label>
-        <Label Content="{Binding TargetDirectory, StringFormat=1. Create \{0\}}" />
-        <Label Content="{Binding TargetFile, StringFormat=2. Write \{0\}}" />
-        <Label>3. Run systemctl --user restart pipewire pipewire-pulse wireplumber</Label>
+        <StackPanel Orientation="Horizontal">
+            <Label>1. Create</Label>
+            <Label FontWeight="SemiBold" Content="{Binding TargetDirectory}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>2. Write</Label>
+            <Label FontWeight="SemiBold" Content="{x:Static wizard:PipeWireWizardWindowViewModel.FileName}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>3. Run</Label>
+            <Label FontWeight="SemiBold">systemctl --user restart pipewire pipewire-pulse wireplumber</Label>
+        </StackPanel>
         <Button Command="{Binding RunCommand}" HorizontalAlignment="Center">Run</Button>
+        <TextBlock Text="{Binding Error}" Foreground="Red" TextWrapping="Wrap"></TextBlock>
     </StackPanel>
 </Window>
