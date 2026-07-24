@@ -133,6 +133,7 @@ public sealed partial class NodeManager : ObservableObject
                     break;
             }
 
+        Ports.Sort(PortComparison);
         if (PlaybackNode is not null && MicNode is not null)
         {
             MicSounds = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, links);
