@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Soundboword.App"
              xmlns:converters="clr-namespace:Soundboword.Converters"
-             xmlns:controls="clr-namespace:Soundboword.Controls"
              RequestedThemeVariant="Dark">
     <Application.Styles>
         <FluentTheme />
@@ -18,14 +17,6 @@
                 </Animation>
             </Style.Animations>
         </Style>
-        <Style Selector="controls|RadioListBox">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="ItemTemplate">
-                <DataTemplate>
-                    <RadioButton Content="{Binding Content, RelativeSource={RelativeSource AncestorType=controls:RadioListBox}}" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
-                </DataTemplate>
-            </Setter>
-        </Style>
     </Application.Styles>
 
     <Application.Resources>
@@ -35,6 +26,5 @@
         <SolidColorBrush x:Key="Playing" Color="#1100ff00" />
         <SolidColorBrush x:Key="Paused" Color="#11ffff00" />
         <SolidColorBrush x:Key="Error" Color="#11ff0000" />
-        <Thickness x:Key="ListBoxItemPadding">5</Thickness>
     </Application.Resources>
 </Application>

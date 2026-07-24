@@ -38,6 +38,7 @@
             <Label>Stream to download:</Label>
             <ListBox Grid.Row="1" ItemsSource="{Binding Streams}" SelectedItem="{Binding SelectedStream}" Background="Transparent">
                 <ListBox.Resources>
+                    <Thickness x:Key="ListBoxItemPadding">5</Thickness>
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
