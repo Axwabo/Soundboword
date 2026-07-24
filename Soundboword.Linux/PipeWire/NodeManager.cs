@@ -4,6 +4,8 @@ namespace Soundboword.Linux.PipeWire;
 public sealed partial class NodeManager : ObservableObject
 {
 
+    private static readonly Comparison<PipeWirePort> PortComparison = (a, b) => a.PortId.CompareTo(b.PortId);
+
     private readonly PipeWireCli _cli;
 
     public NodeManager(PipeWireCli cli)
@@ -49,6 +51,8 @@ public sealed partial class NodeManager : ObservableObject
                     Ports.Add(port);
                     break;
             }
+
+        Ports.Sort(PortComparison);
     }
 
 }

@@ -65,4 +65,11 @@ public static class PipeWireObjectReader
         return true;
     }
 
+    public static HashSet<PipeWireLink> ReadLinksAsync(ReadOnlySpan<char> info)
+    {
+        foreach (var range in info.Split('\n'))
+        {
+        }
+    }
+
 }

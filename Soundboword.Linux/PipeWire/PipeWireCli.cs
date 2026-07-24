@@ -9,6 +9,7 @@ public sealed class PipeWireCli
 {
 
     private const string PwCli = "pw-cli";
+    private const string PwLink = "pw-link";
 
     private static async Task<bool> DetectPipeWireAsync()
     {
@@ -40,6 +41,21 @@ public sealed class PipeWireCli
                 .WithArguments("ls")
                 .ExecuteBufferedAsync();
             return PipeWireObjectReader.ReadObjectsAsync(result.StandardOutput);
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public static async Task<IReadOnlyCollection<PipeWireLink>> ListLinksAsync()
+    {
+        try
+        {
+            var result = await Cli.Wrap(PwLink)
+                .WithArguments("-lI")
+                .ExecuteBufferedAsync();
+            return PipeWireObjectReader.ReadLinksAsync(result.StandardOutput);
         }
         catch
         {
