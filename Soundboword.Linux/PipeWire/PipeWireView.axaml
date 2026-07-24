@@ -6,6 +6,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Linux.PipeWire.PipeWireView"
              x:DataType="pipeWire:PipeWireTabViewModel">
+    <Design.DataContext>
+        <pipeWire:PipeWireTabViewModel />
+    </Design.DataContext>
     <UserControl.Styles>
         <Style Selector=":is(Control).center">
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -18,7 +21,8 @@
         <ScrollViewer IsVisible="{Binding IsAvailable^, FallbackValue=False}">
             <StackPanel Spacing="5">
                 <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
-                <ItemsControl ItemsSource="{Binding Nodes}" />
+                <TextBlock IsVisible="{Binding NodeManager.SoundbowordNode, Converter={x:Static ObjectConverters.IsNull}}" Foreground="Red" FontWeight="Bold" Text="The Soundboword Microphone could not be found!&#10;Launch the wizard to set it up." />
+                <ItemsControl ItemsSource="{Binding NodeManager.Nodes}" />
             </StackPanel>
         </ScrollViewer>
     </Panel>

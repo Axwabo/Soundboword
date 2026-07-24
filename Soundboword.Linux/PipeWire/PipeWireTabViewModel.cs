@@ -5,12 +5,14 @@ namespace Soundboword.Linux.PipeWire;
 public sealed partial class PipeWireTabViewModel : ViewModelBase
 {
 
-    private readonly PipeWireCli? _cli;
+    private readonly PipeWireCli _cli;
     private readonly RestartContext? _context;
     private readonly TopLevel? _topLevel;
 
     public PipeWireTabViewModel()
     {
+        _cli = new PipeWireCli();
+        NodeManager = new NodeManager();
     }
 
     public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context)
@@ -18,19 +20,12 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
         _cli = cli;
         _topLevel = topLevel;
         _context = context;
-        _ = ListNodes();
+        NodeManager = context.NodeManager;
     }
 
-    public Task<bool>? IsAvailable => _cli?.IsAvailable;
+    public NodeManager NodeManager { get; }
 
-    public ObservableCollection<PipeWireNode> Nodes { get; } = [];
-
-    private async Task ListNodes()
-    {
-        var nodes = await PipeWireCli.ListNodesAsync();
-        foreach (var pipeWireNode in nodes)
-            Nodes.Add(pipeWireNode);
-    }
+    public Task<bool> IsAvailable => _cli.IsAvailable;
 
     [RelayCommand]
     private async Task LaunchWizard()

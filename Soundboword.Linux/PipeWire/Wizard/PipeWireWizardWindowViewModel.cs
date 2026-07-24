@@ -71,7 +71,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Run()
     {
-        if (_window == null || _context is not var (audio, devices, inputs))
+        if (_window == null || _context is not var (audio, devices, inputs, nodeManager))
             return;
         var restartAttempted = false;
         var disabled = new HashSet<InputMethodInterface>();
@@ -99,6 +99,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
             return;
         devices.DeviceManager.InitializeEngine();
         await WaitForRestartAsync(devices.DeviceManager);
+        await nodeManager.Refresh();
         devices.Refresh();
         if (devices.DeviceManager.Devices.Count == 0)
             devices.DeviceManager.SwitchToDefaultDevice();
