@@ -110,8 +110,8 @@ public sealed partial class NodeManager : ObservableObject
 
     private async Task RelinkAfterDeviceSwitch()
     {
-        if (MicSounds != null)
-            await MicSounds.EnsureState();
+        var links = await PipeWireCli.ListLinksAsync();
+        var mic = MicSounds?.EnsureState(links) ?? Task.CompletedTask;
         var output = _outputManager.SelectedDevice.Name;
         foreach (var node in _sinks)
         {
@@ -119,26 +119,27 @@ public sealed partial class NodeManager : ObservableObject
                 continue;
             if (node == OutputNode)
                 break;
-            await Relink(node);
+            await Task.WhenAll(
+                mic,
+                Relink(node, links)
+            );
             return;
         }
 
-        if (HearSounds != null)
-            await HearSounds.EnsureState();
+        await Task.WhenAll(
+            mic,
+            HearSounds?.EnsureState(links) ?? Task.CompletedTask
+        );
     }
 
-    private async Task Relink(PipeWireNode node)
+    private async Task Relink(PipeWireNode node, List<PipeWireLink> links)
     {
         var linked = HearSounds?.IsLinked ?? true;
         OutputNode = node;
         if (PlaybackNode is not null)
-        {
-            var links = await PipeWireCli.ListLinksAsync();
             HearSounds = NodeLinkManager.Create(PlaybackNode, node, Ports, links);
-        }
-
         if (HearSounds != null)
-            await HearSounds.ToggleLink(linked);
+            await HearSounds.ToggleLink(linked, links);
     }
 
 }
