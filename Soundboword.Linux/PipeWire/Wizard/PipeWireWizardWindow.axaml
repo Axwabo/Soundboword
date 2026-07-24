@@ -12,20 +12,24 @@
     <Design.DataContext>
         <wizard:PipeWireWizardWindowViewModel />
     </Design.DataContext>
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
         <Label HorizontalAlignment="Center">The wizard will:</Label>
-        <StackPanel Orientation="Horizontal">
-            <Label>1. Create</Label>
-            <Label FontWeight="SemiBold" Content="{Binding TargetDirectory}" />
+        <StackPanel HorizontalAlignment="Center">
+            <Label>1. Stop all sounds</Label>
+            <StackPanel Orientation="Horizontal">
+                <Label>2. Create</Label>
+                <Label FontWeight="SemiBold" Content="{Binding TargetDirectory}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label>3. Write</Label>
+                <Label FontWeight="SemiBold" Content="{x:Static wizard:PipeWireWizardWindowViewModel.FileName}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label>4. Run</Label>
+                <Label FontWeight="SemiBold">systemctl --user restart pipewire pipewire-pulse wireplumber</Label>
+            </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>2. Write</Label>
-            <Label FontWeight="SemiBold" Content="{x:Static wizard:PipeWireWizardWindowViewModel.FileName}" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Label>3. Run</Label>
-            <Label FontWeight="SemiBold">systemctl --user restart pipewire pipewire-pulse wireplumber</Label>
-        </StackPanel>
+        <TextBlock Foreground="Yellow" TextWrapping="Wrap" Text="Note:&#10;Some applications might need a restart for audio to work properly" />
         <Button Command="{Binding RunCommand}" HorizontalAlignment="Center" HotKey="Enter">Run</Button>
     </StackPanel>
 </Window>

@@ -34,16 +34,20 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
     }
 
     private static string Config => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    private readonly AudioManager? _audioManager;
+    private readonly DevicesViewModel? _devices;
 
     private readonly PipeWireWizardWindow? _window;
 
-    public PipeWireWizardWindowViewModel() : this(null)
+    public PipeWireWizardWindowViewModel() : this(null, null, null)
     {
     }
 
-    public PipeWireWizardWindowViewModel(PipeWireWizardWindow? window)
+    public PipeWireWizardWindowViewModel(PipeWireWizardWindow? window, AudioManager? audioManager, DevicesViewModel? devices)
     {
         _window = window;
+        _audioManager = audioManager;
+        _devices = devices;
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         TargetDirectory = Path.Combine(Config.Replace(home, "~"), Directories);
     }
@@ -53,10 +57,12 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Run()
     {
-        if (_window == null)
+        if (_window == null || _audioManager == null || _devices == null)
             return;
         try
         {
+            _audioManager.StopAll();
+            _devices.DeviceManager.Dispose();
             await RunAsync();
             _window.Close();
         }
@@ -66,6 +72,12 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
                 ? $"{e.Message}\n\n{message}"
                 : e.Message;
             await ErrorDialogWindow.ShowAsync(error, _window);
+        }
+        finally
+        {
+            _devices.DeviceManager.InitializeEngine();
+            if (!_devices.Refresh(false))
+                _devices.DeviceManager.SwitchToDefaultDevice();
         }
     }
 

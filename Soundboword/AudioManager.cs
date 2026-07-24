@@ -26,6 +26,8 @@ public sealed class AudioManager
 
     public void Trigger(SoundViewModel sound)
     {
+        if (!_deviceManager.IsInitialized)
+            return;
         switch (sound.Mode)
         {
             case TriggerMode.Duplicate:
@@ -62,7 +64,7 @@ public sealed class AudioManager
 
     public void TogglePause(SoundViewModel sound)
     {
-        if (!_sounds.TryGetValue(sound, out var list))
+        if (!_deviceManager.IsInitialized || !_sounds.TryGetValue(sound, out var list))
             return;
         if (sound.PlaybackState == SoundState.Playing)
             sound.Pause(IPlaybackSuspender.User);
@@ -177,6 +179,8 @@ public sealed class AudioManager
 
     public void Stop(SoundPlayback playback)
     {
+        if (!_deviceManager.IsInitialized)
+            return;
         StopInternal(playback);
         // TODO: optimize
         foreach (var (sound, list) in _sounds)

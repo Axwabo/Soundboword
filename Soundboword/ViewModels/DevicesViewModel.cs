@@ -26,15 +26,18 @@ public sealed partial class DevicesViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Refresh()
+    private void Refresh() => Refresh(true);
+
+    public bool Refresh(bool doNotSwitch)
     {
-        _isRefreshing = true;
+        _isRefreshing = doNotSwitch;
         DeviceManager.RefreshAudioDevices();
-        UpdateSelected();
+        var success = UpdateSelected();
         _isRefreshing = false;
+        return success;
     }
 
-    private void UpdateSelected()
+    private bool UpdateSelected()
     {
         var deviceName = DeviceManager.SelectedDevice.Name;
         for (var i = 0; i < DeviceManager.Devices.Count; i++)
@@ -42,8 +45,10 @@ public sealed partial class DevicesViewModel : ViewModelBase
             if (DeviceManager.Devices[i].Name != deviceName)
                 continue;
             SelectedDeviceIndex = i;
-            break;
+            return true;
         }
+
+        return false;
     }
 
 }
