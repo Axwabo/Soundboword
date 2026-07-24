@@ -1,6 +1,4 @@
 namespace Soundboword.Linux.PipeWire;
 
-public sealed class LinkTogglesViewModel : TabListToggles
-{
-
-}
+[RegisterSingleton<TabListToggles>]
+public sealed class LinkTogglesViewModel : TabListToggles;

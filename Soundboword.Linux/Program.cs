@@ -16,6 +16,6 @@ internal static class Program
     public static AppBuilder BuildAvaloniaApp()
         => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux()
             .AddView<PipeWireView, PipeWireTabViewModel>()
-            .AddView<LinkTogglesView, LinkTogglesViewModel>());
+            .AddViewLocator<LinkTogglesView, LinkTogglesViewModel>());
 
 }
