@@ -53,6 +53,7 @@ public sealed partial class NodeLinkManager : ObservableObject
                 success |= await PipeWireCli.LinkAsync(_outputs[i], _inputs[i], disconnect);
             if (success)
                 IsLinked = !disconnect;
+            await Task.Delay(100);
         }
         finally
         {
