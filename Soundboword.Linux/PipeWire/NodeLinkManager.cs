@@ -3,7 +3,7 @@ namespace Soundboword.Linux.PipeWire;
 public sealed partial class NodeLinkManager : ObservableObject
 {
 
-    public static NodeLinkManager? Create(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> ports)
+    public static NodeLinkManager? Create(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> ports, List<PipeWireLink> links)
     {
         var outputs = new List<string>();
         var inputs = new List<string>();
@@ -13,8 +13,16 @@ public sealed partial class NodeLinkManager : ObservableObject
             else if (port.Direction == "in" && port.Node == destination.Id)
                 inputs.Add(port.Id);
         return outputs.Count != 0 && outputs.Count == inputs.Count
-            ? new NodeLinkManager(outputs, inputs)
+            ? new NodeLinkManager(outputs, inputs) {IsLinked = IsConnected(links, outputs, inputs)}
             : null;
+    }
+
+    private static bool IsConnected(List<PipeWireLink> links, List<string> outputs, List<string> inputs)
+    {
+        foreach (var link in links)
+            if (outputs.Contains(link.OutputPort) && inputs.Contains(link.InputPort))
+                return true;
+        return false;
     }
 
     private readonly List<string> _inputs;
@@ -34,25 +42,25 @@ public sealed partial class NodeLinkManager : ObservableObject
     public partial bool InProgress { get; private set; }
 
     [RelayCommand]
-    private async Task ToggleLink()
+    private async Task ToggleLink(bool? target = null)
     {
         InProgress = true;
-        var links = await PipeWireCli.ListLinksAsync();
-        var disconnect = false;
-        foreach (var link in links)
+        try
         {
-            if (!_outputs.Contains(link.OutputPort) || !_inputs.Contains(link.InputPort))
-                continue;
-            disconnect = true;
-            break;
+            var links = await PipeWireCli.ListLinksAsync();
+            var disconnect = IsConnected(links, _outputs, _inputs);
+            if (target != null && disconnect != target)
+                return;
+            var success = false;
+            for (var i = 0; i < _inputs.Count; i++)
+                success |= await PipeWireCli.LinkAsync(_outputs[i], _inputs[i], disconnect);
+            if (success)
+                IsLinked = !disconnect;
         }
-
-        var success = false;
-        for (var i = 0; i < _inputs.Count; i++)
-            success |= await PipeWireCli.LinkAsync(_outputs[i], _inputs[i], disconnect);
-        if (success)
-            IsLinked = !disconnect;
-        InProgress = false;
+        finally
+        {
+            InProgress = false;
+        }
     }
 
 }

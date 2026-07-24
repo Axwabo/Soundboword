@@ -7,12 +7,15 @@ public static class PipeWireObjectReader
     private const string Type = "type ";
     private const string Node = "PipeWire:Interface:Node/3";
     private const string Port = "PipeWire:Interface:Port/3";
+    private const string Link = "PipeWire:Interface:Link/3";
     private const string MediaClass = "media.class";
     private const string Name = "node.name";
     private const string Description = "node.description";
     private const string NodeId = "node.id";
     private const string Direction = "port.direction";
     private const string PortId = "port.id";
+    private const string OutputPort = "link.output.port";
+    private const string InputPort = "link.input.port";
 
     private const string To = "|->";
 
@@ -30,9 +33,9 @@ public static class PipeWireObjectReader
                 continue;
             var propertyName = span[..equals].Trim();
             var value = span[(equals + 1)..].Trim().Trim('"');
-            if (propertyName is MediaClass or NodeId)
+            if (propertyName is MediaClass or NodeId or OutputPort)
                 p1 = value.ToString();
-            else if (propertyName is Name or Direction)
+            else if (propertyName is Name or Direction or InputPort)
                 p2 = value.ToString();
             else if (propertyName is Description or PortId)
                 p3 = value.ToString();
@@ -49,16 +52,18 @@ public static class PipeWireObjectReader
         var typeIndex = line.IndexOf(Type);
         if (comma == -1 || typeIndex == -1)
             return false;
-        if (id != null && p1 != null && p2 != null && p3 != null)
+        if (id != null && p1 != null && p2 != null)
         {
-            if (type is Node)
+            if (type is Link)
+                nodes.Add(new PipeWireLink(p1, p2));
+            else if (type is Node && p3 != null)
                 nodes.Add(new PipeWireNode(id, p1, p2, p3));
             else if (int.TryParse(p3, out var portId))
                 nodes.Add(new PipeWirePort(id, p1, p2, portId));
         }
 
         var typeSpan = line[(typeIndex + Type.Length)..].Trim();
-        (id, type) = typeSpan is Node or Port
+        (id, type) = typeSpan is Node or Port or Link
             ? (line[Id.Length..comma].Trim().ToString(), typeSpan.ToString())
             : (null, null);
         p1 = null;
