@@ -42,14 +42,14 @@ public sealed partial class NodeLinkManager : ObservableObject
     public partial bool InProgress { get; private set; }
 
     [RelayCommand]
-    private async Task ToggleLink(bool? target = null) => await ToggleLink(target, null);
+    private async Task ToggleLink() => await ToggleLink(null, null);
 
-    public async Task ToggleLink(bool? target, List<PipeWireLink>? links)
+    public async Task ToggleLink(bool? connect, List<PipeWireLink>? links)
     {
         InProgress = true;
         try
         {
-            var disconnect = target ?? IsConnected(links ?? await PipeWireCli.ListLinksAsync(), _outputs, _inputs);
+            var disconnect = !connect ?? IsConnected(links ?? await PipeWireCli.ListLinksAsync(), _outputs, _inputs);
             var success = false;
             for (var i = 0; i < _inputs.Count; i++)
                 success |= await PipeWireCli.LinkAsync(_outputs[i], _inputs[i], disconnect);
