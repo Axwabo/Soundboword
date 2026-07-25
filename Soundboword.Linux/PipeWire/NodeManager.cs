@@ -20,7 +20,6 @@ public sealed partial class NodeManager : ObservableObject
         _cli = cli;
         _outputManager = outputManager;
         _preferences = settingsManager.Require<PipeWirePreferences>();
-        _ = Refresh();
     }
 
     public ObservableCollection<PipeWireNode> Sources { get; } = [];
