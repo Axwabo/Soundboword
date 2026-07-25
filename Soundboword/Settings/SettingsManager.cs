@@ -12,12 +12,10 @@ public sealed class SettingsManager : ViewModelBase
     public SettingsManager(IEnumerable<ISettingsProvider> providers)
     {
         Sections = providers.SelectMany(e => e.Sections).ToList();
-        LastSection = Sections[^1];
+        Sections[^1].IsLast = true;
     }
 
     public List<SettingsSection> Sections { get; }
-
-    public SettingsSection? LastSection { get; }
 
     public T Require<T>() => Sections.OfType<T>().First();
 

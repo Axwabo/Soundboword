@@ -17,12 +17,7 @@
                     <StackPanel Spacing="10">
                         <Label Padding="0" FontSize="24" Content="{Binding Title}" FontWeight="Bold" />
                         <UserControl Content="{Binding}" />
-                        <!-- ReSharper disable once Xaml.PossibleNullReferenceException -->
-                        <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="Gray"
-                                   IsVisible="{Binding 
-                                        Converter={x:Static ObjectConverters.NotEqual},
-                                        ConverterParameter={Binding #Root.((settings:SettingsManager)DataContext).LastSection}
-                                   }" />
+                        <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="Gray" IsVisible="{Binding  !IsLast}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
