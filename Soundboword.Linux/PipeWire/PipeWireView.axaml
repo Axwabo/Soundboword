@@ -18,7 +18,7 @@
     <Panel>
         <Label Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=True}">Detecting PipeWire...</Label>
         <TextBlock Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=False}" TextWrapping="Wrap" TextAlignment="Center" Text="Could not detect PipeWire&#10;Make sure that pw-cli and pw-link are available" />
-        <ScrollViewer IsVisible="{Binding IsAvailable^, FallbackValue=False}">
+        <ScrollViewer IsVisible="{Binding IsAvailable^, FallbackValue=False}" IsEnabled="{Binding !SwitchHandler.IsSwitching}">
             <StackPanel Spacing="5">
                 <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
                 <TextBlock IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNull}}" Foreground="Red" FontWeight="Bold" Text="The Soundboword Microphone could not be found!&#10;Launch the wizard to set it up." />

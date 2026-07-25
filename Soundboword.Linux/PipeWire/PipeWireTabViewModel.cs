@@ -13,15 +13,19 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     {
         _cli = new PipeWireCli();
         NodeManager = new NodeManager(_cli, new SoundFlowDeviceManager());
+        SwitchHandler = new LinkRepair(NodeManager);
     }
 
-    public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context)
+    public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context, DeviceSwitchHandler switchHandler)
     {
+        SwitchHandler = switchHandler;
         _cli = cli;
         _topLevel = topLevel;
         _context = context;
         NodeManager = context.NodeManager;
     }
+
+    public DeviceSwitchHandler SwitchHandler { get; }
 
     public NodeManager NodeManager { get; }
 
