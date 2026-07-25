@@ -60,7 +60,7 @@ public sealed partial class InputsViewModel : PageModelBase
     private void RemoveShortcut()
     {
         if (Context.Interface != null)
-            Context.List.Remove(StopAllSoundsAction.Instance);
+            Context.List.Remove(ShortcutAction.StopAllSounds);
     }
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

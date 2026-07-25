@@ -51,8 +51,9 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         foreach (var sound in soundList.Sounds)
             if (dictionary.TryGetValue(sound.Id, out var key))
                 changed |= Assign(key, new TriggerSoundAction(sound), null);
-        if (dictionary.TryGetValue(StopAllSoundsAction.Instance.Id, out var stopAllKey))
-            changed |= Assign(stopAllKey, StopAllSoundsAction.Instance, null);
+        foreach (var action in ShortcutAction.Global)
+            if (dictionary.TryGetValue(action.Id, out var stopAllKey))
+                changed |= Assign(stopAllKey, action, null);
         if (changed && notifyChanged)
             ShortcutList.NotifyShortcutsChanged();
     }

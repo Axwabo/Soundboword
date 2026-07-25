@@ -41,7 +41,7 @@ public sealed class ShortcutList
     {
         foreach (var repository in _repositories)
             if (repository.InputMethodName == inputMethod)
-                return repository.GetAll(StopAllSoundsAction.Instance).FirstOrDefault();
+                return repository.GetAll(ShortcutAction.StopAllSounds).FirstOrDefault();
         return null;
     }
 
