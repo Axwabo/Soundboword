@@ -40,4 +40,7 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
             await PipeWireWizardWindow.ShowDialogAsync(parent, _context);
     }
 
+    [RelayCommand]
+    private Task RefreshLinks() => SwitchHandler.OnDeviceSwitchedAsync();
+
 }
