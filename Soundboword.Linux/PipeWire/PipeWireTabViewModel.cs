@@ -1,6 +1,4 @@
-using Soundboword.Linux.PipeWire.Settings;
 using Soundboword.Linux.PipeWire.Wizard;
-using Soundboword.Settings;
 
 namespace Soundboword.Linux.PipeWire;
 
@@ -14,17 +12,17 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     public PipeWireTabViewModel()
     {
         _cli = new PipeWireCli();
-        NodeManager = new NodeManager(_cli, new SoundFlowDeviceManager(new UserData()), new SettingsManager(new PreferencesProvider(new PipeWirePreferences())));
+        NodeManager = new NodeManager(_cli, new SoundFlowDeviceManager(new UserData()));
         SwitchHandler = new LinkRepair(NodeManager);
     }
 
-    public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context, DeviceSwitchHandler switchHandler)
+    public PipeWireTabViewModel(PipeWireCli cli, TopLevel topLevel, RestartContext context, NodeManager nodeManager)
     {
-        SwitchHandler = switchHandler;
+        SwitchHandler = context.SwitchHandler;
         _cli = cli;
         _topLevel = topLevel;
         _context = context;
-        NodeManager = context.NodeManager;
+        NodeManager = nodeManager;
     }
 
     public DeviceSwitchHandler SwitchHandler { get; }

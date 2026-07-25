@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Threading;
 using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
 using SoundFlow.Components;
@@ -95,8 +94,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
         }
 
         SelectedDevice = info;
-        if (OutputDeviceSwitched != null)
-            Dispatcher.UIThread.Post(OutputDeviceSwitched);
+        OutputDeviceSwitched?.Invoke();
     }
 
     public void SwitchToDefaultDevice()
@@ -105,11 +103,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
             SwitchDevice(_engine.PlaybackDevices.First(e => e.IsDefault));
     }
 
-    public void InvokeMicrophoneSwitched()
-    {
-        if (MicrophoneSwitched != null)
-            Dispatcher.UIThread.Post(MicrophoneSwitched);
-    }
+    public void InvokeMicrophoneSwitched() => MicrophoneSwitched?.Invoke();
 
     public void RefreshAudioDevices()
     {

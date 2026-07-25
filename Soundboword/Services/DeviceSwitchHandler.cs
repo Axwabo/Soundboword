@@ -9,6 +9,8 @@ public partial class DeviceSwitchHandler : ObservableObject
     [ObservableProperty]
     public partial bool IsSwitching { get; private set; }
 
+    public Task PendingOperation => _task ?? Task.CompletedTask;
+
     public Task OnOutputDeviceSwitched() => Run(OnOutputDeviceSwitchedAsync);
 
     public void OnMicrophoneSwitched() => Run(OnMicrophoneSwitchedAsync);

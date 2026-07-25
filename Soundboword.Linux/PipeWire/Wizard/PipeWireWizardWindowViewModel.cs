@@ -50,6 +50,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
     }
 
     private static string Config => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
     private readonly RestartContext? _context;
 
     private readonly PipeWireWizardWindow? _window;
@@ -71,7 +72,7 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Run()
     {
-        if (_window == null || _context is not var (audio, devices, inputs, nodeManager))
+        if (_window == null || _context is not var (audio, devices, inputs, switchHandler))
             return;
         var restartAttempted = false;
         var disabled = new HashSet<InputMethodInterface>();
@@ -99,12 +100,12 @@ public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase
             return;
         devices.DeviceManager.InitializeEngine();
         await WaitForRestartAsync(devices.DeviceManager);
-        await nodeManager.Refresh();
         devices.Refresh();
         if (devices.DeviceManager.Devices.Count == 0)
             devices.DeviceManager.SwitchToDefaultDevice();
         else
             devices.SwitchToSelected();
+        await switchHandler.PendingOperation;
         inputs.Refresh();
         foreach (var method in inputs.Available)
             if (disabled.Contains(method))

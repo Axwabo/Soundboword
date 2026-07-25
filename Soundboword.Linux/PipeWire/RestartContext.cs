@@ -1,3 +1,3 @@
 namespace Soundboword.Linux.PipeWire;
 
-public sealed record RestartContext(AudioManager AudioManager, DevicesViewModel Devices, InputsViewModel Inputs, NodeManager NodeManager);
+public sealed record RestartContext(AudioManager AudioManager, DevicesViewModel Devices, InputsViewModel Inputs, DeviceSwitchHandler SwitchHandler);
