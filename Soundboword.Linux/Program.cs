@@ -18,6 +18,8 @@ internal static class Program
         => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux()
             .AddView<PipeWireView, PipeWireTabViewModel>()
             .AddView<PreferencesView, PipeWirePreferences>()
-            .AddViewLocator<LinkTogglesView, LinkTogglesViewModel>());
+            .AddViewLocator<LinkTogglesView, LinkTogglesViewModel>()
+            .AddKeyedSingleton(PipeWirePreferences.Key, PipeWirePreferences.CreateData())
+        );
 
 }
