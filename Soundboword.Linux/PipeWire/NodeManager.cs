@@ -18,12 +18,7 @@ public sealed partial class NodeManager : ObservableObject
         _cli = cli;
         _outputManager = devicesViewModel.DeviceManager;
         _ = Refresh();
-        devicesViewModel.DeviceSwitched = () =>
-        {
-            if (_relinkTask is not {IsCompleted: false})
-                _relinkTask = RelinkAfterDeviceSwitch();
-            return _relinkTask;
-        };
+        devicesViewModel.DeviceSwitched = RefreshPersist;
     }
 
     public ObservableCollection<PipeWireNode> Sources { get; } = [];
@@ -54,6 +49,13 @@ public sealed partial class NodeManager : ObservableObject
     [ObservableProperty]
     public partial NodeLinkManager? HearMyself { get; private set; }
 
+    public Task RefreshPersist()
+    {
+        if (_relinkTask is not {IsCompleted: false})
+            _relinkTask = RelinkAfterDeviceSwitch();
+        return _relinkTask;
+    }
+
     public async Task Refresh() => await RefreshAsync(null, null, null, null);
 
     private async Task RefreshAsync(bool? hearSounds, bool? micSounds, bool? micPassthrough, bool? hearMyself)
@@ -69,17 +71,24 @@ public sealed partial class NodeManager : ObservableObject
         RefreshObjects(await PipeWireCli.ListObjectsAsync());
         Ports.Sort(PortComparison);
         PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
-        HearSounds = MicSounds = MicPassthrough = HearMyself = null;
         Task linkMicSounds, linkMicPassthrough, linkHearMyself;
         var linkHearSounds = linkMicSounds = linkMicPassthrough = linkHearMyself = Task.CompletedTask;
         if (PlaybackNode is not null && OutputNode is not null)
             (HearSounds, linkHearSounds) = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, Links, hearSounds);
+        else
+            HearSounds = null;
         if (PlaybackNode is not null && MicNode is not null)
             (MicSounds, linkMicSounds) = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, Links, micSounds);
+        else
+            MicSounds = null;
         if (PhysicalMicrophone is not null && MicNode is not null)
             (MicPassthrough, linkMicPassthrough) = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, Links, micPassthrough);
+        else
+            MicPassthrough = null;
         if (PhysicalMicrophone is not null && OutputNode is not null)
             (HearMyself, linkHearMyself) = NodeLinkManager.Create(PhysicalMicrophone, OutputNode, Ports, Links, hearMyself);
+        else
+            HearMyself = null;
         await Task.WhenAll(linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself);
     }
 
@@ -118,7 +127,7 @@ public sealed partial class NodeManager : ObservableObject
 
     private async Task RelinkAfterDeviceSwitch()
     {
-        await Task.Delay(100);
+        await Task.Delay(200);
         await RefreshAsync(HearSounds?.IsLinked, MicSounds?.IsLinked, MicPassthrough?.IsLinked, HearMyself?.IsLinked);
     }
 
