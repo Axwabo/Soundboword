@@ -3,8 +3,10 @@ namespace Soundboword.Linux.PipeWire;
 public sealed partial class NodeLinkManager : ObservableObject
 {
 
-    public static (NodeLinkManager?, Task) Create(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> ports, List<PipeWireLink> links, bool? targetState)
+    public static (NodeLinkManager?, Task) Create(PipeWireNode? source, PipeWireNode? destination, List<PipeWirePort> ports, List<PipeWireLink> links, bool? targetState)
     {
+        if (source is null || destination is null)
+            return (null, Task.CompletedTask);
         var outputs = new List<string>();
         var inputs = new List<string>();
         foreach (var port in ports)

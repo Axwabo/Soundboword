@@ -71,24 +71,10 @@ public sealed partial class NodeManager : ObservableObject
         RefreshObjects(await PipeWireCli.ListObjectsAsync());
         Ports.Sort(PortComparison);
         PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
-        Task linkMicSounds, linkMicPassthrough, linkHearMyself;
-        var linkHearSounds = linkMicSounds = linkMicPassthrough = linkHearMyself = Task.CompletedTask;
-        if (PlaybackNode is not null && OutputNode is not null)
-            (HearSounds, linkHearSounds) = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, Links, hearSounds);
-        else
-            HearSounds = null;
-        if (PlaybackNode is not null && MicNode is not null)
-            (MicSounds, linkMicSounds) = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, Links, micSounds);
-        else
-            MicSounds = null;
-        if (PhysicalMicrophone is not null && MicNode is not null)
-            (MicPassthrough, linkMicPassthrough) = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, Links, micPassthrough);
-        else
-            MicPassthrough = null;
-        if (PhysicalMicrophone is not null && OutputNode is not null)
-            (HearMyself, linkHearMyself) = NodeLinkManager.Create(PhysicalMicrophone, OutputNode, Ports, Links, hearMyself);
-        else
-            HearMyself = null;
+        (HearSounds, var linkHearSounds) = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, Links, hearSounds);
+        (MicSounds, var linkMicSounds) = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, Links, micSounds);
+        (MicPassthrough, var linkMicPassthrough) = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, Links, micPassthrough);
+        (HearMyself, var linkHearMyself) = NodeLinkManager.Create(PhysicalMicrophone, OutputNode, Ports, Links, hearMyself);
         await Task.WhenAll(linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself);
     }
 
