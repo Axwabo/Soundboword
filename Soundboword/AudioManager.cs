@@ -20,7 +20,13 @@ public sealed class AudioManager
 
     private readonly Dictionary<SoundViewModel, List<SoundPlayback>> _sounds = [];
 
-    public AudioManager(SoundFlowDeviceManager deviceManager) => _deviceManager = deviceManager;
+    public AudioManager(SoundFlowDeviceManager deviceManager, TabListToggles? deviceToggles = null)
+    {
+        DeviceToggles = deviceToggles;
+        _deviceManager = deviceManager;
+    }
+
+    public TabListToggles? DeviceToggles { get; }
 
     public ObservableCollection<SoundPlayback> AllSounds { get; } = [];
 

@@ -25,6 +25,9 @@ public static class ShortcutExtensions
                 case StopAllSoundsAction:
                     audioManager.StopAll();
                     break;
+                case LinkToggleAction {Id: var id} when audioManager.DeviceToggles is { } toggles && toggles.GetCommand(id) is {IsRunning: false} command:
+                    command.Execute(null);
+                    break;
             }
         }
 

@@ -14,4 +14,19 @@ public sealed class LinkTogglesViewModel : TabListToggles
 
     public DeviceSwitchHandler SwitchHandler { get; }
 
+    public override IAsyncRelayCommand? GetCommand(string id)
+    {
+        if (SwitchHandler.IsSwitching)
+            return null;
+        var manager = id switch
+        {
+            LinkToggleAction.HearSounds => Manager.HearSounds,
+            LinkToggleAction.MicSounds => Manager.MicSounds,
+            LinkToggleAction.MicPassthrough => Manager.MicPassthrough,
+            LinkToggleAction.HearMyself => Manager.HearMyself,
+            _ => null
+        };
+        return manager?.ToggleLinkCommand;
+    }
+
 }
