@@ -128,7 +128,11 @@ public sealed partial class NodeManager : ObservableObject
     private async Task RelinkAfterDeviceSwitch()
     {
         await Task.Delay(200);
+        var output = OutputNode;
+        var hearMyself = HearMyself;
         await RefreshAsync(HearSounds?.IsLinked, MicSounds?.IsLinked, MicPassthrough?.IsLinked, HearMyself?.IsLinked);
+        if (output != OutputNode && hearMyself is {IsLinked: true})
+            await hearMyself.ToggleLink(false, Links);
     }
 
 }
