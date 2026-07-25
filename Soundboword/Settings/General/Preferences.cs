@@ -1,5 +1,3 @@
-using Soundboword.Sounds;
-
 namespace Soundboword.Settings.General;
 
 public sealed partial class Preferences : SettingsSection

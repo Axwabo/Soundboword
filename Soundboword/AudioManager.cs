@@ -1,8 +1,3 @@
-using Soundboword.OutputDevices;
-using Soundboword.Playbacks;
-using Soundboword.Sounds;
-using SoundViewModel = Soundboword.Sounds.SoundViewModel;
-
 namespace Soundboword;
 
 // TODO: thread safety

@@ -1,10 +1,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
-using Soundboword.OutputDevices;
 using Soundboword.Settings;
-using Soundboword.Sounds;
 using Preferences = Soundboword.Settings.General.Preferences;
-using SoundViewModel = Soundboword.Sounds.SoundViewModel;
 
 namespace Soundboword.Services;
 

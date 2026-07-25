@@ -28,35 +28,4 @@
         <PackageReference Include="YoutubeExplode.Converter" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Compile Update="OutputDevices\DevicesView.axaml.cs">
-            <DependentUpon>DevicesView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Sounds\EditSoundView.axaml.cs">
-            <DependentUpon>EditSoundView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Sounds\SoundView.axaml.cs">
-            <DependentUpon>SoundView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Playbacks\SoundPlaybackView.axaml.cs">
-            <DependentUpon>SoundPlaybackView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Playbacks\PlaybacksView.axaml.cs">
-            <DependentUpon>PlaybacksView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Sounds\BoardView.axaml.cs">
-            <DependentUpon>BoardView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Inputs\InputsView.axaml.cs">
-            <DependentUpon>InputsView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-    </ItemGroup>
-
 </Project>

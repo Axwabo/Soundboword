@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Soundboword.Inputs.Launchpad;
-using Soundboword.Sounds;
 
 namespace Soundboword;
 

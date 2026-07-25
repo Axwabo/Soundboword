@@ -1,6 +1,5 @@
 using Soundboword.Linux.PipeWire.Settings;
 using Soundboword.Linux.PipeWire.Wizard;
-using Soundboword.OutputDevices;
 using Soundboword.Settings;
 
 namespace Soundboword.Linux.PipeWire;

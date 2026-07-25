@@ -1,5 +1,3 @@
-using Soundboword.Inputs;
-
 namespace Soundboword.Linux;
 
 public static class ShortcutActionExtensions

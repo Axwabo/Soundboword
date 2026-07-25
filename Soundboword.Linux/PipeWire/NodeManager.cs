@@ -1,5 +1,4 @@
 using Soundboword.Linux.PipeWire.Settings;
-using Soundboword.OutputDevices;
 using Soundboword.Settings;
 
 namespace Soundboword.Linux.PipeWire;

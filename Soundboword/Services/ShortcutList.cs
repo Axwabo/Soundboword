@@ -1,6 +1,5 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Inputs;
-using SoundViewModel = Soundboword.Sounds.SoundViewModel;
 
 namespace Soundboword.Services;
 

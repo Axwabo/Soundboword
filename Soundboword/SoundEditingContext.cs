@@ -1,7 +1,3 @@
-using Soundboword.Inputs;
-using Soundboword.Sounds;
-using SoundViewModel = Soundboword.Sounds.SoundViewModel;
-
 namespace Soundboword;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]

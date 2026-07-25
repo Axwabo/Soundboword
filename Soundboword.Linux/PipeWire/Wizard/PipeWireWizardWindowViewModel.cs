@@ -1,6 +1,3 @@
-using Soundboword.Inputs;
-using Soundboword.OutputDevices;
-
 namespace Soundboword.Linux.PipeWire.Wizard;
 
 public sealed partial class PipeWireWizardWindowViewModel : ViewModelBase

@@ -2,7 +2,6 @@ using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
-using Soundboword.Sounds;
 
 namespace Soundboword.Converters;
 

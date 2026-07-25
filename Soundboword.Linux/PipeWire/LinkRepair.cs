@@ -1,5 +1,3 @@
-using Soundboword.OutputDevices;
-
 namespace Soundboword.Linux.PipeWire;
 
 [RegisterSingleton<DeviceSwitchHandler>(Duplicate = DuplicateStrategy.Replace)]

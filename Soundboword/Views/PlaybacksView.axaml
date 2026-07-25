@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Soundboword.ViewModels"
+             xmlns:views="clr-namespace:Soundboword.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Views.PlaybacksView"
+             x:DataType="viewModels:PlaybacksViewModel"
+             Name="Root">
+    <Design.DataContext>
+        <viewModels:PlaybacksViewModel />
+    </Design.DataContext>
+    <StackPanel Spacing="3">
+        <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
+        <Panel>
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Manager.AllSounds}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:SoundPlaybackView DataContext="{Binding}" Manager="{Binding #Root.((viewModels:PlaybacksViewModel)DataContext)?.Manager}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Label IsVisible="{Binding !Manager.AllSounds.Count}">No sounds are being played</Label>
+        </Panel>
+    </StackPanel>
+</UserControl>
