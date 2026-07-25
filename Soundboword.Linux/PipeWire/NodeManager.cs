@@ -70,8 +70,8 @@ public sealed partial class NodeManager : ObservableObject
         Ports.Sort(PortComparison);
         PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
         HearSounds = MicSounds = MicPassthrough = HearMyself = null;
-        Task linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself;
-        linkHearSounds = linkMicSounds = linkMicPassthrough = linkHearMyself = Task.CompletedTask;
+        Task linkMicSounds, linkMicPassthrough, linkHearMyself;
+        var linkHearSounds = linkMicSounds = linkMicPassthrough = linkHearMyself = Task.CompletedTask;
         if (PlaybackNode is not null && OutputNode is not null)
             (HearSounds, linkHearSounds) = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, Links, hearSounds);
         if (PlaybackNode is not null && MicNode is not null)
