@@ -64,9 +64,15 @@ public sealed partial class NodeManager : ObservableObject
         PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
         (HearSounds, var linkHearSounds) = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, Links, hearSounds);
         (MicSounds, var linkMicSounds) = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, Links, micSounds);
+        var (linkMicPassthrough, linkHearMyself) = UpdatePhysicalMic(micPassthrough, hearMyself);
+        await Task.WhenAll(linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself);
+    }
+
+    public (Task, Task) UpdatePhysicalMic(bool? micPassthrough, bool? hearMyself)
+    {
         (MicPassthrough, var linkMicPassthrough) = NodeLinkManager.Create(PhysicalMicrophone, MicNode, Ports, Links, micPassthrough);
         (HearMyself, var linkHearMyself) = NodeLinkManager.Create(PhysicalMicrophone, OutputNode, Ports, Links, hearMyself);
-        await Task.WhenAll(linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself);
+        return (linkMicPassthrough, linkHearMyself);
     }
 
     private void RefreshObjects(List<PipeWireObject> objects)
