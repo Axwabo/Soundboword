@@ -11,7 +11,7 @@ public sealed class UserData
 
     public UserData() => Folder = Root;
 
-    public UserData(string folder) => Folder = Path.Combine(folder);
+    public UserData(string folder) => Folder = Path.Combine(Root, folder);
 
     public string Folder { get; }
 
