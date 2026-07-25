@@ -2,7 +2,7 @@ using Avalonia.Threading;
 using Soundboword.Inputs;
 using Tmds.DBus.Protocol;
 
-namespace Soundboword.Linux.Services;
+namespace Soundboword.Linux.Shortcuts;
 
 [RegisterSingleton<IShortcutRepository>(Duplicate = DuplicateStrategy.Append)]
 public sealed class GlobalShortcutsRepository : ShortcutRepository<string>

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Soundboword.Linux.Services;
+namespace Soundboword.Linux;
 
 [RegisterSingleton<IFileManagerOpener>]
 public sealed class DBusFileManagerOpener : IFileManagerOpener

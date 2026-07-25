@@ -2,10 +2,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
 using Soundboword.Settings;
+using Soundboword.Settings.General;
 using Soundboword.Views;
 using Soundboword.YouTube;
-using Preferences = Soundboword.Settings.General.Preferences;
-using PreferencesView = Soundboword.Settings.General.PreferencesView;
 
 namespace Soundboword;
 

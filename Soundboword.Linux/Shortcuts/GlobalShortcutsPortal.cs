@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Soundboword.Generated;
 using Tmds.DBus.Protocol;
 
-namespace Soundboword.Linux.Services;
+namespace Soundboword.Linux.Shortcuts;
 
 [RegisterSingleton]
 public sealed class GlobalShortcutsPortal

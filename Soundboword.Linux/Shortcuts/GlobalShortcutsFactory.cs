@@ -1,7 +1,7 @@
 using Avalonia.Threading;
 using Soundboword.Inputs;
 
-namespace Soundboword.Linux.Services;
+namespace Soundboword.Linux.Shortcuts;
 
 [RegisterSingleton<IInputFactory>(Duplicate = DuplicateStrategy.Append)]
 public sealed class GlobalShortcutsFactory : IInputFactory

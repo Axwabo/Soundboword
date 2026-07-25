@@ -1,4 +1,4 @@
-namespace Soundboword.Linux;
+namespace Soundboword.Linux.Shortcuts;
 
 public static class ShortcutActionExtensions
 {
