@@ -95,7 +95,8 @@ public sealed class SoundFlowDeviceManager : IDisposable
         }
 
         SelectedDevice = info;
-        OutputDeviceSwitched?.Invoke();
+        if (OutputDeviceSwitched != null)
+            Dispatcher.UIThread.Post(OutputDeviceSwitched);
     }
 
     public void SwitchToDefaultDevice()
@@ -107,7 +108,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
     public void InvokeMicrophoneSwitched()
     {
         if (MicrophoneSwitched != null)
-            Dispatcher.UIThread.InvokeOrPost(MicrophoneSwitched);
+            Dispatcher.UIThread.Post(MicrophoneSwitched);
     }
 
     public void RefreshAudioDevices()
