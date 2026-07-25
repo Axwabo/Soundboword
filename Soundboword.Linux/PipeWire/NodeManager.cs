@@ -11,23 +11,20 @@ public sealed partial class NodeManager : ObservableObject
     private readonly PipeWireCli _cli;
     private readonly SoundFlowDeviceManager _outputManager;
 
-    private Task? _relinkTask;
-
     public NodeManager(PipeWireCli cli, DevicesViewModel devicesViewModel)
     {
         _cli = cli;
         _outputManager = devicesViewModel.DeviceManager;
         _ = Refresh();
-        devicesViewModel.DeviceSwitched = RefreshPersist;
     }
 
     public ObservableCollection<PipeWireNode> Sources { get; } = [];
 
     private List<PipeWirePort> Ports { get; } = [];
 
-    private List<PipeWireLink> Links { get; } = [];
+    public List<PipeWireLink> Links { get; } = [];
 
-    private PipeWireNode? OutputNode { get; set; }
+    public PipeWireNode? OutputNode { get; set; }
 
     private PipeWireNode? PlaybackNode { get; set; }
 
@@ -49,16 +46,9 @@ public sealed partial class NodeManager : ObservableObject
     [ObservableProperty]
     public partial NodeLinkManager? HearMyself { get; private set; }
 
-    public Task RefreshPersist()
-    {
-        if (_relinkTask is not {IsCompleted: false})
-            _relinkTask = RelinkAfterDeviceSwitch();
-        return _relinkTask;
-    }
-
     public async Task Refresh() => await RefreshAsync(null, null, null, null);
 
-    private async Task RefreshAsync(bool? hearSounds, bool? micSounds, bool? micPassthrough, bool? hearMyself)
+    public async Task RefreshAsync(bool? hearSounds, bool? micSounds, bool? micPassthrough, bool? hearMyself)
     {
         Sources.Clear();
         Ports.Clear();
@@ -109,16 +99,6 @@ public sealed partial class NodeManager : ObservableObject
                     Links.Add(link);
                     break;
             }
-    }
-
-    private async Task RelinkAfterDeviceSwitch()
-    {
-        await Task.Delay(200);
-        var output = OutputNode;
-        var hearMyself = HearMyself;
-        await RefreshAsync(HearSounds?.IsLinked, MicSounds?.IsLinked, MicPassthrough?.IsLinked, HearMyself?.IsLinked);
-        if (output != OutputNode && hearMyself is {IsLinked: true})
-            await hearMyself.ToggleLink(false, Links);
     }
 
 }

@@ -5,39 +5,25 @@ public sealed partial class DevicesViewModel : ViewModelBase
 
     private bool _isRefreshing;
 
-    public DevicesViewModel() => DeviceManager = new SoundFlowDeviceManager();
+    public DevicesViewModel()
+    {
+        DeviceManager = new SoundFlowDeviceManager();
+        SwitchHandler = new DeviceSwitchHandler();
+    }
 
-    public DevicesViewModel(SoundFlowDeviceManager deviceManager)
+    public DevicesViewModel(SoundFlowDeviceManager deviceManager, DeviceSwitchHandler handler)
     {
         DeviceManager = deviceManager;
-        deviceManager.DeviceSwitched += () => _ = DeviceManagerOnDeviceSwitched();
+        SwitchHandler = handler;
+        deviceManager.DeviceSwitched += () => _ = SwitchHandler.OnDeviceSwitchedAsync();
         UpdateSelected();
     }
 
     public SoundFlowDeviceManager DeviceManager { get; }
+    public DeviceSwitchHandler SwitchHandler { get; }
 
     [ObservableProperty]
     public partial int SelectedDeviceIndex { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsSwitching { get; private set; }
-
-    public Func<Task>? DeviceSwitched { get; set; }
-
-    private async Task DeviceManagerOnDeviceSwitched()
-    {
-        if (DeviceSwitched == null)
-            return;
-        IsSwitching = true;
-        try
-        {
-            await DeviceSwitched();
-        }
-        finally
-        {
-            IsSwitching = false;
-        }
-    }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {

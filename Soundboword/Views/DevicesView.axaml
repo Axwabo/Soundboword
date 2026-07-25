@@ -9,7 +9,7 @@
     <Design.DataContext>
         <viewModels:DevicesViewModel />
     </Design.DataContext>
-    <StackPanel Spacing="5" IsEnabled="{Binding !IsSwitching}">
+    <StackPanel Spacing="5" IsEnabled="{Binding !SwitchHandler.IsSwitching}">
         <Button Command="{Binding RefreshCommand}">Refresh Playback Devices</Button>
         <Label>Output Device:</Label>
         <ListBox ItemsSource="{Binding DeviceManager.Devices}" SelectionMode="AlwaysSelected,Single" Background="Transparent" SelectedIndex="{Binding SelectedDeviceIndex}">
