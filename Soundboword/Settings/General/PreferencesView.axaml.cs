@@ -1,4 +1,4 @@
-namespace Soundboword.Views;
+namespace Soundboword.Settings.General;
 
 public sealed partial class PreferencesView : UserControl
 {

@@ -28,11 +28,4 @@
         <PackageReference Include="YoutubeExplode.Converter" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Compile Update="Settings\PreferencesView.axaml.cs">
-            <DependentUpon>PreferencesView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-    </ItemGroup>
-
 </Project>

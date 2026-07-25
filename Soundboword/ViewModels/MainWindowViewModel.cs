@@ -1,5 +1,5 @@
 ﻿using Avalonia.Media;
-using Soundboword.Settings;
+using Preferences = Soundboword.Settings.General.Preferences;
 
 namespace Soundboword.ViewModels;
 

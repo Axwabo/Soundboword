@@ -1,6 +1,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using Soundboword.Settings;
+using Preferences = Soundboword.Settings.General.Preferences;
 
 namespace Soundboword.Services;
 

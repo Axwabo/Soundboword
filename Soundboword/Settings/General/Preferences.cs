@@ -1,6 +1,5 @@
-namespace Soundboword.Settings;
+namespace Soundboword.Settings.General;
 
-[RegisterSingleton<SettingsSection>(Duplicate = DuplicateStrategy.Append)]
 public sealed partial class Preferences : SettingsSection
 {
 

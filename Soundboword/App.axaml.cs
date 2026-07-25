@@ -4,6 +4,8 @@ using Avalonia.Markup.Xaml;
 using Soundboword.Settings;
 using Soundboword.Views;
 using Soundboword.YouTube;
+using Preferences = Soundboword.Settings.General.Preferences;
+using PreferencesView = Soundboword.Settings.General.PreferencesView;
 
 namespace Soundboword;
 
@@ -22,6 +24,7 @@ public sealed class App : Application
             .AddView<PlaybacksView, PlaybacksViewModel>()
             .AddView<InputsView, InputsViewModel>()
             .AddView<EditSoundView, EditSoundViewModel>()
+            .AddView<SettingsManagerView, SettingsManager>()
             .AddView<PreferencesView, Preferences>()
             .AddViewLocator<SoundView, SoundViewModel>()
             .AddScoped<AddFromYouTubeViewModel>()
