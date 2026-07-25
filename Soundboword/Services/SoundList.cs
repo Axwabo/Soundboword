@@ -35,10 +35,10 @@ public sealed partial class SoundList
         Editor = new SoundEditingContext(_filePicker);
     }
 
-    public SoundList(FilePicker filePicker, Preferences preferences, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
+    public SoundList(FilePicker filePicker, SettingsManager settingsManager, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
     {
         _filePicker = filePicker;
-        _preferences = preferences;
+        _preferences = settingsManager.Require<Preferences>();
         Editor = editor;
         AudioManager = audioManager;
         foreach (var sound in UserData.Load(FileName, () => [], SourceGenerationContext.Default.IEnumerableSoundDto))
