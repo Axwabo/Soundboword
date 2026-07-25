@@ -41,6 +41,7 @@ public static class PipeWireObjectReader
                 p3 = value.ToString();
         }
 
+        AddObject(id, type, p1, p2, p3, nodes);
         return nodes;
     }
 
@@ -52,6 +53,19 @@ public static class PipeWireObjectReader
         var typeIndex = line.IndexOf(Type);
         if (comma == -1 || typeIndex == -1)
             return false;
+        AddObject(id, type, p1, p2, p3, nodes);
+        var typeSpan = line[(typeIndex + Type.Length)..].Trim();
+        (id, type) = typeSpan is Node or Port or Link
+            ? (line[Id.Length..comma].Trim().ToString(), typeSpan.ToString())
+            : (null, null);
+        p1 = null;
+        p2 = null;
+        p3 = null;
+        return true;
+    }
+
+    private static void AddObject(string? id, string? type, string? p1, string? p2, string? p3, List<PipeWireObject> nodes)
+    {
         if (id != null && p1 != null && p2 != null)
         {
             if (type is Link)
@@ -61,15 +75,6 @@ public static class PipeWireObjectReader
             else if (int.TryParse(p3, out var portId))
                 nodes.Add(new PipeWirePort(id, p1, p2, portId));
         }
-
-        var typeSpan = line[(typeIndex + Type.Length)..].Trim();
-        (id, type) = typeSpan is Node or Port or Link
-            ? (line[Id.Length..comma].Trim().ToString(), typeSpan.ToString())
-            : (null, null);
-        p1 = null;
-        p2 = null;
-        p3 = null;
-        return true;
     }
 
     public static List<PipeWireLink> ReadLinksAsync(ReadOnlySpan<char> info)
