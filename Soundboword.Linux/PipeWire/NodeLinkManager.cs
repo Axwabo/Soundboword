@@ -63,6 +63,4 @@ public sealed partial class NodeLinkManager : ObservableObject
         }
     }
 
-    public Task EnsureState(List<PipeWireLink> links) => _ = ToggleLink(IsLinked, links);
-
 }
