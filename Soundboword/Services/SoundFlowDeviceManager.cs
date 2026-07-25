@@ -65,7 +65,9 @@ public sealed class SoundFlowDeviceManager : IDisposable
         _engine = null;
     }
 
-    public event Action? DeviceSwitched;
+    public event Action? OutputDeviceSwitched;
+
+    public event Action? MicrophoneSwitched;
 
     [MemberNotNull(nameof(_engine))]
     public void InitializeEngine()
@@ -92,7 +94,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
         }
 
         SelectedDevice = info;
-        DeviceSwitched?.Invoke();
+        OutputDeviceSwitched?.Invoke();
     }
 
     public void SwitchToDefaultDevice()
@@ -100,6 +102,8 @@ public sealed class SoundFlowDeviceManager : IDisposable
         if (IsInitialized && _playback == null)
             SwitchDevice(_engine.PlaybackDevices.First(e => e.IsDefault));
     }
+
+    public void InvokeMicrophoneSwitched() => MicrophoneSwitched?.Invoke();
 
     public void RefreshAudioDevices()
     {

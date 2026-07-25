@@ -105,4 +105,11 @@ public sealed partial class NodeManager : ObservableObject
             }
     }
 
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(PhysicalMicrophone))
+            _outputManager.InvokeMicrophoneSwitched();
+    }
+
 }

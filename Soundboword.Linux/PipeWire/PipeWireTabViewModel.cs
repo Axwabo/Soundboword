@@ -41,6 +41,6 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private Task RefreshLinks() => SwitchHandler.OnDeviceSwitchedAsync();
+    private Task RefreshLinks() => SwitchHandler.OnOutputDeviceSwitchedAsync();
 
 }

@@ -10,12 +10,9 @@ public sealed class LinkRepair : DeviceSwitchHandler
 
     public LinkRepair(NodeManager nodeManager) => _nodeManager = nodeManager;
 
-    public override Task OnDeviceSwitchedAsync()
-    {
-        if (_relinkTask is not {IsCompleted: false})
-            _relinkTask = Relink();
-        return _relinkTask;
-    }
+    public override Task OnOutputDeviceSwitchedAsync() => Run(Relink);
+
+    public override Task OnMicrophoneSwitchedAsync() => base.OnMicrophoneSwitchedAsync();
 
     private async Task Relink()
     {
@@ -27,6 +24,17 @@ public sealed class LinkRepair : DeviceSwitchHandler
         if (output != _nodeManager.OutputNode && hearMyself is {IsLinked: true})
             await hearMyself.ToggleLink(false, _nodeManager.Links);
         IsSwitching = false;
+    }
+
+    private async Task RelinkMicOnly()
+    {
+    }
+
+    private Task Run(Func<Task> run)
+    {
+        if (_relinkTask is not {IsCompleted: false})
+            _relinkTask = run();
+        return _relinkTask;
     }
 
 }
