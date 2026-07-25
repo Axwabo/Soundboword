@@ -23,7 +23,9 @@ public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
         return map;
     }
 
-    public GlobalShortcutsRepository(GlobalShortcutsPortal portal, AudioManager audioManager, SoundList soundList) : base(audioManager,
+    public GlobalShortcutsRepository(UserData data, GlobalShortcutsPortal portal, AudioManager audioManager, SoundList soundList) : base(
+        data,
+        audioManager,
         soundList,
         GlobalShortcutsInput.Name,
         e => e,

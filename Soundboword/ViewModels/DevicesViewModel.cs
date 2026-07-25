@@ -7,7 +7,7 @@ public sealed partial class DevicesViewModel : ViewModelBase
 
     public DevicesViewModel()
     {
-        DeviceManager = new SoundFlowDeviceManager();
+        DeviceManager = new SoundFlowDeviceManager(new UserData());
         SwitchHandler = new DeviceSwitchHandler();
     }
 

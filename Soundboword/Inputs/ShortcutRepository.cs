@@ -6,18 +6,21 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
 {
 
     private readonly AudioManager _audioManager;
+
+    private readonly UserData _data;
     private readonly Dictionary<string, T> _map;
     private readonly Dictionary<T, HashSet<Shortcut>> _shortcuts = [];
     private readonly Func<T, string> _toFriendlyName;
     private readonly JsonTypeInfo<Dictionary<string, T>>? _typeInfo;
 
-    protected ShortcutRepository(AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName, JsonTypeInfo<Dictionary<string, T>>? typeInfo)
+    protected ShortcutRepository(UserData data, AudioManager audioManager, SoundList soundList, string inputMethodName, Func<T, string> toFriendlyName, JsonTypeInfo<Dictionary<string, T>>? typeInfo)
     {
         InputMethodName = inputMethodName;
+        _data = data;
         _audioManager = audioManager;
         _toFriendlyName = toFriendlyName;
         _typeInfo = typeInfo;
-        _map = UserData.Load(InputMethodName, () => new Dictionary<string, T>(), typeInfo);
+        _map = _data.Load(InputMethodName, () => new Dictionary<string, T>(), typeInfo);
         InitializeMap(_map, soundList);
     }
 
@@ -40,7 +43,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         _map.Remove(action.Id);
     }
 
-    public void Commit() => UserData.Save(InputMethodName, _map, _typeInfo);
+    public void Commit() => _data.Save(InputMethodName, _map, _typeInfo);
 
     protected void InitializeMap(Dictionary<string, T> dictionary, SoundList soundList, bool notifyChanged = false)
     {

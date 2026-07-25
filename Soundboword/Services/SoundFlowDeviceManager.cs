@@ -28,7 +28,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
     private MiniAudioEngine? _engine;
     private AudioPlaybackDevice? _playback;
 
-    public SoundFlowDeviceManager(IClassicDesktopStyleApplicationLifetime? lifetime = null)
+    public SoundFlowDeviceManager(UserData data, IClassicDesktopStyleApplicationLifetime? lifetime = null)
     {
         if (lifetime == null)
         {
@@ -37,12 +37,12 @@ public sealed class SoundFlowDeviceManager : IDisposable
         }
 
         InitializeEngine();
-        var preferredDeviceName = UserData.Load(FileName);
+        var preferredDeviceName = data.Load(FileName);
         var preferredDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.Name.AsSpan().Trim().Equals(preferredDeviceName.AsSpan().Trim(), StringComparison.OrdinalIgnoreCase));
         SwitchDevice(preferredDevice != default ? preferredDevice : _engine.PlaybackDevices.First(e => e.IsDefault));
         lifetime.Exit += (_, _) =>
         {
-            UserData.Save(FileName, SelectedDevice.Name);
+            data.Save(FileName, SelectedDevice.Name);
             Dispose();
         };
     }

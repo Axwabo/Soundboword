@@ -3,7 +3,7 @@ namespace Soundboword.ViewModels;
 public sealed partial class PlaybacksViewModel : ViewModelBase
 {
 
-    public PlaybacksViewModel() => Manager = new AudioManager(new SoundFlowDeviceManager());
+    public PlaybacksViewModel() => Manager = new AudioManager(new SoundFlowDeviceManager(new UserData()));
 
     public PlaybacksViewModel(AudioManager audioManager) => Manager = audioManager;
 

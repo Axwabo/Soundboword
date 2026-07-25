@@ -3,14 +3,23 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace Soundboword;
 
-public static class UserData
+[RegisterSingleton]
+public sealed class UserData
 {
 
-    private static string FullPath(string name, bool json) => Path.Combine(Folder, $"{name}.{(json ? "json" : "txt")}");
+    public static string Root { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
-    private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
+    public UserData() => Folder = Root;
 
-    public static string? Load(string name)
+    public UserData(string folder) => Folder = Path.Combine(folder);
+
+    public string Folder { get; }
+
+    private string FullPath(string name, bool json) => Path.Combine(Folder, $"{name}.{(json ? "json" : "txt")}");
+
+    private void EnsureDirectory() => Directory.CreateDirectory(Folder);
+
+    public string? Load(string name)
     {
         EnsureDirectory();
         var path = FullPath(name, false);
@@ -26,7 +35,7 @@ public static class UserData
         }
     }
 
-    public static void Save(string name, string content)
+    public void Save(string name, string content)
     {
         EnsureDirectory();
         try
@@ -39,7 +48,7 @@ public static class UserData
         }
     }
 
-    public static T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T>? typeInfo) where T : notnull
+    public T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T>? typeInfo) where T : notnull
     {
         if (typeInfo == null)
             return fallback();
@@ -58,7 +67,7 @@ public static class UserData
         }
     }
 
-    public static void Save<T>(string name, T data, JsonTypeInfo<T>? typeInfo) where T : notnull
+    public void Save<T>(string name, T data, JsonTypeInfo<T>? typeInfo) where T : notnull
     {
         if (typeInfo == null)
             return;
@@ -74,7 +83,5 @@ public static class UserData
             // TODO: log somehow
         }
     }
-
-    public static string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
 }

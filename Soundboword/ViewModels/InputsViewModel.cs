@@ -16,16 +16,16 @@ public sealed partial class InputsViewModel : PageModelBase
         Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner()));
     }
 
-    public InputsViewModel(IClassicDesktopStyleApplicationLifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
+    public InputsViewModel(UserData data, IClassicDesktopStyleApplicationLifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
     {
-        var prefs = UserData.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
+        var prefs = data.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
         Context = context;
         Refresh();
         foreach (var input in Available)
             if (prefs.Remove(input.Name))
                 input.SetActivated(true);
-        lifetime.Exit += (_, _) => UserData.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
+        lifetime.Exit += (_, _) => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         ShortcutList.ShortcutsChanged += ListOnShortcutsChanged;
     }

@@ -11,6 +11,8 @@ namespace Soundboword.YouTube;
 public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 {
 
+    private readonly YouTubeCache _cache;
+
     private readonly YoutubeClient _client;
     private readonly SoundList _soundList;
     private CancellationTokenSource? _details;
@@ -19,15 +21,19 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     private VideoId _id;
 
-    public YouTubeVideoViewModel() : this(new YoutubeClient(), new SoundList())
+    public YouTubeVideoViewModel()
     {
+        _client = new YoutubeClient();
+        _cache = new YouTubeCache(_client);
+        _soundList = new SoundList();
         Streams.Add(new AudioOnlyStreamInfo("", Container.Mp3, new FileSize(10000), new Bitrate(10000), "aac", null, null));
         Streams.Add(new AudioOnlyStreamInfo("", Container.WebM, new FileSize(3000), new Bitrate(8000), "idk", new Language("en-US", "English madafaka"), null));
     }
 
-    public YouTubeVideoViewModel(YoutubeClient client, SoundList soundList)
+    public YouTubeVideoViewModel(YoutubeClient client, YouTubeCache cache, SoundList soundList)
     {
         _client = client;
+        _cache = cache;
         _soundList = soundList;
     }
 
@@ -123,7 +129,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         {
             var token = _download.Token;
             var progress = new Progress<double>(d => Dispatcher.UIThread.Post(() => Progress = d));
-            var path = await YouTubeCache.CacheAsync(_id, SelectedStream, progress, Wav ? new Container("wav") : Container.Mp3, token);
+            var path = await _cache.CacheAsync(_id, SelectedStream, progress, Wav ? new Container("wav") : Container.Mp3, token);
             _soundList.Add(path, Title);
             _soundList.SaveSounds();
             Completed?.Invoke();

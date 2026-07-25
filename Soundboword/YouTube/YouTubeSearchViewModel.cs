@@ -21,7 +21,7 @@ public sealed partial class YouTubeSearchViewModel : ViewModelBase, IDisposable
     public YouTubeSearchViewModel()
     {
         _youtubeClient = new YoutubeClient();
-        _videoViewModel = new YouTubeVideoViewModel(_youtubeClient, new SoundList());
+        _videoViewModel = new YouTubeVideoViewModel(_youtubeClient, new YouTubeCache(_youtubeClient), new SoundList());
         var videoSearchResult = YouTubeVideo.Create(new VideoSearchResult(new VideoId(), "Among us in real life", new Author(default, "Sussy baka"), TimeSpan.FromMinutes(3), []));
         Videos.Add(videoSearchResult);
         Videos.Add(videoSearchResult);

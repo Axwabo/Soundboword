@@ -7,23 +7,26 @@ using Container = YoutubeExplode.Videos.Streams.Container;
 
 namespace Soundboword.YouTube;
 
-// TODO: to service
-public static class YouTubeCache
+[RegisterScoped]
+public sealed class YouTubeCache
 {
 
-    private static readonly string Folder = Path.Combine(UserData.Folder, "YouTube");
-
-    public static Container Wav { get; } = new("wav");
+    private static readonly string Folder = Path.Combine(UserData.Root, "YouTube");
 
     private static void EnsureDirectory() => Directory.CreateDirectory(Folder);
 
-    public static async Task<string> CacheAsync(VideoId id, IStreamInfo? info, IProgress<double> progress, Container container, CancellationToken cancellationToken)
+    public static Container Wav { get; } = new("wav");
+
+    private readonly YoutubeClient _client;
+
+    public YouTubeCache(YoutubeClient client) => _client = client;
+
+    public async Task<string> CacheAsync(VideoId id, IStreamInfo? info, IProgress<double> progress, Container container, CancellationToken cancellationToken)
     {
         EnsureDirectory();
-        using var client = new YoutubeClient();
         if (info == null)
         {
-            var manifest = await client.Videos.Streams.GetManifestAsync(id, cancellationToken).ConfigureAwait(false);
+            var manifest = await _client.Videos.Streams.GetManifestAsync(id, cancellationToken).ConfigureAwait(false);
             info = manifest.GetAudioOnlyStreams()
                 .OrderByDescending(e => e.Bitrate)
                 .First();
@@ -34,7 +37,7 @@ public static class YouTubeCache
             .SetPreset(ConversionPreset.Medium)
             .SetContainer(container)
             .Build();
-        await client.Videos.DownloadAsync([info], request, progress, cancellationToken).ConfigureAwait(false);
+        await _client.Videos.DownloadAsync([info], request, progress, cancellationToken).ConfigureAwait(false);
         return path;
     }
 
