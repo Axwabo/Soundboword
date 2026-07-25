@@ -20,7 +20,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Label Padding="0" FontSize="24" Content="{Binding Title}" FontWeight="Bold" />
+                        <Label FontSize="24" Content="{Binding Title}" FontWeight="Bold" />
                         <UserControl Content="{Binding}" />
                         <Rectangle Classes="section-separator" HorizontalAlignment="Stretch" Height="1" Fill="Gray" Margin="0,15" />
                     </StackPanel>
