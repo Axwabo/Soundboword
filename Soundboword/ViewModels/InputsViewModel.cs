@@ -16,7 +16,7 @@ public sealed partial class InputsViewModel : PageModelBase
         Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner()));
     }
 
-    public InputsViewModel([FromKeyedServices(UserData.General)] IClassicDesktopStyleApplicationLifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
+    public InputsViewModel(IClassicDesktopStyleApplicationLifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
     {
         var prefs = UserData.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();

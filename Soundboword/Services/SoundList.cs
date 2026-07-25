@@ -24,28 +24,25 @@ public sealed partial class SoundList
         ]
     };
 
-    private readonly UserData _data;
     private readonly FilePicker _filePicker;
 
     private readonly Preferences _preferences;
 
     public SoundList()
     {
-        _data = new UserData();
-        AudioManager = new AudioManager(new SoundFlowDeviceManager(_data));
+        AudioManager = new AudioManager(new SoundFlowDeviceManager());
         _filePicker = new FilePicker();
         _preferences = new Preferences();
         Editor = new SoundEditingContext(_filePicker);
     }
 
-    public SoundList([FromKeyedServices(UserData.General)] UserData data, FilePicker filePicker, SettingsManager settingsManager, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
+    public SoundList(FilePicker filePicker, SettingsManager settingsManager, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
     {
-        _data = data;
         _filePicker = filePicker;
         _preferences = settingsManager.Require<Preferences>();
         Editor = editor;
         AudioManager = audioManager;
-        foreach (var sound in _data.Load(FileName, () => [], SourceGenerationContext.Default.IEnumerableSoundDto))
+        foreach (var sound in UserData.Load(FileName, () => [], SourceGenerationContext.Default.IEnumerableSoundDto))
         {
             var soundViewModel = new SoundViewModel
             {
@@ -103,7 +100,7 @@ public sealed partial class SoundList
         SaveSounds();
     }
 
-    public void SaveSounds() => _data.Save(
+    public void SaveSounds() => UserData.Save(
         FileName,
         Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume, e.Interaction)),
         SourceGenerationContext.Default.IEnumerableSoundDto
