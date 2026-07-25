@@ -11,18 +11,21 @@
         <settings:SettingsManager />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="StackPanel ContentPresenter">
-            <Setter Property="IsVisible" Value="False" />
-            <Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
-            <Setter Property="Padding" Value="0,0,0,10" />
-            <Setter Property="Margin" Value="0,0,0,10" />
-        </Style>
         <!--<Style Selector="ItemsControl ContentPresenter:nth-last-child(1)">
             <Setter Property="BorderBrush" Value="Transparent" />
         </Style>-->
     </UserControl.Styles>
     <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Sections}" />
+        <ItemsControl ItemsSource="{Binding Sections}" Loaded="Control_OnLoaded">
+            <ItemsControl.Styles>
+                <Style Selector=":is(Panel) > ContentPresenter" x:DataType="settings:SettingsSection">
+                    <Setter Property="IsVisible" Value="False"></Setter>
+                    <Setter Property="BorderBrush" Value="Gray" />
+                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="Padding" Value="0,0,0,10" />
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+            </ItemsControl.Styles>
+        </ItemsControl>
     </ScrollViewer>
 </UserControl>
