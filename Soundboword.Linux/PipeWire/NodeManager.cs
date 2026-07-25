@@ -58,9 +58,6 @@ public sealed partial class NodeManager : ObservableObject
         Sources.Clear();
         Ports.Clear();
         Links.Clear();
-        MicNode = null;
-        OutputNode = null;
-        PlaybackNode = null;
         await _cli.IsAvailable;
         await Task.Delay(100);
         RefreshObjects(await PipeWireCli.ListObjectsAsync());
@@ -75,6 +72,9 @@ public sealed partial class NodeManager : ObservableObject
 
     private void RefreshObjects(List<PipeWireObject> objects)
     {
+        MicNode = null;
+        OutputNode = null;
+        PlaybackNode = null;
         var selectedOutput = _outputManager.SelectedDevice.Name;
         foreach (var pwObj in objects)
             switch (pwObj)
