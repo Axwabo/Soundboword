@@ -11,7 +11,7 @@
         <settings:SettingsManager />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="Rectangle.section-separator:nth-last-child(1)">
+        <Style Selector="ItemsControl :nth-last-child(1) Rectangle.section-separator">
             <Setter Property="IsVisible" Value="False" />
         </Style>
     </UserControl.Styles>
@@ -19,10 +19,10 @@
         <ItemsControl ItemsSource="{Binding Sections}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Spacing="10">
+                    <StackPanel>
                         <Label Padding="0" FontSize="24" Content="{Binding Title}" FontWeight="Bold" />
                         <UserControl Content="{Binding}" />
-                        <Rectangle Classes="section-separator" HorizontalAlignment="Stretch" Height="1" Fill="Gray" />
+                        <Rectangle Classes="section-separator" HorizontalAlignment="Stretch" Height="1" Fill="Gray" Margin="0,15" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

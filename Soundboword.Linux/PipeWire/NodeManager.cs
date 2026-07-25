@@ -1,3 +1,6 @@
+using Soundboword.Linux.PipeWire.Settings;
+using Soundboword.Settings;
+
 namespace Soundboword.Linux.PipeWire;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
@@ -10,11 +13,13 @@ public sealed partial class NodeManager : ObservableObject
 
     private readonly PipeWireCli _cli;
     private readonly SoundFlowDeviceManager _outputManager;
+    private readonly PipeWirePreferences _preferences;
 
-    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager)
+    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager, SettingsManager settingsManager)
     {
         _cli = cli;
         _outputManager = outputManager;
+        _preferences = settingsManager.Require<PipeWirePreferences>();
         _ = Refresh();
     }
 
@@ -46,7 +51,7 @@ public sealed partial class NodeManager : ObservableObject
     [ObservableProperty]
     public partial NodeLinkManager? HearMyself { get; private set; }
 
-    public async Task Refresh() => await RefreshAsync(null, null, null, null);
+    public async Task Refresh() => await RefreshAsync(null, _preferences.AutoMicSounds, null, null);
 
     public async Task RefreshAsync(bool? hearSounds, bool? micSounds, bool? micPassthrough, bool? hearMyself)
     {

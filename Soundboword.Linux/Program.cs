@@ -1,4 +1,5 @@
 ﻿using Soundboword.Linux.PipeWire;
+using Soundboword.Linux.PipeWire.Settings;
 
 namespace Soundboword.Linux;
 
@@ -16,6 +17,7 @@ internal static class Program
     public static AppBuilder BuildAvaloniaApp()
         => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux()
             .AddView<PipeWireView, PipeWireTabViewModel>()
+            .AddView<PreferencesView, PipeWirePreferences>()
             .AddViewLocator<LinkTogglesView, LinkTogglesViewModel>());
 
 }
