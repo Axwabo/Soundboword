@@ -4,22 +4,23 @@ namespace Soundboword.Services;
 public partial class DeviceSwitchHandler : ObservableObject
 {
 
+    private Task? _task;
+
     [ObservableProperty]
     public partial bool IsSwitching { get; private set; }
 
-    public void OnOutputDeviceSwitched()
+    public Task OnOutputDeviceSwitched() => Run(OnOutputDeviceSwitchedAsync);
+
+    public void OnMicrophoneSwitched() => Run(OnMicrophoneSwitchedAsync);
+
+    private Task Run(Func<Task> run)
     {
-        if (!IsSwitching)
-            _ = Run(OnOutputDeviceSwitchedAsync);
+        if (_task is not {IsCompleted: false})
+            _task = RunAsync(run);
+        return _task;
     }
 
-    public void OnMicrophoneSwitched()
-    {
-        if (!IsSwitching)
-            _ = Run(OnMicrophoneSwitchedAsync);
-    }
-
-    private async Task Run(Func<Task> run)
+    private async Task RunAsync(Func<Task> run)
     {
         IsSwitching = true;
         try
