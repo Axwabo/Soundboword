@@ -20,4 +20,8 @@
         <EmbeddedResource Include="PipeWire/Wizard/Soundboword.conf" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Services\" />
+    </ItemGroup>
+
 </Project>

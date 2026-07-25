@@ -1,3 +1,5 @@
+using Soundboword.OutputDevices;
+
 namespace Soundboword.Inputs.Launchpad;
 
 [RegisterSingleton<IInputFactory>(Duplicate = DuplicateStrategy.Append)]

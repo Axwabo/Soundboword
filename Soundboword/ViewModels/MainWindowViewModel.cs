@@ -1,5 +1,10 @@
 ﻿using Avalonia.Media;
+using Soundboword.Inputs;
+using Soundboword.OutputDevices;
+using Soundboword.Playbacks;
 using Soundboword.Settings;
+using Soundboword.Sounds;
+using DeviceSwitchHandler = Soundboword.OutputDevices.DeviceSwitchHandler;
 
 namespace Soundboword.ViewModels;
 

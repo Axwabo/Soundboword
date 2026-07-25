@@ -1,3 +1,5 @@
+using Soundboword.OutputDevices;
+
 namespace Soundboword.Linux.PipeWire;
 
 [RegisterSingleton<TabListToggles>]

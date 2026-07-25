@@ -1,3 +1,5 @@
+using Soundboword.Inputs;
+
 namespace Soundboword.Services;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
