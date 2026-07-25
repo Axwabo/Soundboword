@@ -4,8 +4,14 @@ namespace Soundboword.Linux.PipeWire;
 public sealed class LinkTogglesViewModel : TabListToggles
 {
 
-    public LinkTogglesViewModel(NodeManager manager) => Manager = manager;
+    public LinkTogglesViewModel(NodeManager manager, DevicesViewModel devices)
+    {
+        Manager = manager;
+        Devices = devices;
+    }
 
     public NodeManager Manager { get; }
+
+    public DevicesViewModel Devices { get; }
 
 }

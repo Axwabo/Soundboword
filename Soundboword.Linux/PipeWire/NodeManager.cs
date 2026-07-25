@@ -13,15 +13,16 @@ public sealed partial class NodeManager : ObservableObject
 
     private Task? _relinkTask;
 
-    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager)
+    public NodeManager(PipeWireCli cli, DevicesViewModel devicesViewModel)
     {
         _cli = cli;
-        _outputManager = outputManager;
+        _outputManager = devicesViewModel.DeviceManager;
         _ = Refresh();
-        outputManager.DeviceSwitched += () =>
+        devicesViewModel.DeviceSwitched = () =>
         {
             if (_relinkTask is not {IsCompleted: false})
                 _relinkTask = RelinkAfterDeviceSwitch();
+            return _relinkTask;
         };
     }
 

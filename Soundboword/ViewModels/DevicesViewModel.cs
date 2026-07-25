@@ -10,6 +10,7 @@ public sealed partial class DevicesViewModel : ViewModelBase
     public DevicesViewModel(SoundFlowDeviceManager deviceManager)
     {
         DeviceManager = deviceManager;
+        deviceManager.DeviceSwitched += () => _ = DeviceManagerOnDeviceSwitched();
         UpdateSelected();
     }
 
@@ -17,6 +18,26 @@ public sealed partial class DevicesViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial int SelectedDeviceIndex { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsSwitching { get; private set; }
+
+    public Func<Task>? DeviceSwitched { get; set; }
+
+    private async Task DeviceManagerOnDeviceSwitched()
+    {
+        if (DeviceSwitched == null)
+            return;
+        IsSwitching = true;
+        try
+        {
+            await DeviceSwitched();
+        }
+        finally
+        {
+            IsSwitching = false;
+        }
+    }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
