@@ -15,6 +15,8 @@ public sealed partial class NodeManager : ObservableObject
     private readonly SoundFlowDeviceManager _outputManager;
     private readonly PipeWirePreferences _preferences;
 
+    private bool _refreshing;
+
     public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager, SettingsManager settingsManager)
     {
         _cli = cli;
@@ -54,6 +56,7 @@ public sealed partial class NodeManager : ObservableObject
 
     public async Task RefreshAsync(bool? hearSounds, bool? micSounds, bool? micPassthrough, bool? hearMyself)
     {
+        _refreshing = true;
         Sources.Clear();
         Ports.Clear();
         Links.Clear();
@@ -66,6 +69,7 @@ public sealed partial class NodeManager : ObservableObject
         (MicSounds, var linkMicSounds) = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, Links, micSounds);
         var (linkMicPassthrough, linkHearMyself) = UpdatePhysicalMic(micPassthrough, hearMyself);
         await Task.WhenAll(linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself);
+        _refreshing = false;
     }
 
     public (Task, Task) UpdatePhysicalMic(bool? micPassthrough, bool? hearMyself)
@@ -111,11 +115,13 @@ public sealed partial class NodeManager : ObservableObject
             }
     }
 
+    /*
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.PropertyName == nameof(PhysicalMicrophone))
+        if (!_refreshing && e.PropertyName == nameof(PhysicalMicrophone))
             _outputManager.InvokeMicrophoneSwitched();
     }
+    */
 
 }

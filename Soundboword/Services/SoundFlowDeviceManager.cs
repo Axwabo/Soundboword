@@ -107,7 +107,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
     public void InvokeMicrophoneSwitched()
     {
         if (MicrophoneSwitched != null)
-            Dispatcher.UIThread.InvokeOrPost(MicrophoneSwitched);
+            Dispatcher.UIThread.Invoke(MicrophoneSwitched);
     }
 
     public void RefreshAudioDevices()
