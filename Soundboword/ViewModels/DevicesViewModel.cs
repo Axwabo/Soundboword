@@ -15,8 +15,8 @@ public sealed partial class DevicesViewModel : ViewModelBase
     {
         DeviceManager = deviceManager;
         SwitchHandler = handler;
-        deviceManager.OutputDeviceSwitched += () => handler.OnOutputDeviceSwitchedAsync();
-        deviceManager.MicrophoneSwitched += () => handler.OnMicrophoneSwitchedAsync();
+        deviceManager.OutputDeviceSwitched += () => handler.OnOutputDeviceSwitched();
+        deviceManager.MicrophoneSwitched += handler.OnMicrophoneSwitched;
         UpdateSelected();
     }
 
