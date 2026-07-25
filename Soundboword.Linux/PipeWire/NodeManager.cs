@@ -11,10 +11,10 @@ public sealed partial class NodeManager : ObservableObject
     private readonly PipeWireCli _cli;
     private readonly SoundFlowDeviceManager _outputManager;
 
-    public NodeManager(PipeWireCli cli, DevicesViewModel devicesViewModel)
+    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager)
     {
         _cli = cli;
-        _outputManager = devicesViewModel.DeviceManager;
+        _outputManager = outputManager;
         _ = Refresh();
     }
 
