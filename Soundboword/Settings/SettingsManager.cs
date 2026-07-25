@@ -10,10 +10,7 @@ public sealed class SettingsManager : ViewModelBase
     }
 
     public SettingsManager(IEnumerable<ISettingsProvider> providers)
-    {
-        Sections = providers.SelectMany(e => e.Sections).ToList();
-        Sections[^1].IsLast = true;
-    }
+        => Sections = providers.SelectMany(e => e.Sections).ToList();
 
     public List<SettingsSection> Sections { get; }
 

@@ -10,6 +10,11 @@
     <Design.DataContext>
         <settings:SettingsManager />
     </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Rectangle.section-separator:nth-last-child(1)">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </UserControl.Styles>
     <ScrollViewer>
         <ItemsControl ItemsSource="{Binding Sections}">
             <ItemsControl.ItemTemplate>
@@ -17,7 +22,7 @@
                     <StackPanel Spacing="10">
                         <Label Padding="0" FontSize="24" Content="{Binding Title}" FontWeight="Bold" />
                         <UserControl Content="{Binding}" />
-                        <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="Gray" IsVisible="{Binding  !IsLast}" />
+                        <Rectangle Classes="section-separator" HorizontalAlignment="Stretch" Height="1" Fill="Gray" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
