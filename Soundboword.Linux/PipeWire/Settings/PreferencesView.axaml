@@ -7,6 +7,8 @@
              x:Class="Soundboword.Linux.PipeWire.Settings.PreferencesView"
              x:DataType="settings:PipeWirePreferences">
     <StackPanel Spacing="5">
+        <!-- ReSharper disable once Xaml.StyleClassNotFound -->
+        <Label Classes="title">PipeWire</Label>
         <CheckBox IsChecked="{Binding AutoMicSounds}">Auto-connect Sounds to Virtual Mic</CheckBox>
     </StackPanel>
 </UserControl>

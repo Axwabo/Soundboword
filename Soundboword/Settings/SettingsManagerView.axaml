@@ -16,16 +16,6 @@
         </Style>
     </UserControl.Styles>
     <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Sections}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <Label FontSize="24" Content="{Binding Title}" FontWeight="Bold" />
-                        <UserControl Content="{Binding}" />
-                        <Rectangle Classes="section-separator" HorizontalAlignment="Stretch" Height="1" Fill="Gray" Margin="0,15" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Sections}" />
     </ScrollViewer>
 </UserControl>

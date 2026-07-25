@@ -19,7 +19,7 @@ internal static class Program
             .AddView<PipeWireView, PipeWireTabViewModel>()
             .AddView<PreferencesView, PipeWirePreferences>()
             .AddViewLocator<LinkTogglesView, LinkTogglesViewModel>()
-            .AddKeyedSingleton(PipeWirePreferences.Key, PipeWirePreferences.CreateData())
+            .AddKeyedSingleton(PipeWirePreferences.Key, new UserData(PipeWirePreferences.Key))
         );
 
 }

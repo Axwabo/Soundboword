@@ -20,6 +20,7 @@ public sealed partial class DevicesViewModel : ViewModelBase
     }
 
     public SoundFlowDeviceManager DeviceManager { get; }
+
     public DeviceSwitchHandler SwitchHandler { get; }
 
     [ObservableProperty]

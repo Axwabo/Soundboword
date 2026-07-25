@@ -1,10 +1,20 @@
+using System.Text.Json.Serialization.Metadata;
+
 namespace Soundboword.Settings;
 
 public abstract class SettingsSection : ViewModelBase
 {
 
-    public abstract string Title { get; }
+    private const string Filename = "settings";
+
+    private readonly UserData? _data;
+
+    protected SettingsSection(UserData? data = null) => _data = data;
 
     public abstract void Save();
+
+    protected T Load<T>(Func<T> fallback, JsonTypeInfo<T> info) where T : notnull => _data!.Load(Filename, fallback, info);
+
+    protected void Save<T>(T data, JsonTypeInfo<T> info) where T : notnull => _data!.Save(Filename, data, info);
 
 }
