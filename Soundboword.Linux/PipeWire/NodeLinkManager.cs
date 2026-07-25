@@ -3,7 +3,7 @@ namespace Soundboword.Linux.PipeWire;
 public sealed partial class NodeLinkManager : ObservableObject
 {
 
-    public static NodeLinkManager? Create(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> ports, List<PipeWireLink> links)
+    public static (NodeLinkManager?, Task) Create(PipeWireNode source, PipeWireNode destination, List<PipeWirePort> ports, List<PipeWireLink> links, bool? targetState)
     {
         var outputs = new List<string>();
         var inputs = new List<string>();
@@ -12,9 +12,12 @@ public sealed partial class NodeLinkManager : ObservableObject
                 outputs.Add(port.Id);
             else if (port.Direction == "in" && port.Node == destination.Id)
                 inputs.Add(port.Id);
-        return outputs.Count != 0 && outputs.Count == inputs.Count
-            ? new NodeLinkManager(outputs, inputs) {IsLinked = IsConnected(links, outputs, inputs)}
-            : null;
+        if (outputs.Count == 0 || outputs.Count != inputs.Count)
+            return (null, Task.CompletedTask);
+        if (targetState == null)
+            return (new NodeLinkManager(outputs, inputs) {IsLinked = IsConnected(links, outputs, inputs)}, Task.CompletedTask);
+        var manager = new NodeLinkManager(outputs, inputs) {IsLinked = targetState.Value};
+        return (manager, manager.ToggleLink(targetState, links));
     }
 
     private static bool IsConnected(List<PipeWireLink> links, List<string> outputs, List<string> inputs)
