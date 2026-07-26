@@ -1,5 +1,6 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using Microsoft.Extensions.Logging.Abstractions;
 using Soundboword.Settings;
 using Preferences = Soundboword.Settings.General.Preferences;
 
@@ -10,6 +11,12 @@ public sealed partial class SoundList
 {
 
     private const string FileName = "sounds";
+
+    [LoggerMessage(LogLevel.Warning, "Could not load sound {Name}\nFile not found: {Path}")]
+    private static partial void LogNotFound(ILogger logger, string name, string path);
+
+    [LoggerMessage(LogLevel.Warning, "Could not find {Count} sound(s)")]
+    private static partial void LogNotFound(ILogger logger, int count);
 
     public static FilePickerOpenOptions Options { get; } = new()
     {
@@ -26,7 +33,7 @@ public sealed partial class SoundList
 
     private readonly UserData _data;
     private readonly FilePicker _filePicker;
-
+    private readonly ILogger _logger;
     private readonly Preferences _preferences;
 
     public SoundList()
@@ -34,17 +41,20 @@ public sealed partial class SoundList
         _data = new UserData();
         AudioManager = new AudioManager(new SoundFlowDeviceManager(_data));
         _filePicker = new FilePicker();
+        _logger = NullLogger.Instance;
         _preferences = new Preferences();
         Editor = new SoundEditingContext(_filePicker);
     }
 
-    public SoundList(UserData data, FilePicker filePicker, SettingsManager settingsManager, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
+    public SoundList(UserData data, FilePicker filePicker, ILoggerFactory loggerFactory, SettingsManager settingsManager, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
     {
         _data = data;
         _filePicker = filePicker;
+        _logger = loggerFactory.CreateLogger("Sounds");
         _preferences = settingsManager.Require<Preferences>();
         Editor = editor;
         AudioManager = audioManager;
+        var notFound = 0;
         foreach (var sound in _data.Load(FileName, () => [], SourceGenerationContext.Default.IEnumerableSoundDto))
         {
             var soundViewModel = new SoundViewModel
@@ -58,11 +68,16 @@ public sealed partial class SoundList
                 Interaction = sound.Interaction,
                 List = this
             };
-            if (!File.Exists(soundViewModel.Path))
-                soundViewModel.UpdatePlaybackState(SoundState.NotFound);
             Sounds.Add(soundViewModel);
+            if (File.Exists(soundViewModel.Path))
+                continue;
+            LogNotFound(_logger, sound.Name, sound.Path);
+            soundViewModel.UpdatePlaybackState(SoundState.NotFound);
+            notFound++;
         }
 
+        if (notFound != 0)
+            LogNotFound(_logger, notFound);
         lifetime?.Exit += (_, _) => SaveSounds();
     }
 
