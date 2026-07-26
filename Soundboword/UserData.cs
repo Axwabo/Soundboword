@@ -76,8 +76,18 @@ public sealed partial class UserData
         catch (Exception e)
         {
             LogReadFailure(name, e);
-            return fallback();
         }
+
+        try
+        {
+            File.Copy(path, $"{path}.old", true);
+        }
+        catch (Exception e)
+        {
+            LogBackupFailure(name, e);
+        }
+
+        return fallback();
     }
 
     public void Save<T>(string name, T data, JsonTypeInfo<T>? typeInfo) where T : notnull
@@ -98,6 +108,9 @@ public sealed partial class UserData
 
     [LoggerMessage(LogLevel.Error, "Failed to load {File}")]
     private partial void LogReadFailure(string file, Exception exception);
+
+    [LoggerMessage(LogLevel.Warning, "Failed to backup {File}")]
+    private partial void LogBackupFailure(string file, Exception exception);
 
     [LoggerMessage(LogLevel.Error, "Failed to save {File}")]
     private partial void LogWriteFailure(string file, Exception exception);
