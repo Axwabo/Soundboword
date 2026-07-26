@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using Soundboword.Logging;
 using Soundboword.Settings;
 
 namespace Soundboword.ViewModels;
@@ -11,12 +12,13 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         new PlaybacksViewModel(),
         new InputsViewModel(),
         new SettingsManager(),
+        new LogListViewModel(),
         new FilePicker(),
         new ShortcutAssigner())
     {
     }
 
-    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, SettingsManager settingsManager, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null, TabListToggles? toggles = null)
+    public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, SettingsManager settingsManager, LogListViewModel logList, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null, TabListToggles? toggles = null)
     {
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
@@ -27,6 +29,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Pages.Add(new TabItemViewModel("Inputs", "🎛️", inputs));
         Pages.AddRange(provider?.AdditionalTabs ?? []);
         Pages.Add(new TabItemViewModel("Settings", "⚙️", settingsManager));
+        Pages.Add(new TabItemViewModel("Logs", "📒", logList));
     }
 
     public List<TabItemViewModel> Pages { get; } = [];

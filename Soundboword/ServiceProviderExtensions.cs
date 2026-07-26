@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Templates;
+using Soundboword.Logging;
 using Soundboword.Settings;
 using Soundboword.Settings.General;
 using Soundboword.Views;
@@ -41,7 +42,9 @@ public static class ServiceProviderExtensions
             .AddView<EditSoundView, EditSoundViewModel>()
             .AddView<SettingsManagerView, SettingsManager>()
             .AddView<PreferencesView, Preferences>()
-            .AddViewLocator<SoundView, SoundViewModel>();
+            .AddViewLocator<SoundView, SoundViewModel>()
+            .AddViewLocator<LogView, LogViewModel>()
+            .AddViewLocator<LogListView, LogListViewModel>();
 
         internal IServiceCollection AddYouTube() => collection.AddScoped<AddFromYouTubeViewModel>()
             .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()
