@@ -12,12 +12,6 @@ public sealed partial class SoundList
 
     private const string FileName = "sounds";
 
-    [LoggerMessage(LogLevel.Warning, "Could not load sound {Name}\nFile not found: {Path}")]
-    private static partial void LogNotFound(ILogger logger, string name, string path);
-
-    [LoggerMessage(LogLevel.Warning, "Could not find {Count} sound(s)")]
-    private static partial void LogNotFound(ILogger logger, int count);
-
     public static FilePickerOpenOptions Options { get; } = new()
     {
         Title = "Pick a sound",
@@ -71,13 +65,13 @@ public sealed partial class SoundList
             Sounds.Add(soundViewModel);
             if (File.Exists(soundViewModel.Path))
                 continue;
-            LogNotFound(_logger, sound.Name, sound.Path);
+            LogNotFound(sound.Name, sound.Path);
             soundViewModel.UpdatePlaybackState(SoundState.NotFound);
             notFound++;
         }
 
         if (notFound != 0)
-            LogNotFound(_logger, notFound);
+            LogNotFound(notFound);
         lifetime?.Exit += (_, _) => SaveSounds();
     }
 
@@ -123,5 +117,11 @@ public sealed partial class SoundList
         Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume, e.Interaction)),
         SourceGenerationContext.Default.IEnumerableSoundDto
     );
+
+    [LoggerMessage(LogLevel.Warning, "Could not load sound {Name}\nFile not found: {Path}")]
+    private partial void LogNotFound(string name, string path);
+
+    [LoggerMessage(LogLevel.Warning, "Could not find {Count} sound(s)")]
+    private partial void LogNotFound(int count);
 
 }
