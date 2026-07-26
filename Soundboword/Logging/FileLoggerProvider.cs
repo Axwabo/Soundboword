@@ -46,11 +46,11 @@ public sealed class FileLoggerProvider : ILoggerProvider
                 await _semaphore.WaitAsync(token);
                 try
                 {
-                    tuple.Time.TryFormat(TimeBuffer.Span, out var timeLength, "s");
-                    await _writer.WriteAsync(TimeBuffer[..timeLength], CancellationToken.None);
+                    tuple.Time.TryFormat(TimeBuffer.Span, out _, "s");
+                    await _writer.WriteAsync(TimeBuffer, CancellationToken.None);
                     await _writer.WriteAsync('[');
                     await _writer.WriteAsync(tuple.Level.ToStringFast());
-                    await _writer.WriteAsync(" ] [");
+                    await _writer.WriteAsync("] [");
                     await _writer.WriteAsync(tuple.Name);
                     await _writer.WriteAsync("] ");
                     await _writer.WriteLineAsync(tuple.Content);
@@ -80,11 +80,11 @@ public sealed class FileLoggerProvider : ILoggerProvider
         {
             while (_logs.TryDequeue(out var tuple))
             {
-                tuple.Time.TryFormat(TimeBuffer.Span, out var timeLength, "s");
-                _writer.Write(TimeBuffer[..timeLength]);
+                tuple.Time.TryFormat(TimeBuffer.Span, out _, "s");
+                _writer.Write(TimeBuffer);
                 _writer.Write('[');
                 _writer.Write(tuple.Level.ToStringFast());
-                _writer.Write(" ] [");
+                _writer.Write("] [");
                 _writer.Write(tuple.Name);
                 _writer.Write("] ");
                 _writer.WriteLine(tuple.Content);
