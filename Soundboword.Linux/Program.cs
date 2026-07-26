@@ -16,10 +16,10 @@ internal static class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
         => AvaloniaAppBuilder.Create(services => services.AddSoundbowordLinux()
+            .AddUserData(PipeWirePreferences.Key)
             .AddView<PipeWireView, PipeWireTabViewModel>()
             .AddView<PreferencesView, PipeWirePreferences>()
             .AddViewLocator<LinkTogglesView, LinkTogglesViewModel>()
-            .AddKeyedSingleton(PipeWirePreferences.Key, new UserData(PipeWirePreferences.Key))
         );
 
 }

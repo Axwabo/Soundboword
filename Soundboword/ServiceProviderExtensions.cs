@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Templates;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soundboword.Logging;
 using Soundboword.Settings;
 using Soundboword.Settings.General;
@@ -10,6 +11,8 @@ namespace Soundboword;
 
 public static class ServiceProviderExtensions
 {
+
+    private static readonly Func<IServiceProvider, object?, UserData> UserDataFactory = (provider, o) => new UserData((string) o!, provider.GetRequiredService<ILoggerFactory>());
 
     extension<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TView>(IServiceCollection collection) where TView : Control, new()
     {
@@ -33,6 +36,12 @@ public static class ServiceProviderExtensions
 
     extension(IServiceCollection collection)
     {
+
+        public IServiceCollection AddUserData(string key)
+        {
+            collection.TryAdd(ServiceDescriptor.KeyedSingleton(key, UserDataFactory));
+            return collection;
+        }
 
         internal IServiceCollection AddViews() => collection.AddView<MainWindow, MainWindowViewModel>()
             .AddView<BoardView, BoardViewModel>()
