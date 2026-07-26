@@ -4,7 +4,7 @@ namespace Soundboword.Inputs.Launchpad;
 public sealed class LaunchpadShortcutRepository : ShortcutRepository<LaunchpadKey>
 {
 
-    public LaunchpadShortcutRepository(UserData data, SoundList soundList, AudioManager audioManager) : base(
+    public LaunchpadShortcutRepository([FromKeyedServices(IShortcutRepository.Key)] UserData data, SoundList soundList, AudioManager audioManager) : base(
         data,
         audioManager,
         soundList,
