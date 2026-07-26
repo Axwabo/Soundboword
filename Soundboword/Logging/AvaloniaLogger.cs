@@ -1,5 +1,4 @@
 using Avalonia.Threading;
-using Microsoft.Extensions.Logging;
 
 namespace Soundboword.Logging;
 
@@ -25,7 +24,8 @@ public sealed class AvaloniaLogger : ILogger
         {
             Name = _name,
             Level = logLevel,
-            Content = content
+            Content = content,
+            Exception = exception
         };
         Dispatcher.UIThread.InvokeOrPost(() => _list.Add(log));
     }

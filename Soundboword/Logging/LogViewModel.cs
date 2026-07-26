@@ -9,9 +9,11 @@ public sealed class LogViewModel : ViewModelBase
 
     public required string Content { get; init; }
 
+    public Exception? Exception { get; init; }
+
     public string Formatted
     {
-        get => field ??= $"[{Name}] {Content}";
+        get => field ??= Exception == null ? $"[{Name}] {Content}" : $"[{Name}] {Content}\n{Exception.Message}";
         init;
     }
 

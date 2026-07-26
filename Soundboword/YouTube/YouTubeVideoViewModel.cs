@@ -205,7 +205,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         }
     }
 
-    [LoggerMessage(LogLevel.Error, "Failed to download YouTube video {Title}")]
+    [LoggerMessage(LogLevel.Error, "Failed to download {Title}")]
     private partial void LogFailedDownload(string title, Exception exception);
 
 }
