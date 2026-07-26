@@ -1,11 +1,8 @@
 namespace Soundboword.Logging;
 
-public partial class LogListView : UserControl
+public sealed partial class LogListView : UserControl
 {
 
-    public LogListView()
-    {
-        InitializeComponent();
-    }
+    public LogListView() => InitializeComponent();
 
 }
