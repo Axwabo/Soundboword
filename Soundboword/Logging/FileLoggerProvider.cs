@@ -17,8 +17,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
 
     private readonly ConcurrentQueue<(DateTimeOffset Time, string Name, LogLevel Level, string Content, Exception? Exception)> _logs = [];
 
-    private readonly SemaphoreSlim _semaphore = new(0, 1);
-
     private readonly StreamWriter _writer;
 
     public FileLoggerProvider(Lifetime lifetime)
@@ -43,24 +41,16 @@ public sealed class FileLoggerProvider : ILoggerProvider
             while (await timer.WaitForNextTickAsync(token))
             while (!token.IsCancellationRequested && _logs.TryDequeue(out var tuple))
             {
-                await _semaphore.WaitAsync(token);
-                try
-                {
-                    tuple.Time.TryFormat(TimeBuffer.Span, out _, "s");
-                    await _writer.WriteAsync(TimeBuffer, CancellationToken.None);
-                    await _writer.WriteAsync('[');
-                    await _writer.WriteAsync(tuple.Level.ToStringFast());
-                    await _writer.WriteAsync("] [");
-                    await _writer.WriteAsync(tuple.Name);
-                    await _writer.WriteAsync("] ");
-                    await _writer.WriteLineAsync(tuple.Content);
-                    if (tuple.Exception != null)
-                        await _writer.WriteLineAsync(tuple.Exception.ToString());
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
+                tuple.Time.TryFormat(TimeBuffer.Span, out _, "s");
+                await _writer.WriteAsync(TimeBuffer, CancellationToken.None);
+                await _writer.WriteAsync('[');
+                await _writer.WriteAsync(tuple.Level.ToStringFast());
+                await _writer.WriteAsync("] [");
+                await _writer.WriteAsync(tuple.Name);
+                await _writer.WriteAsync("] ");
+                await _writer.WriteLineAsync(tuple.Content);
+                if (tuple.Exception != null)
+                    await _writer.WriteLineAsync(tuple.Exception.ToString());
             }
         }
         catch (OperationCanceledException)
@@ -75,7 +65,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
     private void StopLoggingAndFlush()
     {
         _cts.Cancel();
-        _semaphore.Wait(TimeSpan.FromSeconds(1));
         try
         {
             while (_logs.TryDequeue(out var tuple))
@@ -95,7 +84,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
         finally
         {
             _cts.Dispose();
-            _semaphore.Dispose();
             _writer.Dispose();
         }
     }
