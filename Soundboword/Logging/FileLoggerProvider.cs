@@ -19,10 +19,12 @@ public sealed class FileLoggerProvider : ILoggerProvider
 
     private readonly SemaphoreSlim _semaphore = new(0, 1);
 
-    private readonly StreamWriter _writer = new(File.Create(Path.Combine(Folder, DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss.txt"))));
+    private readonly StreamWriter _writer;
 
     public FileLoggerProvider(Lifetime lifetime)
     {
+        Directory.CreateDirectory(Folder);
+        _writer = new StreamWriter(File.Create(Path.Combine(Folder, DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss.txt"))));
         lifetime.Register(StopLoggingAndFlush, ShutdownPriority.Final);
         Task.Run(WriteAsync);
     }
@@ -35,7 +37,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
     private async Task WriteAsync()
     {
         var token = _cts.Token;
-        Directory.CreateDirectory(Folder);
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
         try
         {
