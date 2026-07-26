@@ -39,18 +39,22 @@ public sealed class FileLoggerProvider : ILoggerProvider
         try
         {
             while (await timer.WaitForNextTickAsync(token))
-            while (!token.IsCancellationRequested && _logs.TryDequeue(out var tuple))
             {
-                tuple.Time.TryFormat(TimeBuffer.Span, out _, "s");
-                await _writer.WriteAsync(TimeBuffer, CancellationToken.None);
-                await _writer.WriteAsync('[');
-                await _writer.WriteAsync(tuple.Level.ToStringFast());
-                await _writer.WriteAsync("] [");
-                await _writer.WriteAsync(tuple.Name);
-                await _writer.WriteAsync("] ");
-                await _writer.WriteLineAsync(tuple.Content);
-                if (tuple.Exception != null)
-                    await _writer.WriteLineAsync(tuple.Exception.ToString());
+                while (!token.IsCancellationRequested && _logs.TryDequeue(out var tuple))
+                {
+                    tuple.Time.TryFormat(TimeBuffer.Span, out _, "s");
+                    await _writer.WriteAsync(TimeBuffer, CancellationToken.None);
+                    await _writer.WriteAsync('[');
+                    await _writer.WriteAsync(tuple.Level.ToStringFast());
+                    await _writer.WriteAsync("] [");
+                    await _writer.WriteAsync(tuple.Name);
+                    await _writer.WriteAsync("] ");
+                    await _writer.WriteLineAsync(tuple.Content);
+                    if (tuple.Exception != null)
+                        await _writer.WriteLineAsync(tuple.Exception.ToString());
+                }
+
+                await _writer.FlushAsync(token);
             }
         }
         catch (OperationCanceledException)
