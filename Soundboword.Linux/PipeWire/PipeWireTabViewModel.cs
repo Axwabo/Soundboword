@@ -14,7 +14,7 @@ public sealed partial class PipeWireTabViewModel : ViewModelBase
     public PipeWireTabViewModel()
     {
         _cli = new PipeWireCli();
-        NodeManager = new NodeManager(_cli, new SoundFlowDeviceManager(new UserData()));
+        NodeManager = new NodeManager(_cli, new SoundFlowDeviceManager());
         SwitchHandler = new LinkRepair(NodeManager, new SettingsManager(new PreferencesProvider(new PipeWirePreferences())));
     }
 

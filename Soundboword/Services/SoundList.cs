@@ -1,4 +1,3 @@
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
 using Soundboword.Settings;
@@ -33,14 +32,14 @@ public sealed partial class SoundList
     public SoundList()
     {
         _data = new UserData();
-        AudioManager = new AudioManager(new SoundFlowDeviceManager(_data));
+        AudioManager = new AudioManager(new SoundFlowDeviceManager(_data, new Lifetime()));
         _filePicker = new FilePicker();
         _logger = NullLogger.Instance;
         _preferences = new Preferences();
         Editor = new SoundEditingContext(_filePicker);
     }
 
-    public SoundList(UserData data, FilePicker filePicker, ILoggerFactory loggerFactory, SettingsManager settingsManager, IClassicDesktopStyleApplicationLifetime? lifetime, SoundEditingContext editor, AudioManager audioManager)
+    public SoundList(UserData data, FilePicker filePicker, ILoggerFactory loggerFactory, SettingsManager settingsManager, Lifetime lifetime, SoundEditingContext editor, AudioManager audioManager)
     {
         _data = data;
         _filePicker = filePicker;
@@ -72,7 +71,7 @@ public sealed partial class SoundList
 
         if (notFound != 0)
             LogNotFound(notFound);
-        lifetime?.Exit += (_, _) => SaveSounds();
+        lifetime.Exit += SaveSounds;
     }
 
     public AudioManager AudioManager { get; }

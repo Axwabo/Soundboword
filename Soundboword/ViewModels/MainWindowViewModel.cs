@@ -8,7 +8,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 {
 
     public MainWindowViewModel() : this(new BoardViewModel(),
-        new DevicesViewModel(new SoundFlowDeviceManager(new UserData()), new DeviceSwitchHandler()),
+        new DevicesViewModel(new SoundFlowDeviceManager(), new DeviceSwitchHandler()),
         new PlaybacksViewModel(),
         new InputsViewModel(),
         new SettingsManager(),

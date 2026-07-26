@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Avalonia.Controls.ApplicationLifetimes;
 using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
 using SoundFlow.Components;
@@ -28,9 +27,13 @@ public sealed class SoundFlowDeviceManager : IDisposable
     private MiniAudioEngine? _engine;
     private AudioPlaybackDevice? _playback;
 
-    public SoundFlowDeviceManager(UserData data, IClassicDesktopStyleApplicationLifetime? lifetime = null)
+    public SoundFlowDeviceManager() : this(new UserData(), new Lifetime())
     {
-        if (lifetime == null)
+    }
+
+    public SoundFlowDeviceManager(UserData data, Lifetime lifetime)
+    {
+        if (!lifetime.IsActive)
         {
             _engine = null;
             return;
@@ -40,7 +43,7 @@ public sealed class SoundFlowDeviceManager : IDisposable
         var preferredDeviceName = data.Load(FileName);
         var preferredDevice = _engine.PlaybackDevices.FirstOrDefault(e => e.Name.AsSpan().Trim().Equals(preferredDeviceName.AsSpan().Trim(), StringComparison.OrdinalIgnoreCase));
         SwitchDevice(preferredDevice != default ? preferredDevice : _engine.PlaybackDevices.First(e => e.IsDefault));
-        lifetime.Exit += (_, _) =>
+        lifetime.Exit += () =>
         {
             data.Save(FileName, SelectedDevice.Name);
             Dispose();
