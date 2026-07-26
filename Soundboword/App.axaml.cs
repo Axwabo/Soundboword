@@ -1,6 +1,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
+using Soundboword.Inputs;
 using Soundboword.Views;
 
 namespace Soundboword;
@@ -14,7 +15,8 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Services.AddViews()
+        Services.AddUserData(IShortcutRepository.Key)
+            .AddViews()
             .AddYouTube()
             .AddLogging();
 

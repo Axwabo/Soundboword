@@ -1,12 +1,10 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Microsoft.Extensions.Logging.Abstractions;
-using Soundboword.Inputs;
 
 namespace Soundboword;
 
 [RegisterSingleton]
-[RegisterSingleton(ServiceKey = IShortcutRepository.Key)]
 public sealed partial class UserData
 {
 
