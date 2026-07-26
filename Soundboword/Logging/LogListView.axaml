@@ -6,7 +6,5 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Logging.LogListView"
              x:DataType="logging:LogListViewModel">
-    <ScrollViewer>
-        <ItemsRepeater></ItemsRepeater>
-    </ScrollViewer>
+    <ListBox ItemsSource="{Binding Logs}" />
 </UserControl>

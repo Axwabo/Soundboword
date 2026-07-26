@@ -5,17 +5,10 @@ namespace Soundboword.Logging;
 public sealed class LogViewModel : ViewModelBase
 {
 
-    public LogViewModel(string name, LogLevel logLevel, string content)
-    {
-        Name = name;
-        LogLevel = logLevel;
-        Content = content;
-    }
+    public required string Name { get; init; }
 
-    public string Name { get; }
+    public required LogLevel Level { get; init; }
 
-    public LogLevel LogLevel { get; }
-
-    public string Content { get; }
+    public required string Content { get; init; }
 
 }

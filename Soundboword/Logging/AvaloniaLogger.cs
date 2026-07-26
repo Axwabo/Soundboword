@@ -21,7 +21,12 @@ public sealed class AvaloniaLogger : ILogger
         if (!IsEnabled(logLevel))
             return;
         var content = formatter(state, exception);
-        var log = new LogViewModel(_name, logLevel, content);
+        var log = new LogViewModel
+        {
+            Name = _name,
+            Level = logLevel,
+            Content = content
+        };
         Dispatcher.UIThread.InvokeOrPost(() => _list.Add(log));
     }
 
