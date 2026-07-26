@@ -5,18 +5,20 @@ using Tmds.DBus.Protocol;
 namespace Soundboword.Linux.Shortcuts;
 
 [RegisterSingleton]
-public sealed class GlobalShortcutsPortal
+public sealed partial class GlobalShortcutsPortal
 {
 
     private readonly DBusConnection? _connection;
+    private readonly ILogger _logger;
     private readonly string? _sender;
     private readonly GlobalShortcuts? _shortcuts;
 
     private readonly TopLevel _topLevel;
 
-    public GlobalShortcutsPortal(TopLevel topLevel)
+    public GlobalShortcutsPortal(TopLevel topLevel, ILoggerFactory loggerFactory)
     {
         _topLevel = topLevel;
+        _logger = loggerFactory.CreateLogger("XDG Global Shortcuts Portal");
         try
         {
             _connection = new DBusConnection(new DBusConnectionOptions(DBusAddress.Session!) {AutoConnect = false});
@@ -28,8 +30,8 @@ public sealed class GlobalShortcutsPortal
         }
         catch (Exception e)
         {
+            LogConnectionFailure(e);
             SessionHandle = Task.FromException<ObjectPath>(e);
-            Console.WriteLine(e);
         }
     }
 
@@ -45,26 +47,29 @@ public sealed class GlobalShortcutsPortal
     [MemberNotNullWhen(true, nameof(_connection), nameof(_sender), nameof(_shortcuts))]
     public bool IsAvailable { get; }
 
-    internal Task<PortalResponse> RequestAsync(SendPortalRequest send, CancellationToken cancellationToken = default)
+    internal async Task<PortalResponse> RequestAsync(SendPortalRequest send, CancellationToken cancellationToken = default)
         => IsAvailable
-            ? _connection.RequestAsync(_sender, _shortcuts, send, cancellationToken)
-            : throw new InvalidOperationException("Portal unavailable");
+            ? await _connection.RequestAsync(_sender, _shortcuts, send, cancellationToken)
+            : (2, []);
 
-    internal async ValueTask<IDisposable> WatchActivatedAsync(Action<string> callback)
+    internal async ValueTask<IDisposable?> WatchActivatedAsync(Action<string> callback)
         => IsAvailable
             ? await _shortcuts.WatchActivatedAsync(tuple =>
             {
                 if (SessionHandle.IsCompletedSuccessfully && SessionHandle.Result == tuple.SessionHandle)
                     callback(tuple.ShortcutId);
             })
-            : throw new InvalidOperationException("Portal unavailable");
+            : null;
 
     private async Task<ObjectPath> CreateSessionAsync()
     {
         var (response, results) = await RequestAsync((shortcuts, options) => shortcuts.CreateSessionAsync(options.WithSessionHandleToken())).ConfigureAwait(false);
         return response == 0
             ? results["session_handle"].GetString()
-            : throw new IOException($"Code {response}");
+            : throw new IOException($"Response code {response}");
     }
+
+    [LoggerMessage(LogLevel.Error, "Failed to create D-Bus session")]
+    private partial void LogConnectionFailure(Exception exception);
 
 }

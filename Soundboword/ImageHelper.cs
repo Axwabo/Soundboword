@@ -28,7 +28,6 @@ public static class ImageHelper
         }
         catch (Exception)
         {
-            // TODO: log
             return null;
         }
     }
