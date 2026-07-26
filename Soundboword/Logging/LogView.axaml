@@ -9,12 +9,5 @@
     <Design.DataContext>
         <logging:LogViewModel Name="Among" Level="Error" Content="Us in real life" />
     </Design.DataContext>
-    <TextBlock Padding="2" Background="{Binding Level, Converter={StaticResource LogLevel}}">
-        <TextBlock.Text>
-            <MultiBinding StringFormat="[{0}] {1}">
-                <Binding Path="Name" />
-                <Binding Path="Content" />
-            </MultiBinding>
-        </TextBlock.Text>
-    </TextBlock>
+    <TextBlock Padding="3" Background="{Binding Level, Converter={StaticResource LogLevel}}" Text="{Binding Formatted}" MaxLines="{Binding MaxLines}" />
 </UserControl>

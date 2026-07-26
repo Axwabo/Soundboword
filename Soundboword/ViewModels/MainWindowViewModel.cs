@@ -20,6 +20,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, SettingsManager settingsManager, LogListViewModel logList, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null, TabListToggles? toggles = null)
     {
+        LogList = logList;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
         Toggles = toggles;
@@ -33,6 +34,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     }
 
     public List<TabItemViewModel> Pages { get; } = [];
+
+    public LogListViewModel LogList { get; }
 
     public FilePicker FilePicker { get; }
 

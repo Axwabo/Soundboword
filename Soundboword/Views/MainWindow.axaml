@@ -3,6 +3,7 @@
         xmlns:vm="using:Soundboword.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:logging="clr-namespace:Soundboword.Logging"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Soundboword.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -14,25 +15,28 @@
     <Window.Resources>
         <x:Double x:Key="TabItemHeaderFontSize">18</x:Double>
     </Window.Resources>
-    <Panel>
-        <TabControl TabStripPlacement="Left" Padding="5" ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid ColumnDefinitions="30,Auto">
-                        <Label Content="{Binding Icon}" HorizontalContentAlignment="Center" />
-                        <Label Grid.Column="1" Content="{Binding Header}" VerticalContentAlignment="Center" />
-                    </Grid>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate DataType="vm:TabItemViewModel">
-                    <ContentControl Content="{Binding Content}" />
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
-        <UserControl IsVisible="{Binding Toggles}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5" Content="{Binding Toggles}" />
-        <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
+    <Grid RowDefinitions="*,Auto">
+        <Panel>
+            <TabControl TabStripPlacement="Left" Padding="5" ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="30,Auto">
+                            <Label Content="{Binding Icon}" HorizontalContentAlignment="Center" />
+                            <Label Grid.Column="1" Content="{Binding Header}" VerticalContentAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate DataType="vm:TabItemViewModel">
+                        <ContentControl Content="{Binding Content}" />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+            <UserControl IsVisible="{Binding Toggles}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5" Content="{Binding Toggles}" />
+            <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
+            </Panel>
         </Panel>
-    </Panel>
+        <logging:LogView Grid.Row="1" DataContext="{Binding LogList.Last}" IsVisible="{Binding Converter={x:Static ObjectConverters.IsNotNull}}" Margin="0,2,0,0" />
+    </Grid>
 </Window>

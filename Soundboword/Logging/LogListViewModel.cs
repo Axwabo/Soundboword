@@ -12,7 +12,14 @@ public sealed partial class LogListViewModel : ViewModelBase
     public void Add(LogViewModel log)
     {
         Logs.Add(log);
-        Last = log;
+        Last = new LogViewModel
+        {
+            Name = log.Name,
+            Level = log.Level,
+            Content = log.Content,
+            Formatted = log.Formatted,
+            MaxLines = 1
+        };
     }
 
 }
