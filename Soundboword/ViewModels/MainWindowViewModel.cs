@@ -1,10 +1,9 @@
-﻿using Avalonia.Media;
-using Soundboword.Logging;
+﻿using Soundboword.Logging;
 using Soundboword.Settings;
 
 namespace Soundboword.ViewModels;
 
-public sealed partial class MainWindowViewModel : ViewModelBase
+public sealed class MainWindowViewModel : ViewModelBase
 {
 
     public MainWindowViewModel() : this(new BoardViewModel(),
@@ -21,6 +20,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, SettingsManager settingsManager, LogListViewModel logList, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null, TabListToggles? toggles = null)
     {
         LogList = logList;
+        LogPrefs = LogPreferences.Instance;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
         Toggles = toggles;
@@ -37,17 +37,12 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public LogListViewModel LogList { get; }
 
-#pragma warning disable CA1822
-    public LogPreferences LogPrefs => LogPreferences.Instance;
-#pragma warning restore CA1822
+    public LogPreferences LogPrefs { get; }
 
     public FilePicker FilePicker { get; }
 
     public ShortcutAssigner ShortcutAssigner { get; }
 
     public TabListToggles? Toggles { get; }
-
-    [ObservableProperty]
-    public partial IBrush PressedBrush { get; set; } = Brushes.Gray;
 
 }
