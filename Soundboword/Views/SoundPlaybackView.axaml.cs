@@ -46,10 +46,7 @@ public sealed partial class SoundPlaybackView : UserControl
     {
         using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
         while (await timer.WaitForNextTickAsync(cancellationToken))
-        {
             Dispatcher.Post(Update);
-            throw new InvalidOperationException();
-        }
     }
 
     private void Update()
