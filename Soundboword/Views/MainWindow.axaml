@@ -37,13 +37,7 @@
                 <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
             </Panel>
         </Panel>
-        <Panel Grid.Row="1">
-            <Panel.IsVisible>
-                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                    <Binding Path="!!LogList.Last" />
-                    <Binding Path="!LogPrefs.HideBottomBar" />
-                </MultiBinding>
-            </Panel.IsVisible>
+        <Panel Grid.Row="1" IsVisible="{Binding ShowBottomBar}">
             <logging:LogView DataContext="{Binding LogList.Last}" PointerPressed="NavigateToLogs" />
             <Button Command="{Binding LogList.ClearLastCommand}" Background="Transparent"
                     HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center"

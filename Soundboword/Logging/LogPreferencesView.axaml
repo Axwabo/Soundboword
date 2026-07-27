@@ -17,7 +17,7 @@
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">File log level:</Label>
             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static logging:LogLevelExtensions.Levels}" SelectedItem="{Binding FileLevel}" HorizontalAlignment="Stretch" />
         </Grid>
-        <CheckBox IsChecked="{Binding HideBottomBar}">Always hide bottom bar</CheckBox>
         <Label IsVisible="False" Foreground="Yellow" FontWeight="SemiBold" Name="Note">Changes will apply after you restart Soundboword</Label>
+        <CheckBox IsChecked="{Binding HideBottomBar}">Always hide bottom bar</CheckBox>
     </StackPanel>
 </UserControl>

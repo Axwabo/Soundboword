@@ -20,7 +20,6 @@ public sealed class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(BoardViewModel board, DevicesViewModel devices, PlaybacksViewModel playbacks, InputsViewModel inputs, SettingsManager settingsManager, LogListViewModel logList, FilePicker filePicker, ShortcutAssigner shortcutAssigner, ITabsProvider? provider = null, TabListToggles? toggles = null)
     {
         LogList = logList;
-        LogPrefs = LogPreferences.Instance;
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
         Toggles = toggles;
@@ -31,18 +30,32 @@ public sealed class MainWindowViewModel : ViewModelBase
         Pages.AddRange(provider?.AdditionalTabs ?? []);
         Pages.Add(new TabItemViewModel("Settings", "⚙️", settingsManager));
         Pages.Add(new TabItemViewModel("Logs", "📒", logList));
+        LogList.PropertyChanged += HandlePropertyChanged;
+        LogPreferences.Instance.PropertyChanged += HandlePropertyChanged;
     }
 
     public List<TabItemViewModel> Pages { get; } = [];
 
     public LogListViewModel LogList { get; }
 
-    public LogPreferences LogPrefs { get; }
-
     public FilePicker FilePicker { get; }
 
     public ShortcutAssigner ShortcutAssigner { get; }
 
     public TabListToggles? Toggles { get; }
+
+    public bool ShowBottomBar { get; private set; }
+
+    private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LogPreferences.HideBottomBar) or nameof(LogList.Last))
+            UpdateBottomBarStatus();
+    }
+
+    private void UpdateBottomBarStatus()
+    {
+        ShowBottomBar = !LogPreferences.Instance.HideBottomBar && LogList.Last != null;
+        OnPropertyChanged(nameof(ShowBottomBar));
+    }
 
 }

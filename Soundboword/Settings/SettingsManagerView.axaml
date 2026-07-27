@@ -27,8 +27,6 @@
         </Style>
         <Style Selector="Label.title">
             <Setter Property="Padding" Value="0,5" />
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="FontWeight" Value="Bold" />
         </Style>
     </UserControl.Styles>
     <ScrollViewer>
