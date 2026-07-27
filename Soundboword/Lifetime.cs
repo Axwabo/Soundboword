@@ -16,12 +16,14 @@ public sealed partial class Lifetime
     {
         IsActive = lifetime != null;
         lifetime?.Exit += (_, _) => ShutdownServices();
-        if (IsActive)
-            Dispatcher.UIThread.UnhandledException += (_, args) =>
-            {
-                LogException(args.Exception);
-                ShutdownServices();
-            };
+        if (!IsActive)
+            return;
+        Dispatcher.UIThread.UnhandledException += (_, args) =>
+        {
+            LogCritical(args.Exception);
+            ShutdownServices();
+        };
+        TaskScheduler.UnobservedTaskException += (_, args) => LogUnobserved(args.Exception);
     }
 
     public bool IsActive { get; }
@@ -45,7 +47,10 @@ public sealed partial class Lifetime
         => _callbacks.Add((priority, callback));
 
     [LoggerMessage(LogLevel.Critical, "Exception in the UI thread")]
-    private partial void LogException(Exception exception);
+    private partial void LogCritical(Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Unobserved task exception")]
+    private partial void LogUnobserved(Exception exception);
 
 }
 
