@@ -7,12 +7,7 @@ public sealed partial class LogListViewModel : ViewModelBase
     public ObservableCollection<LogViewModel> Logs { get; } = [];
 
     [ObservableProperty]
-    public partial LogViewModel? Last { get; private set; } = new LogViewModel
-    {
-        Content = "among us",
-        Name = "sussy",
-        Level = LogLevel.Error,
-    };
+    public partial LogViewModel? Last { get; private set; }
 
     public void Add(LogViewModel log)
     {

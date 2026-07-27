@@ -9,5 +9,8 @@
     <UserControl.Resources>
         <Thickness x:Key="ListBoxItemPadding">0</Thickness>
     </UserControl.Resources>
-    <ListBox ItemsSource="{Binding Logs}" Background="Transparent" />
+    <StackPanel Spacing="5">
+        <Button Command="{Binding ClearCommand}">Clear In-App Logs</Button>
+        <ListBox ItemsSource="{Binding Logs}" Background="Transparent" />
+    </StackPanel>
 </UserControl>
