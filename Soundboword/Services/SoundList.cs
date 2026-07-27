@@ -69,6 +69,7 @@ public sealed partial class SoundList
             notFound++;
         }
 
+        LogLoaded(Sounds.Count - notFound);
         if (notFound != 0)
             LogNotFound(notFound);
         lifetime.Exit += SaveSounds;
@@ -123,6 +124,9 @@ public sealed partial class SoundList
         Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume, e.Interaction)),
         SourceGenerationContext.Default.IEnumerableSoundDto
     );
+
+    [LoggerMessage(LogLevel.Information, "Found {Count} sound(s)")]
+    private partial void LogLoaded(int count);
 
     [LoggerMessage(LogLevel.Information, "Skipped adding a file because the extension was incompatible\nFile path: {Path}")]
     private partial void LogSkipped(string path);
