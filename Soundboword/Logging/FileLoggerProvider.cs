@@ -16,13 +16,16 @@ public sealed class FileLoggerProvider : ILoggerProvider
     private readonly ConcurrentDictionary<string, FileLogger> _loggers = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly ConcurrentQueue<(DateTimeOffset Time, string Name, LogLevel Level, string Content, Exception? Exception)> _logs = [];
+    private readonly TimeSpan _offset;
 
     private readonly StreamWriter _writer;
 
     public FileLoggerProvider(Lifetime lifetime)
     {
         Directory.CreateDirectory(Folder);
-        _writer = new StreamWriter(File.Create(Path.Combine(Folder, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss'.txt'"))));
+        var now = DateTimeOffset.Now;
+        _offset = now.Offset;
+        _writer = new StreamWriter(File.Create(Path.Combine(Folder, now.ToString("yyyy-MM-dd_HH-mm-ss'.txt'"))));
         lifetime.Register(StopLoggingAndFlush, ShutdownPriority.Final);
         lifetime.InitializeLogging(this);
         Task.Run(WriteAsync);
@@ -39,11 +42,14 @@ public sealed class FileLoggerProvider : ILoggerProvider
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
         try
         {
+            new DateTimeOffset(DateTime.UnixEpoch, _offset).TryFormat(TimeBuffer.Span, out var offsetCharsWritten, "zzz");
+            await _writer.WriteAsync("Logging started, timezone offset: ");
+            await _writer.WriteLineAsync(TimeBuffer[..offsetCharsWritten], CancellationToken.None);
             while (await timer.WaitForNextTickAsync(token))
             {
                 while (!token.IsCancellationRequested && _logs.TryDequeue(out var tuple))
                 {
-                    tuple.Time.TryFormat(TimeBuffer.Span, out var charsWritten, "s");
+                    tuple.Time.ToOffset(_offset).TryFormat(TimeBuffer.Span, out var charsWritten, "s");
                     await _writer.WriteAsync(TimeBuffer[..charsWritten], CancellationToken.None);
                     await _writer.WriteAsync(" [");
                     await _writer.WriteAsync(tuple.Level.ToStringFast());
