@@ -42,7 +42,7 @@ public sealed class FileLoggerProvider : ILoggerProvider
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
         try
         {
-            new DateTimeOffset(DateTime.UnixEpoch, _offset).TryFormat(TimeBuffer.Span, out var offsetCharsWritten, "zzz");
+            DateTimeOffset.Now.ToOffset(_offset).TryFormat(TimeBuffer.Span, out var offsetCharsWritten, "zzz");
             await _writer.WriteAsync("Logging started, timezone offset: ");
             await _writer.WriteLineAsync(TimeBuffer[..offsetCharsWritten], CancellationToken.None);
             while (await timer.WaitForNextTickAsync(token))
