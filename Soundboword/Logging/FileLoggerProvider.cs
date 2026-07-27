@@ -24,6 +24,7 @@ public sealed class FileLoggerProvider : ILoggerProvider
         Directory.CreateDirectory(Folder);
         _writer = new StreamWriter(File.Create(Path.Combine(Folder, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss'.txt'"))));
         lifetime.Register(StopLoggingAndFlush, ShutdownPriority.Final);
+        lifetime.InitializeLogging(this);
         Task.Run(WriteAsync);
     }
 
