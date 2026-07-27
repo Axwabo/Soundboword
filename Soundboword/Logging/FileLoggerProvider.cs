@@ -4,7 +4,6 @@ using System.Threading;
 namespace Soundboword.Logging;
 
 [ProviderAlias("File")]
-[RegisterSingleton<ILoggerProvider>(Duplicate = DuplicateStrategy.Append)]
 public sealed class FileLoggerProvider : ILoggerProvider
 {
 

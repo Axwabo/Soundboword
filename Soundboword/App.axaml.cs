@@ -2,6 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
 using Soundboword.Inputs;
+using Soundboword.Logging;
 using Soundboword.Views;
 
 namespace Soundboword;
@@ -18,7 +19,7 @@ public sealed class App : Application
         Services.AddUserData(IShortcutRepository.Key)
             .AddViews()
             .AddYouTube()
-            .AddLogging();
+            .AddLogging(builder => builder.AddAvalonia().AddFile());
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

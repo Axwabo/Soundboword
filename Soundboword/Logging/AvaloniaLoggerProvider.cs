@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 namespace Soundboword.Logging;
 
 [ProviderAlias("Avalonia")]
-[RegisterSingleton<ILoggerProvider>(Duplicate = DuplicateStrategy.Append)]
 public sealed class AvaloniaLoggerProvider : ILoggerProvider
 {
 

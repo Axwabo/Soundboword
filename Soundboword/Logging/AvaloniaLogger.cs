@@ -30,7 +30,7 @@ public sealed class AvaloniaLogger : ILogger
         Dispatcher.UIThread.InvokeOrPost(() => _list.Add(log));
     }
 
-    public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Warning; // TODO: config
+    public bool IsEnabled(LogLevel logLevel) => logLevel >= LogPreferences.Instance.AppLevel;
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
 
