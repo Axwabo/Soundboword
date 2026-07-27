@@ -1,5 +1,3 @@
-using Avalonia.Media;
-
 namespace Soundboword.Logging;
 
 public sealed partial class LogPreferencesView : UserControl
@@ -17,7 +15,7 @@ public sealed partial class LogPreferencesView : UserControl
     private void PreferencesOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(LogPreferences.HideBottomBar))
-            Note.Foreground = Brushes.Yellow;
+            Note.IsVisible = true;
     }
 
 }
