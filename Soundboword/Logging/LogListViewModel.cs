@@ -1,29 +1,8 @@
-using System.Text.Json;
-
 namespace Soundboword.Logging;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
 public sealed partial class LogListViewModel : ViewModelBase
 {
-
-    private static void SaveSettings()
-    {
-        try
-        {
-            using var file = File.Create(LogPreferences.FilePath);
-            JsonSerializer.Serialize(file, LogPreferences.Instance, SourceGenerationContext.Default.LogPreferences);
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
-    public LogListViewModel()
-    {
-    }
-
-    public LogListViewModel(Lifetime lifetime) => lifetime.Register(SaveSettings, ShutdownPriority.Final);
 
     public ObservableCollection<LogViewModel> Logs { get; } = [];
 

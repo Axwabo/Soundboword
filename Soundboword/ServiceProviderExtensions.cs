@@ -53,7 +53,8 @@ public static class ServiceProviderExtensions
             .AddView<PreferencesView, Preferences>()
             .AddViewLocator<SoundView, SoundViewModel>()
             .AddViewLocator<LogView, LogViewModel>()
-            .AddViewLocator<LogListView, LogListViewModel>();
+            .AddViewLocator<LogListView, LogListViewModel>()
+            .AddViewLocator<LogPreferencesView, LogPreferences>();
 
         internal IServiceCollection AddYouTube() => collection.AddScoped<AddFromYouTubeViewModel>()
             .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()

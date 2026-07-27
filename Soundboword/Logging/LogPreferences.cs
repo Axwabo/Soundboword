@@ -1,11 +1,12 @@
 using System.Text.Json;
+using Soundboword.Settings;
 
 namespace Soundboword.Logging;
 
-public sealed partial class LogPreferences : ObservableObject
+public sealed partial class LogPreferences : SettingsSection
 {
 
-    public static string FilePath { get; } = Path.Combine(UserData.Root, "logging.json");
+    private static readonly string FilePath = Path.Combine(UserData.Root, "logging.json");
 
     public static LogPreferences Instance { get; }
 
@@ -30,5 +31,21 @@ public sealed partial class LogPreferences : ObservableObject
 
     [ObservableProperty]
     public partial LogLevel AppLevel { get; set; } = LogLevel.Warning;
+
+    [ObservableProperty]
+    public partial bool HideBottomBar { get; set; }
+
+    public override void Save()
+    {
+        try
+        {
+            using var file = File.Create(FilePath);
+            JsonSerializer.Serialize(file, this, SourceGenerationContext.Default.LogPreferences);
+        }
+        catch
+        {
+            // ignored
+        }
+    }
 
 }
