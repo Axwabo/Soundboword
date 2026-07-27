@@ -37,6 +37,6 @@
                 <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
             </Panel>
         </Panel>
-        <logging:LogView Grid.Row="1" DataContext="{Binding LogList.Last}" IsVisible="{Binding Converter={x:Static ObjectConverters.IsNotNull}}" Margin="0,2,0,0" />
+        <logging:LogView Grid.Row="1" DataContext="{Binding LogList.Last}" IsVisible="{Binding Converter={x:Static ObjectConverters.IsNotNull}}" />
     </Grid>
 </Window>
