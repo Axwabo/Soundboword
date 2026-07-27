@@ -11,7 +11,7 @@
     </Design.DataContext>
     <StackPanel Spacing="5">
         <Label Classes="title">Logging</Label>
-        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" RowSpacing="5" ColumnSpacing="5">
+        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,120" RowSpacing="5" ColumnSpacing="5">
             <Label VerticalAlignment="Center">In-app log level:</Label>
             <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{x:Static logging:LogLevelExtensions.Levels}" SelectedItem="{Binding AppLevel}" HorizontalAlignment="Stretch" />
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">File log level:</Label>
