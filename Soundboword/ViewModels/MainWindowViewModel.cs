@@ -37,6 +37,10 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public LogListViewModel LogList { get; }
 
+#pragma warning disable CA1822
+    public LogPreferences LogPrefs => LogPreferences.Instance;
+#pragma warning restore CA1822
+
     public FilePicker FilePicker { get; }
 
     public ShortcutAssigner ShortcutAssigner { get; }
