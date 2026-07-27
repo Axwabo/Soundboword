@@ -39,7 +39,6 @@ public sealed partial class DevicesViewModel : ViewModelBase
     [RelayCommand]
     public void Refresh()
     {
-        throw new NotImplementedException();
         _isRefreshing = true;
         DeviceManager.RefreshAudioDevices();
         UpdateSelected();
