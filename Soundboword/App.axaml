@@ -17,10 +17,6 @@
                 </Animation>
             </Style.Animations>
         </Style>
-        <Style Selector="Label.title">
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
     </Application.Styles>
 
     <Application.Resources>
