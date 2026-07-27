@@ -7,7 +7,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
     private readonly AudioManager _audioManager;
-    private readonly IFileManagerOpener? _opener;
 
     private readonly TopLevel? _topLevel;
 
@@ -21,13 +20,15 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
     {
         _topLevel = topLevel;
-        _opener = opener;
         _audioManager = audioManager;
+        Opener = opener;
         Shortcuts = shortcuts;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
         ShortcutList.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
+
+    public IFileManagerOpener? Opener { get; }
 
     public ShortcutList Shortcuts { get; }
 
@@ -73,7 +74,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     private void Reveal()
     {
         if (Context.Model is {Path: var path})
-            _opener?.Open(path);
+            Opener?.Open(path);
     }
 
     [RelayCommand]

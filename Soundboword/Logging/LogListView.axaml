@@ -10,7 +10,10 @@
         <Thickness x:Key="ListBoxItemPadding">0</Thickness>
     </UserControl.Resources>
     <StackPanel Spacing="5">
-        <Button Command="{Binding ClearCommand}">Clear In-App Logs</Button>
+        <StackPanel Orientation="Horizontal" Spacing="3">
+            <Button Command="{Binding ClearCommand}">Clear In-App Logs</Button>
+            <Button Command="{Binding ShowLogsCommand}" IsEnabled="{Binding Opener}">Show Logs Directory</Button>
+        </StackPanel>
         <ListBox ItemsSource="{Binding Logs}" Background="Transparent" />
     </StackPanel>
 </UserControl>

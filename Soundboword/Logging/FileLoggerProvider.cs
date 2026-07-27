@@ -7,8 +7,9 @@ namespace Soundboword.Logging;
 public sealed class FileLoggerProvider : ILoggerProvider
 {
 
-    private static readonly string Folder = Path.Combine(UserData.Root, "Logs");
     private static readonly Memory<char> TimeBuffer = new char[20].AsMemory();
+
+    public static string Folder { get; } = Path.Combine(UserData.Root, "Logs");
 
     private readonly CancellationTokenSource _cts = new();
 

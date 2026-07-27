@@ -4,6 +4,10 @@ namespace Soundboword.Logging;
 public sealed partial class LogListViewModel : ViewModelBase
 {
 
+    public LogListViewModel(IFileManagerOpener? opener = null) => Opener = opener;
+
+    public IFileManagerOpener? Opener { get; }
+
     public ObservableCollection<LogViewModel> Logs { get; } = [];
 
     [ObservableProperty]
@@ -31,5 +35,8 @@ public sealed partial class LogListViewModel : ViewModelBase
 
     [RelayCommand]
     private void ClearLast() => Last = null;
+
+    [RelayCommand]
+    private void ShowLogs() => Opener?.Open(FileLoggerProvider.Folder);
 
 }
