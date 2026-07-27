@@ -85,9 +85,16 @@ public sealed partial class SoundList
 
     public void Add(IEnumerable<string> paths)
     {
+        Span<char> extension = stackalloc char[3];
         var any = false;
         foreach (var path in paths)
         {
+            if (Path.GetExtension(path.AsSpan()).ToLower(extension, null) == -1 || extension is not "mp3" or "wav")
+            {
+                LogSkipped(path);
+                continue;
+            }
+
             any = true;
             Add(path, Path.GetFileNameWithoutExtension(path));
         }
@@ -117,7 +124,10 @@ public sealed partial class SoundList
         SourceGenerationContext.Default.IEnumerableSoundDto
     );
 
-    [LoggerMessage(LogLevel.Warning, "Could not load sound {Name}\nFile not found: {Path}")]
+    [LoggerMessage(LogLevel.Information, "Skipped adding a file because the extension was incompatible\nFile path: {Path}")]
+    private partial void LogSkipped(string path);
+
+    [LoggerMessage(LogLevel.Warning, "Could not load sound \"{Name}\"\nFile not found: {Path}")]
     private partial void LogNotFound(string name, string path);
 
     [LoggerMessage(LogLevel.Warning, "Could not find {Count} sound(s)")]
