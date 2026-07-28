@@ -30,6 +30,7 @@ public sealed class MainWindowViewModel : ViewModelBase
         Pages.AddRange(provider?.AdditionalTabs ?? []);
         Pages.Add(new TabItemViewModel("Settings", "⚙️", settingsManager));
         Pages.Add(new TabItemViewModel("Logs", "📒", logList));
+        UpdateBottomBarStatus();
         LogList.PropertyChanged += HandlePropertyChanged;
         LogPreferences.Instance.PropertyChanged += HandlePropertyChanged;
     }
