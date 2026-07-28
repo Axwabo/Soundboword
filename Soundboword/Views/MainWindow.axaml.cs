@@ -1,3 +1,4 @@
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 
 namespace Soundboword.Views;
@@ -9,7 +10,7 @@ public sealed partial class MainWindow : Window
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.Source is not TabControl control || DataContext is not MainWindowViewModel model)
+        if (e.Source is not TabStrip control || DataContext is not MainWindowViewModel model)
             return;
         model.ShortcutAssigner.Close();
         if (control.SelectedValue is TabItem {Content: UserControl {Content: PageModelBase page}})

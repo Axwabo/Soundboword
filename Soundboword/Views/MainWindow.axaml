@@ -17,22 +17,25 @@
     </Window.Resources>
     <Grid RowDefinitions="*,Auto">
         <Panel>
-            <TabControl TabStripPlacement="Left" Padding="5" ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="30,Auto">
-                            <Label Content="{Binding Icon}" HorizontalContentAlignment="Center" />
-                            <Label Grid.Column="1" Content="{Binding Header}" VerticalContentAlignment="Center" />
-                        </Grid>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate DataType="vm:TabItemViewModel">
-                        <ContentControl Content="{Binding Content}" />
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
-            <UserControl IsVisible="{Binding Toggles}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5" Content="{Binding Toggles}" />
+            <Grid RowDefinitions="10*,*" ColumnDefinitions="Auto,*">
+                <TabStrip ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                    <TabStrip.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </TabStrip.ItemsPanel>
+                    <TabStrip.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="30,Auto">
+                                <Label Content="{Binding Icon}" HorizontalContentAlignment="Center" />
+                                <Label Grid.Column="1" Content="{Binding Header}" VerticalContentAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </TabStrip.ItemTemplate>
+                </TabStrip>
+                <UserControl Grid.Row="1" Grid.Column="0" IsVisible="{Binding Toggles}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5" Content="{Binding Toggles}" />
+
+            </Grid>
             <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
                 <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>
             </Panel>
