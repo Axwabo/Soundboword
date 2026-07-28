@@ -1,5 +1,6 @@
 using System.Threading;
 using Avalonia.Threading;
+using Microsoft.Extensions.Logging.Abstractions;
 using YoutubeExplode;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.ClosedCaptions;
@@ -14,7 +15,10 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     private readonly YouTubeCache _cache;
 
     private readonly YoutubeClient _client;
+
+    private readonly ILogger _logger;
     private readonly SoundList _soundList;
+
     private CancellationTokenSource? _details;
 
     private CancellationTokenSource? _download;
@@ -26,15 +30,17 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         _client = new YoutubeClient();
         _cache = new YouTubeCache(_client);
         _soundList = new SoundList();
+        _logger = NullLogger.Instance;
         Streams.Add(new AudioOnlyStreamInfo("", Container.Mp3, new FileSize(10000), new Bitrate(10000), "aac", null, null));
         Streams.Add(new AudioOnlyStreamInfo("", Container.WebM, new FileSize(3000), new Bitrate(8000), "idk", new Language("en-US", "English madafaka"), null));
     }
 
-    public YouTubeVideoViewModel(YoutubeClient client, YouTubeCache cache, SoundList soundList)
+    public YouTubeVideoViewModel(YoutubeClient client, YouTubeCache cache, SoundList soundList, ILoggerFactory loggerFactory)
     {
         _client = client;
         _cache = cache;
         _soundList = soundList;
+        _logger = loggerFactory.CreateLogger("YouTube Downloader");
     }
 
     [ObservableProperty]
@@ -125,21 +131,22 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
             return;
         _download = new CancellationTokenSource();
         IsDownloading = true;
+        var title = Title;
         try
         {
             var token = _download.Token;
             var progress = new Progress<double>(d => Dispatcher.UIThread.Post(() => Progress = d));
-            var path = await _cache.CacheAsync(_id, SelectedStream, progress, Wav ? new Container("wav") : Container.Mp3, token);
-            _soundList.Add(path, Title);
+            var path = await _cache.CacheAsync(_id, SelectedStream, progress, Wav ? YouTubeCache.Wav : Container.Mp3, token);
+            _soundList.Add(path, title);
             _soundList.SaveSounds();
             Completed?.Invoke();
         }
         catch (OperationCanceledException)
         {
         }
-        catch
+        catch (Exception e)
         {
-            // TODO: log
+            LogFailedDownload(title, e);
         }
         finally
         {
@@ -197,5 +204,8 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
             IsLoadingStreams = false;
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Failed to download {Title}")]
+    private partial void LogFailedDownload(string title, Exception exception);
 
 }

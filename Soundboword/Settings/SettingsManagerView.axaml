@@ -22,9 +22,15 @@
         <Style Selector="ContentPresenter:nth-last-child(1) UserControl.section">
             <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
+        <Style Selector="Label">
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Label.title">
+            <Setter Property="Padding" Value="0,5" />
+        </Style>
     </UserControl.Styles>
     <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Sections}" Loaded="Control_OnLoaded">
+        <ItemsControl ItemsSource="{Binding Sections}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <UserControl Classes="section" Content="{Binding}" />

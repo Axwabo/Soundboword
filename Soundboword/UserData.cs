@@ -1,17 +1,28 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Soundboword;
 
 [RegisterSingleton]
-public sealed class UserData
+public sealed partial class UserData
 {
 
     public static string Root { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboword");
 
-    public UserData() => Folder = Root;
+    private readonly ILogger _logger;
 
-    public UserData(string folder) => Folder = Path.Combine(Root, folder);
+    public UserData(ILoggerFactory? loggerFactory = null)
+    {
+        Folder = Root;
+        _logger = loggerFactory?.CreateLogger("User Data") ?? NullLogger.Instance;
+    }
+
+    public UserData(string folder, ILoggerFactory loggerFactory)
+    {
+        Folder = Path.Combine(Root, folder);
+        _logger = loggerFactory.CreateLogger($"{folder} Data");
+    }
 
     public string Folder { get; }
 
@@ -29,8 +40,9 @@ public sealed class UserData
         {
             return File.ReadAllText(path);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            LogReadFailure(name, e);
             return null;
         }
     }
@@ -42,9 +54,9 @@ public sealed class UserData
         {
             File.WriteAllText(FullPath(name, false), content);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // ignored
+            LogWriteFailure(name, e);
         }
     }
 
@@ -61,10 +73,21 @@ public sealed class UserData
             using var file = File.OpenRead(path);
             return JsonSerializer.Deserialize(file, typeInfo) ?? fallback();
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return fallback();
+            LogReadFailure(name, e);
         }
+
+        try
+        {
+            File.Copy(path, $"{path}.old", true);
+        }
+        catch (Exception e)
+        {
+            LogBackupFailure(name, e);
+        }
+
+        return fallback();
     }
 
     public void Save<T>(string name, T data, JsonTypeInfo<T>? typeInfo) where T : notnull
@@ -77,11 +100,19 @@ public sealed class UserData
             using var file = File.Create(FullPath(name, true));
             JsonSerializer.Serialize(file, data, typeInfo);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // ignored
-            // TODO: log somehow
+            LogWriteFailure(name, e);
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Failed to load {File}")]
+    private partial void LogReadFailure(string file, Exception exception);
+
+    [LoggerMessage(LogLevel.Warning, "Failed to backup {File}")]
+    private partial void LogBackupFailure(string file, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Failed to save {File}")]
+    private partial void LogWriteFailure(string file, Exception exception);
 
 }

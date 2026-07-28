@@ -1,3 +1,5 @@
+using Avalonia.Input;
+
 namespace Soundboword.Views;
 
 public sealed partial class MainWindow : Window
@@ -12,6 +14,11 @@ public sealed partial class MainWindow : Window
         model.ShortcutAssigner.Close();
         if (control.SelectedValue is TabItem {Content: UserControl {Content: PageModelBase page}})
             page.OnActivated();
+    }
+
+    private void NavigateToLogs(object? sender, PointerPressedEventArgs e)
+    {
+        // TODO
     }
 
 }

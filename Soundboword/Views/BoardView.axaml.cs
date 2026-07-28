@@ -17,7 +17,7 @@ public sealed partial class BoardView : UserControl
         foreach (var item in items)
         {
             var path = item.TryGetLocalPath();
-            if (!string.IsNullOrEmpty(path) && (path.EndsWith(".mp3") || path.EndsWith(".wav")))
+            if (!string.IsNullOrEmpty(path))
                 yield return path;
         }
     }

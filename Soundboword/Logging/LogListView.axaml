@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:logging="clr-namespace:Soundboword.Logging"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Logging.LogListView"
+             x:DataType="logging:LogListViewModel">
+    <UserControl.Resources>
+        <Thickness x:Key="ListBoxItemPadding">0</Thickness>
+    </UserControl.Resources>
+    <StackPanel Spacing="5">
+        <StackPanel Orientation="Horizontal" Spacing="3">
+            <Button Command="{Binding ClearCommand}">Clear In-App Logs</Button>
+            <Button Command="{Binding ShowLogsCommand}" IsEnabled="{Binding Opener}">Show Logs Directory</Button>
+        </StackPanel>
+        <ListBox ItemsSource="{Binding Logs}" Background="Transparent" />
+    </StackPanel>
+</UserControl>

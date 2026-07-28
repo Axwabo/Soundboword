@@ -1,4 +1,3 @@
-using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Inputs;
 
 namespace Soundboword.ViewModels;
@@ -16,7 +15,7 @@ public sealed partial class InputsViewModel : PageModelBase
         Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner()));
     }
 
-    public InputsViewModel(UserData data, IClassicDesktopStyleApplicationLifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
+    public InputsViewModel(UserData data, Lifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
     {
         var prefs = data.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
@@ -25,7 +24,7 @@ public sealed partial class InputsViewModel : PageModelBase
         foreach (var input in Available)
             if (prefs.Remove(input.Name))
                 input.SetActivated(true);
-        lifetime.Exit += (_, _) => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
+        lifetime.Exit += () => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         ShortcutList.ShortcutsChanged += ListOnShortcutsChanged;
     }

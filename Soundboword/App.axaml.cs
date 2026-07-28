@@ -1,10 +1,9 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml;
-using Soundboword.Settings;
-using Soundboword.Settings.General;
+using Soundboword.Inputs;
+using Soundboword.Logging;
 using Soundboword.Views;
-using Soundboword.YouTube;
 
 namespace Soundboword;
 
@@ -17,18 +16,10 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Services.AddView<MainWindow, MainWindowViewModel>()
-            .AddView<BoardView, BoardViewModel>()
-            .AddView<DevicesView, DevicesViewModel>()
-            .AddView<PlaybacksView, PlaybacksViewModel>()
-            .AddView<InputsView, InputsViewModel>()
-            .AddView<EditSoundView, EditSoundViewModel>()
-            .AddView<SettingsManagerView, SettingsManager>()
-            .AddView<PreferencesView, Preferences>()
-            .AddViewLocator<SoundView, SoundViewModel>()
-            .AddScoped<AddFromYouTubeViewModel>()
-            .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()
-            .AddScopedView<YouTubeVideoView, YouTubeVideoViewModel>();
+        Services.AddUserData(IShortcutRepository.Key)
+            .AddViews()
+            .AddYouTube()
+            .AddLogging(builder => builder.AddAvalonia().AddFile());
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

@@ -20,13 +20,12 @@ functionality will be limited (no shortcuts).
 
 # Installation
 
-[//]: # (TODO: Linux installation steps)
-
-1. Make sure to have .NET 10 installed
-    - On windows, the Desktop Runtime is sufficient
-2. Download the binary for your OS from the [releases page](https://github.com/Axwabo/Soundboword/releases)
+1. Download the archive for your OS from the [releases page](https://github.com/Axwabo/Soundboword/releases)
+2. Extract the archive into a directory of your choosing
 3. Run the application
-
+    - Linux: `./Soundboword`
+    - Windows: `Soundboword.exe`
+   
 # Usage
 
 Click the `Add Sound` button to add a sound.

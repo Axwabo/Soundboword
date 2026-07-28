@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,6 +26,7 @@
 
         <Using Include="Injectio.Attributes" />
         <Using Include="Microsoft.Extensions.DependencyInjection" />
+        <Using Include="Microsoft.Extensions.Logging" />
 
         <Using Include="Soundboword.Models" />
         <Using Include="Soundboword.Services" />
