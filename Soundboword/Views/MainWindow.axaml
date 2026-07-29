@@ -23,7 +23,7 @@
                     <RowDefinition Height="8*" />
                     <RowDefinition Height="*" MinHeight="160" />
                 </Grid.RowDefinitions>
-                <TabStrip ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                <TabStrip ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
                     <TabStrip.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Vertical" />
@@ -47,7 +47,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:LazyControl IsLazy="{Binding Tab.IsLazy}" IsActive="{Binding Converter={x:Static ObjectConverters.Equal}, ConverterParameter={Binding Parent.CurrentPage}}" ViewModel="{Binding Content}" />
+                            <controls:LazyControl IsLazy="{Binding Tab.IsLazy}" IsActive="{Binding Parent.CurrentPage, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={Binding}}" ViewModel="{Binding Content}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

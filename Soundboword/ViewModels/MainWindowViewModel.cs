@@ -32,14 +32,25 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Add(new Tab("Settings", "⚙️", settingsManager));
         Add(new Tab("Logs", "📒", logList, true));
         UpdateBottomBarStatus();
+        CurrentPage = Pages[0];
         LogList.PropertyChanged += HandlePropertyChanged;
         LogPreferences.Instance.PropertyChanged += HandlePropertyChanged;
     }
 
     public List<Page> Pages { get; } = [];
 
-    [ObservableProperty]
-    public partial Page CurrentPage { get; set; }
+    public Page CurrentPage
+    {
+        get;
+        set
+        {
+            if (value == field)
+                return;
+            OnPropertyChanging();
+            field = value;
+            OnPropertyChanged();
+        }
+    }
 
     public LogListViewModel LogList { get; }
 
