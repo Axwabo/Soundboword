@@ -30,7 +30,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         foreach (var tab in provider?.AdditionalTabs ?? [])
             Add(tab);
         Add(new Tab("Settings", "⚙️", settingsManager));
-        Add(new Tab("Logs", "📒", logList));
+        Add(new Tab("Logs", "📒", logList, true));
         UpdateBottomBarStatus();
         LogList.PropertyChanged += HandlePropertyChanged;
         LogPreferences.Instance.PropertyChanged += HandlePropertyChanged;

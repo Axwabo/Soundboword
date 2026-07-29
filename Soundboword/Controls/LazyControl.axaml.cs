@@ -5,6 +5,8 @@ public sealed partial class LazyControl : UserControl
 
     public static readonly StyledProperty<bool> IsLazyProperty = AvaloniaProperty.Register<LazyControl, bool>(nameof(IsLazy));
 
+    public static readonly StyledProperty<bool> IsActiveProperty = AvaloniaProperty.Register<LazyControl, bool>(nameof(IsActive));
+
     public static readonly StyledProperty<object?> ViewModelProperty = AvaloniaProperty.Register<LazyControl, object?>(nameof(ViewModel));
 
     public LazyControl() => InitializeComponent();
@@ -13,6 +15,12 @@ public sealed partial class LazyControl : UserControl
     {
         get => GetValue(IsLazyProperty);
         set => SetValue(IsLazyProperty, value);
+    }
+
+    public bool IsActive
+    {
+        get => GetValue(IsActiveProperty);
+        set => SetValue(IsActiveProperty, value);
     }
 
     public object? ViewModel
@@ -24,8 +32,19 @@ public sealed partial class LazyControl : UserControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsVisibleProperty)
+        if (change.Property == IsLazyProperty)
         {
+        }
+
+        if (change.Property == ViewModelProperty)
+        {
+            if (!IsLazy || IsActive)
+                ContentControl.Content = ViewModel;
+        }
+
+        if (change.Property == IsActiveProperty)
+        {
+            // TODO
         }
     }
 
