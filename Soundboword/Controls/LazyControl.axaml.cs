@@ -1,4 +1,5 @@
 using Avalonia.Interactivity;
+using Page = Soundboword.ViewModels.Page;
 
 namespace Soundboword.Controls;
 
@@ -7,9 +8,9 @@ public sealed partial class LazyControl : UserControl
 
     public static readonly StyledProperty<bool> IsLazyProperty = AvaloniaProperty.Register<LazyControl, bool>(nameof(IsLazy));
 
-    public static readonly StyledProperty<bool> IsActiveProperty = AvaloniaProperty.Register<LazyControl, bool>(nameof(IsActive));
+    public static readonly StyledProperty<object?> ActiveObjectProperty = AvaloniaProperty.Register<LazyControl, object?>(nameof(ActiveObject));
 
-    public static readonly StyledProperty<object?> ViewModelProperty = AvaloniaProperty.Register<LazyControl, object?>(nameof(ViewModel));
+    public static readonly StyledProperty<Page?> PageProperty = AvaloniaProperty.Register<LazyControl, Page?>(nameof(Page));
 
     public LazyControl() => InitializeComponent();
 
@@ -19,30 +20,32 @@ public sealed partial class LazyControl : UserControl
         set => SetValue(IsLazyProperty, value);
     }
 
-    public bool IsActive
+    public object? ActiveObject
     {
-        get => GetValue(IsActiveProperty);
-        set => SetValue(IsActiveProperty, value);
+        get => GetValue(ActiveObjectProperty);
+        set => SetValue(ActiveObjectProperty, value);
     }
 
-    public object? ViewModel
+    public Page? Page
     {
-        get => GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
+        get => GetValue(PageProperty);
+        set => SetValue(PageProperty, value);
     }
+
+    private bool IsActive => ActiveObject == Page;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (!IsLoaded || change.Property != IsActiveProperty)
+        if (!IsLoaded || change.Property != ActiveObjectProperty)
             return;
         if (IsLazy)
         {
-            InnerControl.Content = IsActive ? ViewModel : null;
+            InnerControl.Content = IsActive ? Page?.Content : null;
             return;
         }
 
-        InnerControl.Content ??= ViewModel;
+        InnerControl.Content ??= Page?.Content;
         InnerControl.IsVisible = IsActive;
     }
 
@@ -51,7 +54,7 @@ public sealed partial class LazyControl : UserControl
         base.OnLoaded(e);
         if (IsLazy && !IsActive)
             return;
-        InnerControl.Content = ViewModel;
+        InnerControl.Content = Page?.Content;
         InnerControl.IsVisible = IsActive;
     }
 

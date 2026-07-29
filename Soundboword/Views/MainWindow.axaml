@@ -47,7 +47,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:LazyControl IsLazy="{Binding Tab.IsLazy}" IsActive="{Binding Parent.CurrentPage, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={Binding}}" ViewModel="{Binding Content}" />
+                            <controls:LazyControl Padding="2" Page="{Binding}" ActiveObject="{Binding Parent.CurrentPage}" IsLazy="{Binding Tab.IsLazy}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

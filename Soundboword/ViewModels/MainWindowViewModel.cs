@@ -39,18 +39,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public List<Page> Pages { get; } = [];
 
-    public Page CurrentPage
-    {
-        get;
-        set
-        {
-            if (value == field)
-                return;
-            OnPropertyChanging();
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial Page CurrentPage { get; set; }
 
     public LogListViewModel LogList { get; }
 
