@@ -1,3 +1,5 @@
+using Avalonia.Interactivity;
+
 namespace Soundboword.Controls;
 
 public sealed partial class LazyControl : UserControl
@@ -29,6 +31,7 @@ public sealed partial class LazyControl : UserControl
         set => SetValue(ViewModelProperty, value);
     }
 
+    /*
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -45,7 +48,18 @@ public sealed partial class LazyControl : UserControl
         if (change.Property == IsActiveProperty)
         {
             // TODO
+
         }
+    }
+    */
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        if (IsLazy && !IsActive)
+            return;
+        InnerControl.Content = ViewModel;
+        InnerControl.IsVisible = true;
     }
 
 }

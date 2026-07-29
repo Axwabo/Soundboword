@@ -21,12 +21,12 @@
             <Grid ColumnDefinitions="Auto,*">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="8*" />
-                    <RowDefinition Height="*" MinHeight="80" />
+                    <RowDefinition Height="*" MinHeight="160" />
                 </Grid.RowDefinitions>
                 <TabStrip ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
                     <TabStrip.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" />
+                            <WrapPanel Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </TabStrip.ItemsPanel>
                     <TabStrip.ItemTemplate>
