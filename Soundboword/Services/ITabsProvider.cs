@@ -3,6 +3,6 @@ namespace Soundboword.Services;
 public interface ITabsProvider
 {
 
-    IEnumerable<TabItemViewModel> AdditionalTabs { get; }
+    IEnumerable<Tab> AdditionalTabs { get; }
 
 }

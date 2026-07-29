@@ -3,7 +3,7 @@ using Soundboword.Settings;
 
 namespace Soundboword.ViewModels;
 
-public sealed class MainWindowViewModel : ViewModelBase
+public sealed partial class MainWindowViewModel : ViewModelBase
 {
 
     public MainWindowViewModel() : this(new BoardViewModel(),
@@ -23,19 +23,23 @@ public sealed class MainWindowViewModel : ViewModelBase
         FilePicker = filePicker;
         ShortcutAssigner = shortcutAssigner;
         Toggles = toggles;
-        Pages.Add(new TabItemViewModel("Sounds", "🔊", board));
-        Pages.Add(new TabItemViewModel("Devices", "🎧", devices));
-        Pages.Add(new TabItemViewModel("Playbacks", "🎚️", playbacks));
-        Pages.Add(new TabItemViewModel("Inputs", "🎛️", inputs));
-        Pages.AddRange(provider?.AdditionalTabs ?? []);
-        Pages.Add(new TabItemViewModel("Settings", "⚙️", settingsManager));
-        Pages.Add(new TabItemViewModel("Logs", "📒", logList));
+        Add(new Tab("Sounds", "🔊", board));
+        Add(new Tab("Devices", "🎧", devices));
+        Add(new Tab("Playbacks", "🎚️", playbacks));
+        Add(new Tab("Inputs", "🎛️", inputs));
+        foreach (var tab in provider?.AdditionalTabs ?? [])
+            Add(tab);
+        Add(new Tab("Settings", "⚙️", settingsManager));
+        Add(new Tab("Logs", "📒", logList));
         UpdateBottomBarStatus();
         LogList.PropertyChanged += HandlePropertyChanged;
         LogPreferences.Instance.PropertyChanged += HandlePropertyChanged;
     }
 
-    public List<TabItemViewModel> Pages { get; } = [];
+    public List<Page> Pages { get; } = [];
+
+    [ObservableProperty]
+    public partial Page CurrentPage { get; set; }
 
     public LogListViewModel LogList { get; }
 
@@ -45,7 +49,8 @@ public sealed class MainWindowViewModel : ViewModelBase
 
     public TabListToggles? Toggles { get; }
 
-    public bool ShowBottomBar { get; private set; }
+    [ObservableProperty]
+    public partial bool ShowBottomBar { get; private set; }
 
     private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -53,10 +58,12 @@ public sealed class MainWindowViewModel : ViewModelBase
             UpdateBottomBarStatus();
     }
 
-    private void UpdateBottomBarStatus()
+    private void UpdateBottomBarStatus() => ShowBottomBar = !LogPreferences.Instance.HideBottomBar && LogList.Last != null;
+
+    private void Add(Tab tab) => Pages.Add(new Page
     {
-        ShowBottomBar = !LogPreferences.Instance.HideBottomBar && LogList.Last != null;
-        OnPropertyChanged(nameof(ShowBottomBar));
-    }
+        Tab = tab,
+        Parent = this
+    });
 
 }

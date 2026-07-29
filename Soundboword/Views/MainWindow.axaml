@@ -17,7 +17,11 @@
     </Window.Resources>
     <Grid RowDefinitions="*,Auto">
         <Panel>
-            <Grid RowDefinitions="10*,*" ColumnDefinitions="Auto,*">
+            <Grid ColumnDefinitions="Auto,*">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="*" MinHeight="80" />
+                </Grid.RowDefinitions>
                 <TabStrip ItemsSource="{Binding Pages}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
                     <TabStrip.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -34,7 +38,18 @@
                     </TabStrip.ItemTemplate>
                 </TabStrip>
                 <UserControl Grid.Row="1" Grid.Column="0" IsVisible="{Binding Toggles}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5" Content="{Binding Toggles}" />
-
+                <ItemsControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ItemsSource="{Binding Pages}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Panel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <UserControl Content="{Binding Content}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
             <Panel Background="#44000000" IsVisible="{Binding FilePicker.IsBrowsing}">
                 <Label HorizontalAlignment="Center" VerticalAlignment="Center">Waiting for file dialog...</Label>

@@ -17,6 +17,6 @@ public sealed class TabsProvider : ITabsProvider
         _context = new RestartContext(audioManager, devices, inputs, switchHandler);
     }
 
-    public IEnumerable<TabItemViewModel> AdditionalTabs => [new("PipeWire", "🔌", new PipeWireTabViewModel(_cli, _topLevel, _context, _nodeManager))];
+    public IEnumerable<Tab> AdditionalTabs => [new("PipeWire", "🔌", new PipeWireTabViewModel(_cli, _topLevel, _context, _nodeManager))];
 
 }
