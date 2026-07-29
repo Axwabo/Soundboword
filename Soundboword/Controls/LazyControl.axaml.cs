@@ -31,27 +31,20 @@ public sealed partial class LazyControl : UserControl
         set => SetValue(ViewModelProperty, value);
     }
 
-    /*
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsLazyProperty)
+        if (!IsLoaded || change.Property != IsActiveProperty)
+            return;
+        if (IsLazy)
         {
+            InnerControl.Content = IsActive ? ViewModel : null;
+            return;
         }
 
-        if (change.Property == ViewModelProperty)
-        {
-            if (!IsLazy || IsActive)
-                ContentControl.Content = ViewModel;
-        }
-
-        if (change.Property == IsActiveProperty)
-        {
-            // TODO
-
-        }
+        InnerControl.Content ??= ViewModel;
+        InnerControl.IsVisible = IsActive;
     }
-    */
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
@@ -59,7 +52,7 @@ public sealed partial class LazyControl : UserControl
         if (IsLazy && !IsActive)
             return;
         InnerControl.Content = ViewModel;
-        InnerControl.IsVisible = true;
+        InnerControl.IsVisible = IsActive;
     }
 
 }
