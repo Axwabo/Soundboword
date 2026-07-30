@@ -65,7 +65,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public partial bool IsLoadingDetails { get; private set; } = true;
 
     [ObservableProperty]
-    public partial bool IsLoadingStreams { get; private set; } = true;
+    public partial bool IsLoadingStreams { get; private set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
