@@ -23,8 +23,6 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     private CancellationTokenSource? _download;
 
-    private VideoId _id;
-
     public YouTubeVideoViewModel()
     {
         _client = new YoutubeClient();
@@ -44,14 +42,15 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     }
 
     [ObservableProperty]
+    public partial VideoId Id { get; private set; }
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSet), nameof(Id), nameof(Title), nameof(Author), nameof(Duration), nameof(UploadDate))]
     public partial YouTubeVideo? Video { get; private set; }
 
     public bool IsSet => Video != null;
 
     public bool CanDownload => Video != null && !IsDownloading;
-
-    public string Id => $"https://youtu.be/{Video?.Id}";
 
     public string Title => Video?.Title ?? "Title";
 
@@ -60,6 +59,12 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public TimeSpan Duration => Video?.Duration ?? TimeSpan.Zero;
 
     public DateTimeOffset UploadDate => Video?.UploadDate ?? DateTimeOffset.UnixEpoch;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasError))]
+    public partial string? Error { get; private set; }
+
+    public bool HasError => Error != null;
 
     [ObservableProperty]
     public partial bool IsLoadingDetails { get; private set; } = true;
@@ -90,6 +95,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
+        Error = null;
         SelectedStream = null;
         Streams.Clear();
         CancelDetails();
@@ -107,7 +113,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public void Open(IVideo video)
     {
-        _id = video.Id;
+        Id = video.Id;
         Video = YouTubeVideo.Create(video);
         IsLoadingDetails = false;
         if (IsLoadingStreams)
@@ -136,7 +142,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         {
             var token = _download.Token;
             var progress = new Progress<double>(d => Dispatcher.UIThread.Post(() => Progress = d));
-            var path = await _cache.CacheAsync(_id, SelectedStream, progress, Wav ? YouTubeCache.Wav : Container.Mp3, token);
+            var path = await _cache.CacheAsync(Id, SelectedStream, progress, Wav ? YouTubeCache.Wav : Container.Mp3, token);
             _soundList.Add(path, title);
             _soundList.SaveSounds();
             Completed?.Invoke();
@@ -166,7 +172,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
 
     public async Task OpenAsync(VideoId id)
     {
-        _id = id;
+        Id = id;
         IsLoadingDetails = true;
         IsLoadingStreams = true;
         Video = YouTubeVideo.Loading;
@@ -177,6 +183,11 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         }
         catch (OperationCanceledException)
         {
+        }
+        catch (Exception e)
+        {
+            Error = $"Failed to load video metadata\n{e.Message}";
+            LogFailedFetch(id, e);
         }
         finally
         {
@@ -192,7 +203,7 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
         IsLoadingStreams = true;
         try
         {
-            var manifest = await _client.Videos.Streams.GetManifestAsync(_id, token);
+            var manifest = await _client.Videos.Streams.GetManifestAsync(Id, token);
             foreach (var info in manifest.GetAudioOnlyStreams())
                 Streams.Add(info);
         }
@@ -204,6 +215,9 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
             IsLoadingStreams = false;
         }
     }
+
+    [LoggerMessage(LogLevel.Information, "Failed to fetch information for video {Id}")]
+    private partial void LogFailedFetch(VideoId id, Exception exception);
 
     [LoggerMessage(LogLevel.Error, "Failed to download {Title}")]
     private partial void LogFailedDownload(string title, Exception exception);
