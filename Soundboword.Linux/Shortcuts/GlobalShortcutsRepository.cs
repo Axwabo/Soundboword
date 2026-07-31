@@ -17,7 +17,8 @@ public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
             var id = value.GetItem(0).GetString();
             var properties = value.GetItem(1).GetDictionary<string, VariantValue>();
             var assigned = properties["trigger_description"].GetString();
-            map[id] = assigned;
+            if (!string.IsNullOrEmpty(assigned))
+                map[id] = assigned;
         }
 
         return map;
