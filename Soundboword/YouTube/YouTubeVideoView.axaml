@@ -11,7 +11,7 @@
         <youTube:YouTubeVideoViewModel />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector=".hidden > .hide:is(Control)">
+        <Style Selector="Grid.hidden > .hide:is(Control)">
             <Setter Property="IsVisible" Value="False" />
         </Style>
     </UserControl.Styles>
@@ -64,6 +64,6 @@
             <Button Command="{Binding CancelDownloadCommand}" IsEnabled="{Binding !CanDownload}">Cancel</Button>
             <ProgressBar IsVisible="{Binding IsDownloading}" Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" ShowProgressText="True" ProgressTextFormat="\{1:0\}%" Maximum="1" />
         </StackPanel>
-        <TextBlock Grid.Row="1" Grid.Column="0" Grid.RowSpan="5" IsVisible="{Binding HasError}" Text="{Binding Error}" Foreground="Red" TextWrapping="Wrap" />
+        <TextBlock Grid.Row="1" Grid.Column="0" IsVisible="{Binding HasError}" Text="{Binding Error}" Foreground="Red" TextWrapping="Wrap" />
     </Grid>
 </UserControl>
