@@ -10,7 +10,12 @@
     <Design.DataContext>
         <youTube:YouTubeVideoViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="3" ColumnSpacing="3">
+    <UserControl.Styles>
+        <Style Selector=".hidden > .hide:is(Control)">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="3" ColumnSpacing="3" Classes.hidden="{Binding HasError}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="300" Width="*" />
             <ColumnDefinition MinWidth="100" Width="Auto" />
@@ -19,11 +24,11 @@
             <Button Command="{Binding CloseCommand}" HotKey="Escape">&lt;- Back</Button>
             <Label Content="{Binding Id, StringFormat=https://youtu.be/\{0\}}" VerticalAlignment="Center" />
         </StackPanel>
-        <Panel Grid.Row="1" Grid.Column="0">
+        <Panel Grid.Row="1" Grid.Column="0" Classes="hide">
             <TextBlock Margin="0,3" TextTrimming="CharacterEllipsis" FontWeight="Bold" Text="{Binding Title}" />
             <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
         </Panel>
-        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="3">
+        <StackPanel Grid.Row="2" Grid.Column="0" Classes="hide" Orientation="Horizontal" Spacing="3">
             <Panel>
                 <Label Content="{Binding Duration}" />
                 <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
@@ -34,7 +39,7 @@
                 <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
             </Panel>
         </StackPanel>
-        <Grid Grid.Row="3" Grid.Column="0" RowDefinitions="Auto,*" IsVisible="{Binding !IsLoadingStreams}">
+        <Grid Grid.Row="3" Grid.Column="0" Classes="hide" RowDefinitions="Auto,*" IsVisible="{Binding !IsLoadingStreams}">
             <Label>Stream to download:</Label>
             <ListBox Grid.Row="1" ItemsSource="{Binding Streams}" SelectedItem="{Binding SelectedStream}" Background="Transparent">
                 <ListBox.Resources>
@@ -46,19 +51,19 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <TextBlock Grid.Row="1" IsVisible="{Binding HasError}" Text="{Binding Error}" Foreground="Red" TextWrapping="Wrap" />
         </Grid>
-        <Rectangle Grid.Row="3" Grid.Column="0" Classes="loading" IsVisible="{Binding IsLoadingStreams}" MinHeight="60" />
-        <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" Spacing="10">
+        <Rectangle Grid.Row="3" Grid.Column="0" Classes="loading hide" IsVisible="{Binding IsLoadingStreams}" MinHeight="60" />
+        <StackPanel Grid.Row="4" Grid.Column="0" Classes="hide" Orientation="Horizontal" Spacing="10">
             <Label VerticalContentAlignment="Center">Format:</Label>
             <RadioButton IsChecked="{Binding Mp3}">mp3</RadioButton>
             <RadioButton IsCancel="{Binding Wav}">wav</RadioButton>
         </StackPanel>
         <controls:Thumbnail Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" DataContext="{Binding Video}" MaxHeight="150" />
-        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
+        <StackPanel Grid.Row="5" Grid.Column="0" Classes="hide" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="3">
             <Button Command="{Binding DownloadCommand}" HotKey="Enter">Download</Button>
             <Button Command="{Binding CancelDownloadCommand}" IsEnabled="{Binding !CanDownload}">Cancel</Button>
             <ProgressBar IsVisible="{Binding IsDownloading}" Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" ShowProgressText="True" ProgressTextFormat="\{1:0\}%" Maximum="1" />
         </StackPanel>
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.RowSpan="5" IsVisible="{Binding HasError}" Text="{Binding Error}" Foreground="Red" TextWrapping="Wrap" />
     </Grid>
 </UserControl>
