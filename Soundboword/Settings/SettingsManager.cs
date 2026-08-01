@@ -5,7 +5,7 @@ namespace Soundboword.Settings;
 public sealed class SettingsManager : ViewModelBase
 {
 
-    public SettingsManager(UserData userData) : this(new PreferencesProvider(new Preferences(userData)))
+    public SettingsManager() : this(new PreferencesProvider(new Preferences()))
     {
     }
 
