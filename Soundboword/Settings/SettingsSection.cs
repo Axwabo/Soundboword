@@ -13,8 +13,8 @@ public abstract class SettingsSection : ViewModelBase
 
     public abstract void Save();
 
-    protected T Load<T>(Func<T> fallback, JsonTypeInfo<T> info) where T : notnull => _data!.Load(Filename, fallback, info);
+    protected T Load<T>(Func<T> fallback, JsonTypeInfo<T> info, string filename = Filename) where T : notnull => _data!.Load(filename, fallback, info);
 
-    protected void Save<T>(T data, JsonTypeInfo<T> info) where T : notnull => _data!.Save(Filename, data, info);
+    protected void Save<T>(T data, JsonTypeInfo<T> info, string filename = Filename) where T : notnull => _data!.Save(filename, data, info);
 
 }
