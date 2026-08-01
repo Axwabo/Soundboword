@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:Soundboword.Converters"
              xmlns:general="clr-namespace:Soundboword.Settings.General"
+             xmlns:models="clr-namespace:Soundboword.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Settings.General.PreferencesView"
              x:DataType="general:Preferences">
@@ -15,5 +16,7 @@
         <Label>Default Trigger Mode:</Label>
         <ComboBox SelectedItem="{Binding Path=DefaultTriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}"
                   DisplayMemberBinding="{Binding Converter={StaticResource PlaybackMode}}" />
+        <Label>Default Sound Interaction:</Label>
+        <ComboBox SelectedItem="{Binding Path=DefaultInteraction}" ItemsSource="{x:Static models:InteractionExtensions.Interactions}" />
     </StackPanel>
 </UserControl>

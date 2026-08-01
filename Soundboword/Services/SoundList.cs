@@ -110,7 +110,8 @@ public sealed partial class SoundList
         Path = path,
         Name = name,
         List = this,
-        Mode = _preferences.DefaultTriggerMode
+        Mode = _preferences.DefaultTriggerMode,
+        Interaction = _preferences.DefaultInteraction
     });
 
     public void Delete(SoundViewModel sound)
