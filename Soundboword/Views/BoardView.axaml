@@ -15,8 +15,8 @@
                 <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
                 <Button Command="{Binding List.AddCommand}">Add Sounds</Button>
                 <Button Command="{Binding AddFromYouTubeCommand}">Add From YouTube</Button>
-                <Button Command="{Binding}" ToolTip.Tip="Re-checks each sound that could not be found on disk">Rescan</Button>
-                <Button Command="{Binding}">Relink All</Button>
+                <Button Command="{Binding List.RescanCommand}" ToolTip.Tip="Re-checks each sound that could not be found on disk">Rescan</Button>
+                <Button Command="{Binding List.RelinkAllCommand}">Relink All</Button>
             </WrapPanel>
             <Panel Grid.Row="1" Grid.Column="0">
                 <ScrollViewer PointerReleased="InputElement_OnPointerReleased">

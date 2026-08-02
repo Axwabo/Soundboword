@@ -69,7 +69,9 @@ public sealed partial class SoundList
             notFound++;
         }
 
-        LogLoaded(Sounds.Count - notFound);
+        var count = Sounds.Count - notFound;
+        if (count != 0)
+            LogLoaded(count);
         if (notFound != 0)
             LogNotFound(notFound);
         lifetime.Exit += SaveSounds;
@@ -126,6 +128,40 @@ public sealed partial class SoundList
         SourceGenerationContext.Default.IEnumerableSoundDto
     );
 
+    [RelayCommand]
+    private void Rescan()
+    {
+        LogRescanning();
+        var loaded = 0;
+        var notFound = 0;
+        foreach (var sound in Sounds)
+        {
+            if (sound.PlaybackState != SoundState.NotFound)
+                continue;
+            if (File.Exists(sound.Path))
+            {
+                sound.UpdatePlaybackState(SoundState.Stopped);
+                loaded++;
+                continue;
+            }
+
+            notFound++;
+            LogNotFound(sound.Name, sound.Path);
+        }
+
+        if (loaded != 0)
+            LogLoaded(loaded);
+        if (notFound != 0)
+            LogNotFound(notFound);
+    }
+
+    [RelayCommand]
+    private async Task RelinkAll()
+    {
+        // TODO
+        // _filePicker.PickMany()
+    }
+
     [LoggerMessage(LogLevel.Information, "Found {Count} sound(s)")]
     private partial void LogLoaded(int count);
 
@@ -137,5 +173,8 @@ public sealed partial class SoundList
 
     [LoggerMessage(LogLevel.Warning, "Could not find {Count} sound(s)")]
     private partial void LogNotFound(int count);
+
+    [LoggerMessage(LogLevel.Information, "Rescanning sounds that could not be loaded")]
+    private partial void LogRescanning();
 
 }
