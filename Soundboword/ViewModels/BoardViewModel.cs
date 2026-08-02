@@ -35,6 +35,7 @@ public sealed partial class BoardViewModel : PageModelBase
             AddFromYouTubeWindow.Show(_provider);
     }
 
+    [RelayCommand]
     public override void OnActivated()
     {
         if (Editor.Context.Model is { } model)

@@ -23,7 +23,7 @@
                     <RowDefinition Height="8*" />
                     <RowDefinition Height="*" MinHeight="160" />
                 </Grid.RowDefinitions>
-                <TabStrip ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}" SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                <TabStrip ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}">
                     <TabStrip.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Vertical" />

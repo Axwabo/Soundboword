@@ -30,17 +30,19 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         foreach (var tab in provider?.AdditionalTabs ?? [])
             Add(tab);
         Add(new Tab("Settings", "⚙️", settingsManager));
-        Add(new Tab("Logs", "📒", logList, true));
+        LogsPage = Add(new Tab("Logs", "📒", logList, true));
         UpdateBottomBarStatus();
         CurrentPage = Pages[0];
-        LogList.PropertyChanged += HandlePropertyChanged;
-        LogPreferences.Instance.PropertyChanged += HandlePropertyChanged;
+        LogList.PropertyChanged += HandleBarPropertyChanged;
+        LogPreferences.Instance.PropertyChanged += HandleBarPropertyChanged;
     }
 
     public List<Page> Pages { get; } = [];
 
     [ObservableProperty]
     public partial Page CurrentPage { get; set; }
+
+    public Page LogsPage { get; }
 
     public LogListViewModel LogList { get; }
 
@@ -53,7 +55,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool ShowBottomBar { get; private set; }
 
-    private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void HandleBarPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(LogPreferences.HideBottomBar) or nameof(LogList.Last))
             UpdateBottomBarStatus();
@@ -61,10 +63,25 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     private void UpdateBottomBarStatus() => ShowBottomBar = !LogPreferences.Instance.HideBottomBar && LogList.Last != null;
 
-    private void Add(Tab tab) => Pages.Add(new Page
+    private Page Add(Tab tab)
     {
-        Tab = tab,
-        Parent = this
-    });
+        var page = new Page
+        {
+            Tab = tab,
+            Parent = this
+        };
+        Pages.Add(page);
+        return page;
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName != nameof(CurrentPage))
+            return;
+        ShortcutAssigner.Close();
+        if (CurrentPage.Content is PageModelBase page)
+            page.OnActivated();
+    }
 
 }
