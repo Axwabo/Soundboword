@@ -11,9 +11,11 @@ public sealed partial class SoundList
 
     private const string FileName = "sounds";
 
+    private static readonly FolderPickerOpenOptions FolderOptions = new() {Title = "Select folders to locate sounds in"};
+
     public static FilePickerOpenOptions Options { get; } = new()
     {
-        Title = "Pick a sound",
+        Title = "Add sounds",
         FileTypeFilter =
         [
             new FilePickerFileType("Audio files (mp3, wav)")
@@ -158,8 +160,46 @@ public sealed partial class SoundList
     [RelayCommand]
     private async Task RelinkAll()
     {
-        // TODO
-        // _filePicker.PickMany()
+        var folders = await _filePicker.PickFolders(FolderOptions);
+        if (folders.Count == 0)
+            return;
+        LogRelinking();
+        var restored = 0;
+        var notFound = 0;
+        foreach (var sound in Sounds)
+        {
+            if (sound.PlaybackState != SoundState.NotFound)
+                continue;
+            if (File.Exists(sound.Path))
+            {
+                sound.UpdatePlaybackState(SoundState.Stopped);
+                restored++;
+                continue;
+            }
+
+            var filename = Path.GetFileName(sound.Path);
+            var oldPath = sound.Path;
+            foreach (var folder in folders)
+            {
+                var newPath = Path.Combine(folder, filename);
+                if (!File.Exists(newPath))
+                    continue;
+                restored++;
+                sound.Path = newPath;
+                sound.UpdatePlaybackState(SoundState.Stopped);
+                LogRestored(sound.Name, oldPath, newPath);
+                break;
+            }
+
+            if (sound.Path == oldPath)
+                notFound++;
+        }
+
+        if (restored != 0)
+            LogRestored(restored);
+        if (notFound != 0)
+            LogNotFound(notFound);
+        SaveSounds();
     }
 
     [LoggerMessage(LogLevel.Information, "Found {Count} sound(s)")]
@@ -176,5 +216,14 @@ public sealed partial class SoundList
 
     [LoggerMessage(LogLevel.Information, "Rescanning sounds that could not be loaded")]
     private partial void LogRescanning();
+
+    [LoggerMessage(LogLevel.Information, "Relinking all sounds that could not be found")]
+    private partial void LogRelinking();
+
+    [LoggerMessage(LogLevel.Information, "Restored sound \"{Name}\"\nNew location: {NewPath}\nOld location: {OldPath}")]
+    private partial void LogRestored(string name, string oldPath, string newPath);
+
+    [LoggerMessage(LogLevel.Information, "Restored {Count} sound(s)")]
+    private partial void LogRestored(int count);
 
 }

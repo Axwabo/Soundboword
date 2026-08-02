@@ -48,6 +48,23 @@ public sealed partial class FilePicker : ObservableObject
         }
     }
 
+    public async Task<IReadOnlyList<string>> PickFolders(FolderPickerOpenOptions options)
+    {
+        if (_topLevel is not {StorageProvider: var provider})
+            return [];
+        options.AllowMultiple = true;
+        IsBrowsing = true;
+        try
+        {
+            var folders = await provider.OpenFolderPickerAsync(options);
+            return folders.Select(e => e.TryGetLocalPath()).Where(e => e != null).ToList()!;
+        }
+        finally
+        {
+            MarkNotBrowsing();
+        }
+    }
+
     // Multipilier reference?
     private void MarkNotBrowsing() => Dispatcher.UIThread.InvokeOrPost(() => IsBrowsing = false);
 
