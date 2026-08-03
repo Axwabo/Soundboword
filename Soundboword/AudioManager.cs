@@ -138,7 +138,14 @@ public sealed class AudioManager
 
                 break;
             case OtherSoundInteraction.Mute:
-                // TODO
+                foreach (var (other, list) in _sounds)
+                {
+                    if (other == sound)
+                        continue;
+                    foreach (var soundPlayback in list)
+                        soundPlayback.Player.Volume = 0;
+                }
+
                 break;
         }
     }
@@ -207,7 +214,7 @@ public sealed class AudioManager
         {
             case nameof(SoundViewModel.Volume):
                 foreach (var played in list)
-                    played.Player.Volume = sound.Volume;
+                    played.Player.Volume = sound.Volume; // TODO: don't override interaction
                 break;
             case nameof(SoundViewModel.Loop):
             {
@@ -233,6 +240,10 @@ public sealed class AudioManager
         foreach (var (other, playbacks) in _sounds)
         {
             other.Resume(sound);
+            if (sound.Interaction == OtherSoundInteraction.Mute && other != sound) // TODO
+                foreach (var soundPlayback in playbacks)
+                    if (soundPlayback.Player.Volume == 0)
+                        soundPlayback.Player.Volume = other.Volume;
             UpdatePausedState(other, playbacks);
         }
     }
