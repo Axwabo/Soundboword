@@ -67,10 +67,14 @@ public sealed partial class YouTubeVideoViewModel : ViewModelBase, IDisposable
     public bool HasError => Error != null;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoading))]
     public partial bool IsLoadingDetails { get; private set; } = true;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoading))]
     public partial bool IsLoadingStreams { get; private set; }
+
+    public bool IsLoading => IsLoadingDetails || IsLoadingStreams;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
