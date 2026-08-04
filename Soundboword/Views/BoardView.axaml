@@ -30,8 +30,8 @@
                 </ScrollViewer>
                 <Label IsVisible="{Binding !List.Sounds.Count}">No sounds have been added</Label>
             </Panel>
-            <Panel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#33333333">
-                <TextBlock IsVisible="{Binding Editor.Context.Model, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="#ccc">
+            <Panel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="{StaticResource SidePanelBackground}">
+                <TextBlock IsVisible="{Binding Editor.Context.Model, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{StaticResource SidePanelPlaceholder}">
                     Configure a sound
                 </TextBlock>
                 <UserControl Margin="3" Content="{Binding Editor}" IsVisible="{Binding !!Editor.Context.Model}" />

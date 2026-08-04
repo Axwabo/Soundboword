@@ -1,11 +1,8 @@
 namespace Soundboword.Views;
 
-public partial class InputsView : UserControl
+public sealed partial class InputsView : UserControl
 {
 
-    public InputsView()
-    {
-        InitializeComponent();
-    }
+    public InputsView() => InitializeComponent();
 
 }

@@ -31,5 +31,8 @@
         <SolidColorBrush x:Key="Playing" Color="#1100ff00" />
         <SolidColorBrush x:Key="Paused" Color="#11ffff00" />
         <SolidColorBrush x:Key="Error" Color="#11ff0000" />
+
+        <SolidColorBrush x:Key="SidePanelBackground" Color="#33333333" />
+        <SolidColorBrush x:Key="SidePanelPlaceholder" Color="#ccc" />
     </Application.Resources>
 </Application>
