@@ -30,7 +30,7 @@
             <Label>Available Input Devices</Label>
             <Button Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh Devices">🔄</Button>
         </StackPanel>
-        <Rectangle Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" Width="2" Fill="DimGray" />
+        <Rectangle Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" Width="1" Fill="DimGray" />
         <Label Grid.Row="0" Grid.Column="2">Unavailable Devices</Label>
         <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Available}">
             <ItemsControl.ItemTemplate>
