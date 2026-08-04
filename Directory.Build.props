@@ -6,6 +6,10 @@
         <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$(Configuration) == 'Release'">
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Injectio" PrivateAssets="all" />
     </ItemGroup>
