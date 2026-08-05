@@ -26,7 +26,7 @@
         </Style>
     </UserControl.Styles>
     <Grid ColumnDefinitions="*,Auto,*,200" RowDefinitions="Auto,Auto,*" RowSpacing="5" ColumnSpacing="5">
-        <StackPanel Orientation="Horizontal" Spacing="5">
+        <StackPanel Orientation="Horizontal">
             <Label>Available Input Devices</Label>
             <Button Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh Devices">🔄</Button>
         </StackPanel>
@@ -35,7 +35,7 @@
         <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Available}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="models:InputMethodInterface">
-                    <StackPanel Orientation="Horizontal" Spacing="5">
+                    <StackPanel Orientation="Horizontal">
                         <controls:DataToggle IsEnabled="{Binding !ActivationPending}" IsChecked="{Binding Activated}" Text="{Binding Name}" Command="{Binding ToggleCommand}" />
                         <Button Command="{Binding ConfigureCommand}">⚙️</Button>
                     </StackPanel>
@@ -47,7 +47,7 @@
             <TextBlock IsVisible="{Binding Context.Interface, Converter={x:Static ObjectConverters.IsNull}}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{StaticResource SidePanelPlaceholder}">
                 Configure a device
             </TextBlock>
-            <StackPanel Spacing="5" IsVisible="{Binding !!Context.Interface}" Margin="3">
+            <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
                 <Label Content="{Binding Context.Name}" FontWeight="Bold" />
                 <Label FontWeight="Normal">Stop All Sounds</Label>
                 <ToggleButton IsChecked="{Binding Assigner.IsAssigning}">Add Shortcut</ToggleButton>

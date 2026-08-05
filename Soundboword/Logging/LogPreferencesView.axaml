@@ -9,7 +9,7 @@
     <Design.DataContext>
         <logging:LogPreferences />
     </Design.DataContext>
-    <StackPanel Spacing="5">
+    <StackPanel>
         <Label Classes="title">Logging</Label>
         <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,120" RowSpacing="5" ColumnSpacing="5">
             <Label VerticalAlignment="Center">In-app log level:</Label>

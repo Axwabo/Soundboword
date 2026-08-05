@@ -20,7 +20,7 @@
             <ColumnDefinition MinWidth="300" Width="*" />
             <ColumnDefinition MinWidth="100" Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Spacing="5">
+        <StackPanel Orientation="Horizontal">
             <Button Command="{Binding CloseCommand}" HotKey="Escape">&lt;- Back</Button>
             <Label Content="{Binding Id, StringFormat=https://youtu.be/\{0\}}" VerticalAlignment="Center" />
         </StackPanel>
@@ -28,7 +28,7 @@
             <TextBlock Margin="0,3" TextTrimming="CharacterEllipsis" FontWeight="Bold" Text="{Binding Title}" />
             <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />
         </Panel>
-        <StackPanel Grid.Row="2" Grid.Column="0" Classes="hide" Orientation="Horizontal" Spacing="3">
+        <StackPanel Grid.Row="2" Grid.Column="0" Classes="hide" Orientation="Horizontal">
             <Panel>
                 <Label Content="{Binding Duration}" />
                 <Rectangle Classes="loading" IsVisible="{Binding IsLoadingDetails}" />

@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Views.SoundPlaybackView"
              x:DataType="models:SoundPlayback">
-    <StackPanel Orientation="Vertical" Spacing="3">
+    <StackPanel Orientation="Vertical">
         <TextBlock Name="SoundName" />
         <ProgressBar Foreground="Red" Name="Progress" />
         <Button Click="Button_OnClick">Stop</Button>

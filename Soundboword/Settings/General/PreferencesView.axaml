@@ -11,7 +11,7 @@
     <Design.DataContext>
         <general:Preferences />
     </Design.DataContext>
-    <StackPanel Spacing="5">
+    <StackPanel>
         <Label Classes="title">General</Label>
         <Label>Default Trigger Mode:</Label>
         <ComboBox SelectedItem="{Binding Path=DefaultTriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}"

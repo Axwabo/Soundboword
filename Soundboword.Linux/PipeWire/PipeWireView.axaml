@@ -19,13 +19,13 @@
         <Label Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=True}">Detecting PipeWire...</Label>
         <TextBlock Classes="center" FontSize="20" IsVisible="{Binding !IsAvailable^, FallbackValue=False}" TextWrapping="Wrap" TextAlignment="Center" Text="Could not detect PipeWire&#10;Make sure that pw-cli and pw-link are available" />
         <ScrollViewer IsVisible="{Binding IsAvailable^, FallbackValue=False}" IsEnabled="{Binding !SwitchHandler.IsSwitching}">
-            <StackPanel Spacing="5">
-                <StackPanel Orientation="Horizontal" Spacing="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
                     <Button Command="{Binding RefreshLinksCommand}">Refresh Links</Button>
                 </StackPanel>
                 <TextBlock IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNull}}" Foreground="Red" FontWeight="Bold" Text="The Soundboword Microphone could not be found!&#10;Launch the wizard to set it up." />
-                <StackPanel Spacing="5" IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <StackPanel IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNotNull}}">
                     <Label>Physical Microphone:</Label>
                     <ListBox ItemsSource="{Binding NodeManager.Sources}" SelectedItem="{Binding NodeManager.PhysicalMicrophone}" SelectionMode="Single, AlwaysSelected" Background="Transparent">
                         <ListBox.ItemTemplate>
