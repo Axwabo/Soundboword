@@ -26,6 +26,9 @@ functionality will be limited (no shortcuts).
     - Linux: `./Soundboword`
     - Windows: `Soundboword.exe`
    
+> [!NOTE]
+> `.deb` or `.rpm` packages won't be provided yet, as I have no desire to learn allat :333
+
 # Usage
 
 Click the `Add Sound` button to add a sound.
@@ -36,7 +39,7 @@ Click ⚙️ to configure settings, including changing [trigger modes](#trigger-
 
 Click 🟦 to stop the sound.
 
-Click 🔁 to toggle looping.
+Click ⚡ to assign a shortcut using any of the active [input methods](#input-methods)
 
 [//]: # (TODO: sound setup guide)
 
@@ -63,3 +66,25 @@ If you trigger it again, it'll pause or unpause playback.
 ### Duplicate
 
 Each time you press the trigger, a new sound instance will be played.
+
+# Input Methods
+
+These are basically shortcuts, allowing you to trigger a sound or an action using any of the available devices.
+
+## Global Shortcuts
+
+[//]: # (TODO: is this real?)
+On Windows, global shortcuts work out of the box. 
+
+On Linux, you need the `xdg-desktop-portal` to be able to assign global shortcuts.
+
+> [!NOTE]
+> The portal will **not** prompt the user for subsequent requests to bind the same action.
+> If the dialog is closed, the request will be ignored even if no shortcut was bound.
+> Additionally, you must go to your System Settings to remove or change global shortcuts.
+
+## Launchpad Mini
+
+This is primarily for my personal use.
+
+If you also have a Novation Launchpad Mini MKII, you're in luck!
