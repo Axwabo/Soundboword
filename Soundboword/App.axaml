@@ -31,6 +31,8 @@
         <converters:LogLevelConverter x:Key="LogLevel" />
         <converters:TriggerModeConverter x:Key="PlaybackMode" />
         <converters:SoundStateConverter x:Key="SoundState" />
+        <converters:BoolBrushConverter x:Key="ShortcutBackground" True="#22ffaa00" False="#2233ff00" />
+
         <SolidColorBrush x:Key="Playing" Color="#1100ff00" />
         <SolidColorBrush x:Key="Paused" Color="#11ffff00" />
         <SolidColorBrush x:Key="Error" Color="#11ff0000" />

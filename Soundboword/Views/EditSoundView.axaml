@@ -56,7 +56,7 @@
                     <DataTemplate>
                         <StackPanel Spacing="3">
                             <Label Content="{Binding InputMethodName}" />
-                            <Border Padding="3" Background="#22ffaa00">
+                            <Border Padding="3" Background="{Binding IsEphemeral, Converter={StaticResource ShortcutBackground}}">
                                 <Label Content="{Binding FriendlyName}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
                             </Border>
                         </StackPanel>
