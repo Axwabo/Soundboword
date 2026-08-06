@@ -55,4 +55,12 @@ public sealed partial class BoardView : UserControl
             Model?.List.Add(MapPaths(files));
     }
 
+    private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+    }
+
+    private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
+    {
+    }
+
 }
