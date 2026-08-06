@@ -1,6 +1,4 @@
-﻿using Soundboword.Windows.Services;
-
-namespace Soundboword.Windows;
+﻿namespace Soundboword.Windows;
 
 internal static class Program
 {
