@@ -93,8 +93,10 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void RemoveShortcuts()
     {
-        if (Context.Model is { } model)
-            Shortcuts.Remove(new TriggerSoundAction(model));
+        if (Context.Model is not { } model)
+            return;
+        Active.Clear();
+        Shortcuts.Remove(new TriggerSoundAction(model));
     }
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -107,6 +109,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         if (Context.Model is not { } model)
             return;
+        Active.Clear();
         foreach (var shortcut in Shortcuts.ForSound(model))
             Active.Add(shortcut);
     }
