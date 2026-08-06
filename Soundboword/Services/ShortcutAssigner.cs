@@ -21,6 +21,9 @@ public sealed partial class ShortcutAssigner : ObservableObject
         InputMethodFilter = null;
     }
 
+    [RelayCommand]
+    public void StartAssigning() => IsAssigning = true;
+
     public void StopAssigning() => IsAssigning = false;
 
 }
