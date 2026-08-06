@@ -76,10 +76,12 @@ public sealed class GlobalShortcutsInput : IInputMethod
         if (response != 0)
             return;
         var map = GlobalShortcutsRepository.CreateShortcutMap(results);
-        if (!map.TryGetValue(action.Id, out var description))
-            Dispatcher.UIThread.Post(() => _assigner.IsAssigning = false);
-        else if (!string.IsNullOrEmpty(description))
-            Dispatcher.UIThread.Post(() => _list.Assign(description, action));
+        if (map.TryGetValue(action.Id, out var description) && !string.IsNullOrEmpty(description))
+            Dispatcher.UIThread.Post(() =>
+            {
+                _assigner.IsAssigning = false;
+                _list.Assign(description, action);
+            });
     }
 
 }
