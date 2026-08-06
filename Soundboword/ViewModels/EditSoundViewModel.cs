@@ -1,5 +1,4 @@
 using Avalonia.Input.Platform;
-using Avalonia.Threading;
 
 namespace Soundboword.ViewModels;
 
@@ -25,7 +24,6 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Shortcuts = shortcuts;
         Context = context;
         Context.PropertyChanged += ContextOnPropertyChanged;
-        ShortcutList.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
 
     public IFileManagerOpener? Opener { get; }
@@ -34,7 +32,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public SoundEditingContext Context { get; }
 
-    public ObservableCollection<Shortcut> Active { get; } = [];
+    public ObservableCollection<Shortcut> Active => Shortcuts.Assigner.Active;
 
     [RelayCommand]
     private void Stop()
@@ -101,11 +99,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             UpdateActiveShortcuts();
     }
 
-    private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);
-
     private void UpdateActiveShortcuts()
     {
-        Active.Clear();
         if (Context.Model is not { } model)
             return;
         foreach (var shortcut in Shortcuts.ForSound(model))

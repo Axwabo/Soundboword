@@ -11,8 +11,11 @@ public sealed partial class ShortcutAssigner : ObservableObject
 
     public string? InputMethodFilter { get; set; }
 
+    public ObservableCollection<Shortcut> Active { get; } = [];
+
     public void Close()
     {
+        Active.Clear();
         IsAssigning = false;
         Target = null;
         InputMethodFilter = null;
