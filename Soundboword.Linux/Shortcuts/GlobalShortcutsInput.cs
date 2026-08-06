@@ -75,11 +75,10 @@ public sealed class GlobalShortcutsInput : IInputMethod
         var (response, results) = await _portal.RequestAsync((shortcuts, options) => shortcuts.BindShortcutsAsync(sessionHandle, list.ToArray(), parentWindow, options), _cts.Token).ConfigureAwait(false);
         if (response != 0)
             return;
+        Dispatcher.UIThread.Post(() => _assigner.IsAssigning = false);
         var map = GlobalShortcutsRepository.CreateShortcutMap(results);
-        if (map.TryGetValue(action.Id, out var description) && !string.IsNullOrEmpty(description))
+        if (map.TryGetValue(action.Id, out var description))
             Dispatcher.UIThread.Post(() => _list.Assign(description, action));
-        else
-            Dispatcher.UIThread.Post(() => _assigner.StopAssigning());
     }
 
 }

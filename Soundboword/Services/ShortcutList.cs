@@ -65,7 +65,7 @@ public sealed class ShortcutList
 
         if (Assigner.InputMethodFilter is { } filter && filter != inputMethod)
             return;
-        Assigner.StopAssigning();
+        Assigner.IsAssigning = false;
         if (Assigner.Target is { } action)
             Assign(key, action);
     }
@@ -83,7 +83,7 @@ public sealed class ShortcutList
     public void Remove(ShortcutAction action)
     {
         if (Assigner.Target == action)
-            Assigner.StopAssigning();
+            Assigner.IsAssigning = false;
         foreach (var repository in _repositories)
             repository.RemoveAll(action);
         var removed = _all.RemoveWhere(e => e.Action == action);

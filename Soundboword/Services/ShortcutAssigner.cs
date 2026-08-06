@@ -5,7 +5,7 @@ public sealed partial class ShortcutAssigner : ObservableObject
 {
 
     [ObservableProperty]
-    public partial bool IsAssigning { get; private set; }
+    public partial bool IsAssigning { get; set; }
 
     public ShortcutAction? Target { get; set; }
 
@@ -16,14 +16,9 @@ public sealed partial class ShortcutAssigner : ObservableObject
     public void Close()
     {
         Active.Clear();
-        StopAssigning();
+        IsAssigning = false;
         Target = null;
         InputMethodFilter = null;
     }
-
-    [RelayCommand]
-    public void StartAssigning() => IsAssigning = true;
-
-    public void StopAssigning() => IsAssigning = false;
 
 }
