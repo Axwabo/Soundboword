@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
 
@@ -22,9 +23,14 @@ public sealed partial class BoardView : UserControl
         }
     }
 
+    private static bool IgnoreSource(KeyEventArgs e) => e.Source is TextBox or Slider or NumericUpDown or ComboBox;
+
     public BoardView() => InitializeComponent();
 
     private BoardViewModel? Model => DataContext as BoardViewModel;
+
+    [MemberNotNullWhen(true, nameof(Model))]
+    private bool IsAssigning => Model?.Editor.Shortcuts.Assigner.IsAssigning ?? false;
 
     private void InputElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
@@ -57,10 +63,14 @@ public sealed partial class BoardView : UserControl
 
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
     {
+        if (!IgnoreSource(e) && IsAssigning)
+            Model.Editor.KeyHandler?.OnPressed(e);
     }
 
     private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
     {
+        if (!IgnoreSource(e) && IsAssigning)
+            Model.Editor.KeyHandler?.OnReleased(e);
     }
 
 }

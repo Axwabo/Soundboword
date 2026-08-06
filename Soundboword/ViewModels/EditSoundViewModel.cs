@@ -1,4 +1,5 @@
 using Avalonia.Input.Platform;
+using Soundboword.Inputs;
 
 namespace Soundboword.ViewModels;
 
@@ -16,13 +17,14 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Shortcuts = new ShortcutList(null, new ShortcutAssigner());
     }
 
-    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
+    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts, IAssignmentKeyHandler? keyHandler = null)
     {
         _topLevel = topLevel;
         _audioManager = audioManager;
         Opener = opener;
         Shortcuts = shortcuts;
         Context = context;
+        KeyHandler = keyHandler;
         Context.PropertyChanged += ContextOnPropertyChanged;
     }
 
@@ -31,6 +33,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     public ShortcutList Shortcuts { get; }
 
     public SoundEditingContext Context { get; }
+
+    public IAssignmentKeyHandler? KeyHandler { get; }
 
     public ObservableCollection<Shortcut> Active => Shortcuts.Assigner.Active;
 
