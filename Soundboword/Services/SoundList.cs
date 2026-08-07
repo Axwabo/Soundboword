@@ -94,7 +94,7 @@ public sealed partial class SoundList
         var any = false;
         foreach (var path in paths)
         {
-            if (Path.GetExtension(path.AsSpan()).ToLower(extension, null) == -1 || extension is not "mp3" or "wav")
+            if (Path.GetExtension(path.AsSpan()).TrimStart('.').ToLower(extension, null) == -1 || extension is not "mp3" or "wav")
             {
                 LogSkipped(path);
                 continue;
