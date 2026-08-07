@@ -74,8 +74,17 @@ public sealed class ShortcutList
     {
         var changed = false;
         foreach (var repository in _repositories)
-            if (repository is ShortcutRepository<T> implementation)
-                changed |= implementation.Assign(key, action, _all);
+        {
+            if (repository is not ShortcutRepository<T> implementation || implementation.Assign(key, action, _all) is not { } shortcut)
+                continue;
+            changed = true;
+            var index = Assigner.Active.FindInputMethodIndex(repository.InputMethodName);
+            if (index == -1)
+                Assigner.Active.Add(shortcut);
+            else
+                Assigner.Active[index] = shortcut;
+        }
+
         if (changed)
             NotifyShortcutsChanged();
     }
