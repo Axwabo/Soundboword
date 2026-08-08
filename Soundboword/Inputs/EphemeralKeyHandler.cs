@@ -9,16 +9,29 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private static readonly Shortcut NullShortcut = new("Dummy", "", null!, true);
 
-    private static string Translate(KeyEventArgs eventArgs)
+    private readonly ShortcutAssigner _assigner;
+
+    private Key _lastKey;
+
+    private string _lastSymbol = "";
+
+    private KeyModifiers _modifiers;
+
+    public EphemeralKeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
+
+    public void OnPressed(KeyEventArgs eventArgs)
     {
-        var sb = new StringBuilder();
-        var first = true;
-        if ((eventArgs.KeyModifiers & KeyModifiers.Control) != 0 || eventArgs.Key is Key.LeftCtrl or Key.RightCtrl)
-            Append("Ctrl");
-        if ((eventArgs.KeyModifiers & KeyModifiers.Alt) != 0 || eventArgs.Key is Key.LeftAlt or Key.RightAlt)
-            Append("Alt");
-        if ((eventArgs.KeyModifiers & KeyModifiers.Shift) != 0 || eventArgs.Key is Key.LeftShift or Key.RightShift)
-            Append("Shift");
+        var modifiers = eventArgs.Key switch
+        {
+            Key.LeftCtrl or Key.RightCtrl => _modifiers | KeyModifiers.Control,
+            Key.LeftAlt or Key.RightAlt => _modifiers | KeyModifiers.Alt,
+            Key.LeftShift or Key.RightShift => _modifiers | KeyModifiers.Shift,
+            _ => KeyModifiers.None
+        };
+        _lastKey = eventArgs.Key;
+        if (modifiers != KeyModifiers.None)
+            _modifiers = modifiers;
+
         var symbol = eventArgs.Key switch
         {
             Key.Up => "Up Arrow",
@@ -29,7 +42,27 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
             _ => eventArgs.KeySymbol
         };
         if (!string.IsNullOrEmpty(symbol))
-            Append(symbol);
+            _lastSymbol = symbol;
+        Update();
+    }
+
+    public void OnReleased(KeyEventArgs eventArgs)
+    {
+    }
+
+    private string Translate()
+    {
+        var modifiers = _modifiers;
+        var sb = new StringBuilder();
+        var first = true;
+        if ((modifiers & KeyModifiers.Control) != 0)
+            Append("Ctrl");
+        if ((modifiers & KeyModifiers.Alt) != 0)
+            Append("Alt");
+        if ((modifiers & KeyModifiers.Shift) != 0)
+            Append("Shift");
+        if (!string.IsNullOrEmpty(_lastSymbol))
+            Append(_lastSymbol);
         return sb.ToString();
 
         void Append(string s)
@@ -41,25 +74,17 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         }
     }
 
-    private readonly ShortcutAssigner _assigner;
-
-    public EphemeralKeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
-
-    public void OnPressed(KeyEventArgs eventArgs)
+    private void Update()
     {
         for (var i = 0; i < _assigner.Active.Count; i++)
         {
             if (!_assigner.Active[i].IsEphemeral)
                 continue;
-            _assigner.Active[i] = NullShortcut with {FriendlyName = Translate(eventArgs)};
+            _assigner.Active[i] = NullShortcut with {FriendlyName = Translate()};
             return;
         }
 
-        _assigner.Active.Add(NullShortcut with {FriendlyName = Translate(eventArgs)});
-    }
-
-    public void OnReleased(KeyEventArgs eventArgs)
-    {
+        _assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
     }
 
 }
