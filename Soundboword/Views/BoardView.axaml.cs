@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Input;
+using Avalonia.Input.TextInput;
 using Avalonia.Platform.Storage;
 
 // ReSharper disable UnusedParameter.Local
@@ -71,6 +72,15 @@ public sealed partial class BoardView : UserControl
     {
         if (!IgnoreSource(e) && IsAssigning)
             Model.Editor.KeyHandler?.OnReleased(e);
+    }
+
+    private void InputElement_OnTextInput(object? sender, TextInputEventArgs e)
+    {
+        Console.WriteLine(e.Text);
+    }
+
+    private void InputElement_OnTextInputMethodClientRequested(object? sender, TextInputMethodClientRequestedEventArgs e)
+    {
     }
 
 }
