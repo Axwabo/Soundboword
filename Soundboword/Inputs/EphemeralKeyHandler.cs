@@ -9,9 +9,15 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private static readonly Shortcut NullShortcut = new("Dummy", "", null!, true);
 
-    private readonly ShortcutAssigner _assigner;
+    private static KeyModifiers GetModifier(Key key) => key switch
+    {
+        Key.LeftCtrl or Key.RightCtrl => KeyModifiers.Control,
+        Key.LeftAlt or Key.RightAlt => KeyModifiers.Alt,
+        Key.LeftShift or Key.RightShift => KeyModifiers.Shift,
+        _ => KeyModifiers.None
+    };
 
-    private Key _lastKey;
+    private readonly ShortcutAssigner _assigner;
 
     private string _lastSymbol = "";
 
@@ -21,17 +27,9 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     public void OnPressed(KeyEventArgs eventArgs)
     {
-        var modifiers = eventArgs.Key switch
-        {
-            Key.LeftCtrl or Key.RightCtrl => _modifiers | KeyModifiers.Control,
-            Key.LeftAlt or Key.RightAlt => _modifiers | KeyModifiers.Alt,
-            Key.LeftShift or Key.RightShift => _modifiers | KeyModifiers.Shift,
-            _ => KeyModifiers.None
-        };
-        _lastKey = eventArgs.Key;
-        if (modifiers != KeyModifiers.None)
-            _modifiers = modifiers;
-
+        var modifier = GetModifier(eventArgs.Key);
+        if (modifier != KeyModifiers.None)
+            _modifiers |= modifier;
         var symbol = eventArgs.Key switch
         {
             Key.Up => "Up Arrow",
@@ -48,6 +46,12 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     public void OnReleased(KeyEventArgs eventArgs)
     {
+        var modifier = GetModifier(eventArgs.Key);
+        if (modifier != KeyModifiers.None)
+            _modifiers &= ~modifier;
+        else
+            _lastSymbol = "";
+        Update();
     }
 
     private string Translate()
