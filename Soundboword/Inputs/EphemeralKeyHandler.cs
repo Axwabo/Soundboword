@@ -54,8 +54,9 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         if (modifier != KeyModifiers.None)
             _modifiers &= ~modifier;
         else if (_lastKey == eventArgs.Key)
-            _lastSymbol = "";
-        Update();
+            Update(true);
+        else
+            Update();
     }
 
     public void OnTextInput(TextInputEventArgs eventArgs)
@@ -88,17 +89,21 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         }
     }
 
-    private void Update()
+    private void Update(bool finalize = false)
     {
         for (var i = 0; i < _assigner.Active.Count; i++)
         {
-            if (!_assigner.Active[i].IsEphemeral)
+            if (_assigner.Active[i].InputMethodName != NullShortcut.InputMethodName)
                 continue;
-            _assigner.Active[i] = NullShortcut with {FriendlyName = Translate()};
+            var friendlyName = Translate();
+            if (string.IsNullOrEmpty(friendlyName))
+                _assigner.Active.RemoveAt(i);
+            else
+                _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = !finalize};
             return;
         }
 
-        _assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
+        _assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
     }
 
 }
