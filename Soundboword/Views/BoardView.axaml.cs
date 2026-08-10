@@ -24,7 +24,7 @@ public sealed partial class BoardView : UserControl
         }
     }
 
-    private static bool IgnoreSource(KeyEventArgs e) => e.Source is TextBox or Slider or NumericUpDown or ComboBox;
+    private static bool Ignore(object? source) => source is TextBox or Slider or NumericUpDown or ComboBox;
 
     public BoardView() => InitializeComponent();
 
@@ -64,19 +64,20 @@ public sealed partial class BoardView : UserControl
 
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (!IgnoreSource(e) && IsAssigning)
+        if (!Ignore(e.Source) && IsAssigning)
             Model.Editor.KeyHandler?.OnPressed(e);
     }
 
     private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
     {
-        if (!IgnoreSource(e) && IsAssigning)
+        if (!Ignore(e.Source) && IsAssigning)
             Model.Editor.KeyHandler?.OnReleased(e);
     }
 
     private void InputElement_OnTextInput(object? sender, TextInputEventArgs e)
     {
-        Console.WriteLine(e.Text);
+        if (!Ignore(e.Source) && IsAssigning)
+            Model.Editor.KeyHandler?.OnTextInput(e);
     }
 
     private void InputElement_OnTextInputMethodClientRequested(object? sender, TextInputMethodClientRequestedEventArgs e)

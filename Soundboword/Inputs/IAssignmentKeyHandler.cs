@@ -9,4 +9,6 @@ public interface IAssignmentKeyHandler
 
     void OnReleased(KeyEventArgs eventArgs);
 
+    void OnTextInput(TextInputEventArgs eventArgs);
+
 }

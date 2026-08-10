@@ -19,6 +19,8 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private readonly ShortcutAssigner _assigner;
 
+    private Key _lastKey;
+
     private string _lastSymbol = "";
 
     private KeyModifiers _modifiers;
@@ -30,6 +32,8 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
             _modifiers |= modifier;
+        else
+            _lastKey = eventArgs.Key;
         var symbol = eventArgs.Key switch
         {
             Key.Up => "Up Arrow",
@@ -49,8 +53,14 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
             _modifiers &= ~modifier;
-        else
+        else if (_lastKey == eventArgs.Key)
             _lastSymbol = "";
+        Update();
+    }
+
+    public void OnTextInput(TextInputEventArgs eventArgs)
+    {
+        _lastSymbol = eventArgs.Text ?? "";
         Update();
     }
 
