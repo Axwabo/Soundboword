@@ -1,10 +1,11 @@
 using System.Text;
 using Avalonia.Input;
+using Soundboword.Inputs;
 
-namespace Soundboword.Inputs;
+namespace Soundboword.Windows.GlobalHotkeys;
 
 [RegisterSingleton<IAssignmentKeyHandler>]
-public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
+public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 {
 
     private static readonly Shortcut NullShortcut = new("Dummy", "", null!, true);
@@ -25,7 +26,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public EphemeralKeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
+    public GlobalHotkeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
 
     public void OnPressed(KeyEventArgs eventArgs)
     {
