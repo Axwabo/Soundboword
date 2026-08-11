@@ -99,11 +99,14 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
             var friendlyName = Translate();
             if (string.IsNullOrEmpty(friendlyName))
                 _assigner.Active.RemoveAt(i);
+            else if (!finalize)
+                _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
             else
-                _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = !finalize};
+                _assigner.
             return;
         }
 
+        // TODO: check finalize should probably never happen here
         _assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
     }
 
