@@ -32,3 +32,4 @@ jobs:
         with:
           path: ${{ matrix.project }}/OUT/
           name: ${{ matrix.project }}
+          if-no-files-found: error
