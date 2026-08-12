@@ -30,6 +30,6 @@ jobs:
       
       - uses: actions/upload-artifact@v7.0.1
         with:
-          path: ${{ matrix.project }}/OUT/
+          path: Soundboword.${{ matrix.project }}/OUT/
           name: ${{ matrix.project }}
           if-no-files-found: error
