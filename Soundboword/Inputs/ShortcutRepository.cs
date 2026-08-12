@@ -24,6 +24,8 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         InitializeMap(_map, soundList);
     }
 
+    protected Dictionary<T, HashSet<Shortcut>>.KeyCollection Keys => _shortcuts.Keys;
+
     public string InputMethodName { get; }
 
     public IEnumerable<Shortcut> All => _shortcuts.SelectMany(e => e.Value);
