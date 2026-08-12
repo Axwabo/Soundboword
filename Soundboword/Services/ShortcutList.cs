@@ -100,4 +100,6 @@ public sealed class ShortcutList
             NotifyShortcutsChanged();
     }
 
+    public T RequireRepository<T>() where T : IShortcutRepository => _repositories.OfType<T>().First();
+
 }

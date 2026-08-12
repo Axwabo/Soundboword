@@ -20,13 +20,19 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private readonly ShortcutAssigner _assigner;
 
+    private readonly ShortcutList _list;
+
     private Key _lastKey;
 
     private string _lastSymbol = "";
 
     private KeyModifiers _modifiers;
 
-    public GlobalHotkeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
+    public GlobalHotkeyHandler(ShortcutList list)
+    {
+        _list = list;
+        _assigner = list.Assigner;
+    }
 
     public void OnPressed(KeyEventArgs eventArgs)
     {
@@ -102,7 +108,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
             else if (!finalize)
                 _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
             else
-                _assigner.
+                _list.Trigger(new KeyGesture(_lastKey, _modifiers), GlobalHotkeysInput.Name);
             return;
         }
 
