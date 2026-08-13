@@ -39,7 +39,5 @@
 
         <SolidColorBrush x:Key="SidePanelBackground" Color="#33333333" />
         <SolidColorBrush x:Key="SidePanelPlaceholder" Color="#ccc" />
-
-        <Thickness x:Key="ListBoxItemPadding">0</Thickness>
     </Application.Resources>
 </Application>

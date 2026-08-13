@@ -22,7 +22,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
+                    <StackPanel Spacing="0">
                         <controls:Thumbnail DataContext="{Binding}" />
                         <Label FontWeight="Bold" Content="{Binding Title}" />
                         <Label Content="{Binding Author}" />
