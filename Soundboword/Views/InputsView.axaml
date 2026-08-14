@@ -49,12 +49,13 @@
             </TextBlock>
             <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
                 <Label Content="{Binding Context.Name}" FontWeight="Bold" />
-                <Label FontWeight="Normal">Stop All Sounds</Label>
+                <!--<Label FontWeight="Normal">Stop All Sounds</Label>
                 <ToggleButton IsChecked="{Binding Assigner.IsAssigning}">Add Shortcut</ToggleButton>
                 <Button Command="{Binding RemoveShortcutCommand}">Remove Shortcut</Button>
                 <Border Padding="3" Background="#22ffaa00" IsVisible="{Binding !!StopAllShortcut}">
                     <Label Content="{Binding StopAllShortcut}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
-                </Border>
+                </Border>-->
+                <ItemsControl ItemsSource="{x:Static viewModels:InputsViewModel.GlobalActionNames}" />
             </StackPanel>
         </Panel>
     </Grid>

@@ -7,15 +7,18 @@ public sealed partial class InputsViewModel : PageModelBase
 
     private const string File = "inputs";
 
+    public static List<string> GlobalActionNames { get; } = [];
+
     private readonly List<InputMethodInterface> _all;
 
     public InputsViewModel()
     {
         _all = [];
         Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner()));
+        GlobalActionNames.Add(ShortcutAction.StopAllSounds.Id);
     }
 
-    public InputsViewModel(UserData data, Lifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories)
+    public InputsViewModel(UserData data, Lifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories, TabListToggles? toggles = null)
     {
         var prefs = data.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
@@ -27,6 +30,9 @@ public sealed partial class InputsViewModel : PageModelBase
         lifetime.Exit += () => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         ShortcutList.ShortcutsChanged += ListOnShortcutsChanged;
+        foreach (var action in ShortcutAction.Global)
+            if (action is not LinkToggleAction || toggles?.GetCommand(action.Id) != null)
+                GlobalActionNames.Add(action.Id);
     }
 
     public InputEditingContext Context { get; }
