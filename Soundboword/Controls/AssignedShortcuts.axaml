@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:services="clr-namespace:Soundboword.Services"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Soundboword.Controls.AssignedShortcuts"
+             x:DataType="services:ShortcutAssigner">
+    <Panel>
+        <Label IsVisible="{Binding !Active.Count}">No shortcuts assigned</Label>
+        <ItemsControl ItemsSource="{Binding Active}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="3" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Spacing="3">
+                        <Label Content="{Binding InputMethodName}" />
+                        <Border Padding="3" Background="{Binding IsEphemeral, Converter={StaticResource ShortcutBackground}}">
+                            <Label Content="{Binding FriendlyName}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
+                        </Border>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Panel>
+</UserControl>

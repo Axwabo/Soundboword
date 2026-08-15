@@ -46,6 +46,9 @@ public sealed partial class InputsViewModel : PageModelBase
     [ObservableProperty]
     public partial string? StopAllShortcut { get; private set; }
 
+    [ObservableProperty]
+    public partial string? TargetActionId { get; set; }
+
     [RelayCommand]
     public void Refresh()
     {
