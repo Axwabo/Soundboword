@@ -9,7 +9,7 @@ public interface IShortcutRepository
 
     IEnumerable<Shortcut> All { get; }
 
-    IEnumerable<Shortcut> GetAll(string actionId);
+    IEnumerable<Shortcut> GetAll(ShortcutAction action);
 
     void RemoveAll(ShortcutAction action);
 

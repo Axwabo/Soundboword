@@ -7,15 +7,13 @@ public sealed partial class InputsViewModel : PageModelBase
 
     private const string File = "inputs";
 
-    public static List<string> GlobalActionNames { get; } = [];
-
     private readonly List<InputMethodInterface> _all;
 
     public InputsViewModel()
     {
         _all = [];
         Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner()));
-        GlobalActionNames.Add(ShortcutAction.StopAllSounds.Id);
+        GlobalActions.Add(ShortcutAction.StopAllSounds);
     }
 
     public InputsViewModel(UserData data, Lifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories, TabListToggles? toggles = null)
@@ -31,8 +29,10 @@ public sealed partial class InputsViewModel : PageModelBase
         context.PropertyChanged += ContextOnPropertyChanged;
         foreach (var action in ShortcutAction.Global)
             if (action is not LinkToggleAction || toggles?.GetCommand(action.Id) != null)
-                GlobalActionNames.Add(action.Id);
+                GlobalActions.Add(action);
     }
+
+    public List<ShortcutAction> GlobalActions { get; } = [];
 
     public InputEditingContext Context { get; }
 
@@ -43,7 +43,7 @@ public sealed partial class InputsViewModel : PageModelBase
     public ObservableCollection<InputMethodInterface> Unavailable { get; } = [];
 
     [ObservableProperty]
-    public partial string? TargetActionId { get; set; }
+    public partial ShortcutAction? TargetAction { get; set; }
 
     [RelayCommand]
     public void Refresh()
@@ -76,7 +76,7 @@ public sealed partial class InputsViewModel : PageModelBase
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.PropertyName == nameof(TargetActionId))
+        if (e.PropertyName == nameof(TargetAction))
             UpdateShortcutList();
     }
 
@@ -88,8 +88,11 @@ public sealed partial class InputsViewModel : PageModelBase
 
     private void UpdateShortcutList()
     {
-        if (TargetActionId is not { } id || Context.Interface is not { } method)
+        if (TargetAction is not { } action || Context.Interface is not { } method)
             return;
+        Assigner.Active.Clear();
+        foreach (var shortcut in Context.List.For(method.Name, action))
+            Assigner.Active.Add(shortcut);
     }
 
 }

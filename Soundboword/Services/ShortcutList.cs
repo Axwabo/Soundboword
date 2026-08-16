@@ -30,19 +30,19 @@ public sealed class ShortcutList
 
     public static event Action? ShortcutsChanged;
 
-    public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
-    {
-        foreach (var repository in _repositories)
-        foreach (var shortcut in repository.GetAll(sound.Id))
-            yield return shortcut;
-    }
-
-    public Shortcut? For(string inputMethod, string actionId)
+    public IEnumerable<Shortcut> For(string inputMethod, ShortcutAction action)
     {
         foreach (var repository in _repositories)
             if (repository.InputMethodName == inputMethod)
-                return repository.GetAll(actionId).FirstOrDefault();
-        return null;
+                foreach (var shortcut in repository.GetAll(action))
+                    yield return shortcut;
+    }
+
+    public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
+    {
+        foreach (var repository in _repositories)
+        foreach (var shortcut in repository.GetAll(new TriggerSoundAction(sound)))
+            yield return shortcut;
     }
 
     public IEnumerable<Shortcut> ForRepository(string name)

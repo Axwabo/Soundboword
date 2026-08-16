@@ -30,11 +30,11 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
 
     public IEnumerable<Shortcut> All => _shortcuts.SelectMany(e => e.Value);
 
-    public IEnumerable<Shortcut> GetAll(string actionId)
+    public IEnumerable<Shortcut> GetAll(ShortcutAction action)
     {
         foreach (var set in _shortcuts.Values)
         foreach (var shortcut in set)
-            if (shortcut.Action.Id == actionId)
+            if (shortcut.Action == action)
                 yield return shortcut;
     }
 
