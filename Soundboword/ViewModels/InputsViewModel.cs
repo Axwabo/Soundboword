@@ -29,7 +29,6 @@ public sealed partial class InputsViewModel : PageModelBase
                 input.SetActivated(true);
         lifetime.Exit += () => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
-        ShortcutList.ShortcutsChanged += ListOnShortcutsChanged;
         foreach (var action in ShortcutAction.Global)
             if (action is not LinkToggleAction || toggles?.GetCommand(action.Id) != null)
                 GlobalActionNames.Add(action.Id);
@@ -42,9 +41,6 @@ public sealed partial class InputsViewModel : PageModelBase
     public ObservableCollection<InputMethodInterface> Available { get; } = [];
 
     public ObservableCollection<InputMethodInterface> Unavailable { get; } = [];
-
-    [ObservableProperty]
-    public partial string? StopAllShortcut { get; private set; }
 
     [ObservableProperty]
     public partial string? TargetActionId { get; set; }
@@ -74,19 +70,26 @@ public sealed partial class InputsViewModel : PageModelBase
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(InputEditingContext.Interface))
-            ListOnShortcutsChanged();
+            UpdateShortcutList();
     }
 
-    private void ListOnShortcutsChanged()
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        if (Context.Interface is {Name: var name})
-            StopAllShortcut = Context.List.ForStopAll(name)?.FriendlyName;
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(TargetActionId))
+            UpdateShortcutList();
     }
 
     public override void OnActivated()
     {
         if (Context.Interface is { } method)
             Context.Open(method);
+    }
+
+    private void UpdateShortcutList()
+    {
+        if (TargetActionId is not { } id || Context.Interface is not { } method)
+            return;
     }
 
 }

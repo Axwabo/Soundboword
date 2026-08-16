@@ -33,15 +33,15 @@ public sealed class ShortcutList
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
     {
         foreach (var repository in _repositories)
-        foreach (var shortcut in repository.GetAll(new TriggerSoundAction(sound)))
+        foreach (var shortcut in repository.GetAll(sound.Id))
             yield return shortcut;
     }
 
-    public Shortcut? ForStopAll(string inputMethod)
+    public Shortcut? For(string inputMethod, string actionId)
     {
         foreach (var repository in _repositories)
             if (repository.InputMethodName == inputMethod)
-                return repository.GetAll(ShortcutAction.StopAllSounds).FirstOrDefault();
+                return repository.GetAll(actionId).FirstOrDefault();
         return null;
     }
 
