@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Input;
-using Avalonia.Input.TextInput;
 using Avalonia.Platform.Storage;
 
 // ReSharper disable UnusedParameter.Local
@@ -23,8 +22,6 @@ public sealed partial class BoardView : UserControl
                 yield return path;
         }
     }
-
-    private static bool Ignore(object? source) => source is TextBox or Slider or NumericUpDown or ComboBox;
 
     public BoardView() => InitializeComponent();
 
@@ -60,28 +57,6 @@ public sealed partial class BoardView : UserControl
         var files = e.DataTransfer.TryGetFiles();
         if (files != null)
             Model?.List.Add(MapPaths(files));
-    }
-
-    private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (!Ignore(e.Source) && IsAssigning)
-            Model.Editor.KeyHandler?.OnPressed(e);
-    }
-
-    private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
-    {
-        if (!Ignore(e.Source) && IsAssigning)
-            Model.Editor.KeyHandler?.OnReleased(e);
-    }
-
-    private void InputElement_OnTextInput(object? sender, TextInputEventArgs e)
-    {
-        if (!Ignore(e.Source) && IsAssigning)
-            Model.Editor.KeyHandler?.OnTextInput(e);
-    }
-
-    private void InputElement_OnTextInputMethodClientRequested(object? sender, TextInputMethodClientRequestedEventArgs e)
-    {
     }
 
 }

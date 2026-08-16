@@ -12,7 +12,7 @@ public sealed partial class InputsViewModel : PageModelBase
     public InputsViewModel()
     {
         _all = [];
-        Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner()));
+        Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner(), []));
         GlobalActions.Add(ShortcutAction.StopAllSounds);
     }
 
@@ -35,8 +35,6 @@ public sealed partial class InputsViewModel : PageModelBase
     public List<ShortcutAction> GlobalActions { get; } = [];
 
     public InputEditingContext Context { get; }
-
-    public ShortcutAssigner Assigner => Context.List.Assigner;
 
     public ObservableCollection<InputMethodInterface> Available { get; } = [];
 
@@ -90,9 +88,10 @@ public sealed partial class InputsViewModel : PageModelBase
     {
         if (TargetAction is not { } action || Context.Interface is not { } method)
             return;
-        Assigner.Active.Clear();
+        var active = Context.List.Assigner.Active;
+        active.Clear();
         foreach (var shortcut in Context.List.For(method.Name, action))
-            Assigner.Active.Add(shortcut);
+            active.Add(shortcut);
     }
 
 }
