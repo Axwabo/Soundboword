@@ -4,7 +4,7 @@ using Soundboword.Inputs;
 
 namespace Soundboword.Windows.GlobalHotkeys;
 
-public sealed class GlobalHotkeysInput : IInputMethod
+public sealed class GlobalHotkeyInput : IInputMethod
 {
 
     public const string Name = "Global Hotkeys";
@@ -16,7 +16,7 @@ public sealed class GlobalHotkeysInput : IInputMethod
 
     private readonly TopLevel _topLevel;
 
-    public GlobalHotkeysInput(TopLevel topLevel, ShortcutList list)
+    public GlobalHotkeyInput(TopLevel topLevel, ShortcutList list)
     {
         _topLevel = topLevel;
         _hWnd = topLevel.TryGetPlatformHandle()!.Handle;

@@ -20,6 +20,6 @@ public sealed class GlobalHotkeyFactory : IInputFactory
 
     public bool IsAvailable => true;
 
-    public Task<IInputMethod?> ActivateAsync() => Task.FromResult<IInputMethod?>(new GlobalHotkeysInput(_topLevel, _list));
+    public Task<IInputMethod?> ActivateAsync() => Task.FromResult<IInputMethod?>(new GlobalHotkeyInput(_topLevel, _list));
 
 }

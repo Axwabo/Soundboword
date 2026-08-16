@@ -1,14 +1,15 @@
+#if DEBUG
 using System.Text;
 using Avalonia.Input;
 using Soundboword.Inputs;
 
-namespace Soundboword.Windows.GlobalHotkeys;
+namespace Soundboword.Linux;
 
 [RegisterSingleton<IAssignmentKeyHandler>]
-public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
+public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 {
 
-    private static readonly Shortcut NullShortcut = new(GlobalHotkeyInput.Name, "", null!, true);
+    private static readonly Shortcut NullShortcut = new("Dummy", "", null!, true);
 
     private static KeyModifiers GetModifier(Key key) => key switch
     {
@@ -20,20 +21,13 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private readonly ShortcutAssigner _assigner;
 
-    private readonly ShortcutList _list;
-
     private Key _lastKey;
 
     private string _lastSymbol = "";
 
     private KeyModifiers _modifiers;
 
-    // TODO: circular dependency
-    public GlobalHotkeyHandler(ShortcutList list)
-    {
-        _list = list;
-        _assigner = list.Assigner;
-    }
+    public EphemeralKeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
 
     public void OnPressed(KeyEventArgs eventArgs)
     {
@@ -108,8 +102,6 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
                 _assigner.Active.RemoveAt(i);
             else if (!finalize)
                 _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
-            else
-                _list.Trigger(new KeyGesture(_lastKey, _modifiers), GlobalHotkeyInput.Name);
             return;
         }
 
@@ -118,3 +110,4 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
     }
 
 }
+#endif
