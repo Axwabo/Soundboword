@@ -28,7 +28,7 @@ public sealed partial class InputsViewModel : PageModelBase
         lifetime.Exit += () => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
         foreach (var action in ShortcutAction.Global)
-            if (action is not LinkToggleAction || toggles?.GetCommand(action.Id) != null)
+            if (action is not LinkToggleAction || toggles != null)
                 GlobalActions.Add(action);
     }
 
