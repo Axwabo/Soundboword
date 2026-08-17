@@ -73,7 +73,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     public void OnTextInput(TextInputEventArgs eventArgs)
     {
-        _lastSymbol = eventArgs.Text ?? "";
+        _lastSymbol = _lastKey == Key.Space ? "Space" : eventArgs.Text ?? "";
         Update();
     }
 

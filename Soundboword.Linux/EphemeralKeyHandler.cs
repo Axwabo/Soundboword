@@ -67,7 +67,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     public void OnTextInput(TextInputEventArgs eventArgs)
     {
-        _lastSymbol = eventArgs.Text ?? "";
+        _lastSymbol = _lastKey == Key.Space ? "Space" : eventArgs.Text ?? "";
         Update();
     }
 
