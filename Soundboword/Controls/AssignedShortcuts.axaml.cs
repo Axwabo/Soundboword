@@ -1,5 +1,4 @@
 using Avalonia.Input;
-using Avalonia.Input.TextInput;
 
 namespace Soundboword.Controls;
 
@@ -42,10 +41,6 @@ public sealed partial class AssignedShortcuts : UserControl
     {
         if (IsAssigning)
             List?.KeyHandler?.OnTextInput(e);
-    }
-
-    private void InputElement_OnTextInputMethodClientRequested(object? sender, TextInputMethodClientRequestedEventArgs e)
-    {
     }
 
 }
