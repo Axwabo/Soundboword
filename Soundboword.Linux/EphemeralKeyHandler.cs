@@ -42,8 +42,9 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
             Key.Down => "Down Arrow",
             Key.Left => "Left Arrow",
             Key.Right => "Right Arrow",
+            Key.Space => "Space",
             // TODO: localization, cuz apparently this isn't localized :sob:
-            _ => eventArgs.KeySymbol
+            _ => eventArgs.KeySymbol?.ToUpper()
         };
         if (!string.IsNullOrEmpty(symbol))
             _lastSymbol = symbol;
@@ -54,7 +55,10 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
+        {
             _modifiers &= ~modifier;
+            Update();
+        }
         else if (_lastKey == eventArgs.Key)
             Update(true);
         else
