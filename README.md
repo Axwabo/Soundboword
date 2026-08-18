@@ -13,8 +13,11 @@ that uses `xdg-desktop-portal`. Additional functionality includes pipewire manip
 
 Windows support is partial, but it's expected to work.
 
-MacOS support is not provided. You can compile the app yourself, and while it might work,
+MacOS support is not provided. You can add a project and compile the app yourself, and while it might work,
 functionality will be limited (no shortcuts).
+
+> [!TIP]
+> See also: [platform-specific features](#platform-specific-features)
 
 [^1]: Tested on Fedora KDE 43 
 
@@ -67,14 +70,34 @@ If you trigger it again, it'll pause or unpause playback.
 
 Each time you press the trigger, a new sound instance will be played.
 
+## Sound Interaction
+
+You can specify the behavior for other sounds if you trigger a specific sound.
+The behavior will apply to all other playbacks.
+
+| Interction | Behavior                                                              |
+|------------|-----------------------------------------------------------------------|
+| Nothing    | Other sounds are not affected                                         |
+| Stop       | Stops the playbacks of other sounds                                   |
+| Pause      | Pauses other sounds, and resumes them when the triggered sound(s) end |
+| Mute       | Mutes other sounds while the triggered sound(s) are playing           |
+
 # Input Methods
 
 These are basically shortcuts, allowing you to trigger a sound or an action using any of the available devices.
 
 ## Global Shortcuts
 
-[//]: # (TODO: is this real?)
+### Windows
+
 On Windows, global shortcuts work out of the box. 
+Click the ⚡ button to assign a shortcut.
+Hold down any modifier keys, then press and release a non-modifier key.
+
+> [!NOTE]
+> Some non-modifier keys don't have translations. Please create an issue if you encounter one.
+
+### Linux
 
 On Linux, you need the `xdg-desktop-portal` to be able to assign global shortcuts.
 
@@ -88,3 +111,13 @@ On Linux, you need the `xdg-desktop-portal` to be able to assign global shortcut
 This is primarily for my personal use.
 
 If you also have a Novation Launchpad Mini MKII, you're in luck!
+
+# Platform-specific Features
+
+## Linux
+
+You can manage some node links using PipeWire.
+
+First, go to the PipeWire tab, and launch the wizard to set up the Soundboword Microphone.
+
+[//]: # (TODO)
