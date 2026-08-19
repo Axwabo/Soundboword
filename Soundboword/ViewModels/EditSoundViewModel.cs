@@ -1,5 +1,4 @@
 using Avalonia.Input.Platform;
-using Soundboword.Inputs;
 
 namespace Soundboword.ViewModels;
 
@@ -12,43 +11,42 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public EditSoundViewModel()
     {
-        Context = new SoundEditingContext(new FilePicker());
+        SoundContext = new SoundEditingContext(new FilePicker());
         _audioManager = new AudioManager(new SoundFlowDeviceManager());
-        Shortcuts = new ShortcutList(null, new ShortcutAssigner(), []);
+        InputContext = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner(), []));
     }
 
-    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts, IAssignmentKeyHandler? keyHandler = null)
+    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext soundContext, AudioManager audioManager, InputEditingContext inputContext)
     {
         _topLevel = topLevel;
         _audioManager = audioManager;
         Opener = opener;
-        Shortcuts = shortcuts;
-        Context = context;
-        KeyHandler = keyHandler;
-        Context.PropertyChanged += ContextOnPropertyChanged;
+        SoundContext = soundContext;
+        InputContext = inputContext;
+        SoundContext.PropertyChanged += SoundContextOnPropertyChanged;
     }
 
     public IFileManagerOpener? Opener { get; }
 
-    public ShortcutList Shortcuts { get; }
+    public ShortcutList Shortcuts => InputContext.List;
 
-    public SoundEditingContext Context { get; }
+    public SoundEditingContext SoundContext { get; }
 
-    public IAssignmentKeyHandler? KeyHandler { get; }
+    public InputEditingContext InputContext { get; }
 
-    public ObservableCollection<Shortcut> Active => Shortcuts.Assigner.Active;
+    public ObservableCollection<Shortcut> Active => InputContext.Assigner.Active;
 
     [RelayCommand]
     private void Stop()
     {
-        if (Context.Model != null)
-            _audioManager.StopAll(Context.Model);
+        if (SoundContext.Model != null)
+            _audioManager.StopAll(SoundContext.Model);
     }
 
     [RelayCommand]
     private async Task Relink()
     {
-        if (Context.Model is { } model)
+        if (SoundContext.Model is { } model)
             await model.Relink();
     }
 
@@ -61,31 +59,31 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void TogglePause()
     {
-        if (Context.Model != null)
-            _audioManager.TogglePause(Context.Model);
+        if (SoundContext.Model != null)
+            _audioManager.TogglePause(SoundContext.Model);
     }
 
     [RelayCommand]
     private void CopyPath()
     {
-        if (Context.Model is {Path: var path} && _topLevel is {Clipboard: { } clipboard})
+        if (SoundContext.Model is {Path: var path} && _topLevel is {Clipboard: { } clipboard})
             clipboard.SetTextAsync(path);
     }
 
     [RelayCommand]
     private void Reveal()
     {
-        if (Context.Model is {Path: var path})
+        if (SoundContext.Model is {Path: var path})
             Opener?.Open(path);
     }
 
     [RelayCommand]
     private void Delete()
     {
-        if (Context.Model is not { } model)
+        if (SoundContext.Model is not { } model)
             return;
         _audioManager.StopAll(model);
-        Context.Close();
+        SoundContext.Close();
         model.List.Delete(model);
         Shortcuts.Remove(new TriggerSoundAction(model));
     }
@@ -93,13 +91,13 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void RemoveShortcuts()
     {
-        if (Context.Model is not { } model)
+        if (SoundContext.Model is not { } model)
             return;
         Active.Clear();
         Shortcuts.Remove(new TriggerSoundAction(model));
     }
 
-    private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void SoundContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SoundEditingContext.Model))
             UpdateActiveShortcuts();
@@ -107,7 +105,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     private void UpdateActiveShortcuts()
     {
-        if (Context.Model is not { } model)
+        if (SoundContext.Model is not { } model)
             return;
         Active.Clear();
         foreach (var shortcut in Shortcuts.ForSound(model))

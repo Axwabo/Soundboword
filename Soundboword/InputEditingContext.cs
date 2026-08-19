@@ -1,3 +1,5 @@
+using Soundboword.Inputs;
+
 namespace Soundboword;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
@@ -7,6 +9,10 @@ public sealed partial class InputEditingContext : ObservableObject
     public InputEditingContext(ShortcutList list) => List = list;
 
     public ShortcutList List { get; }
+
+    public ShortcutAssigner Assigner => List.Assigner;
+
+    public IAssignmentKeyHandler? KeyHandler { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Name))]
@@ -18,13 +24,13 @@ public sealed partial class InputEditingContext : ObservableObject
     {
         Close();
         Interface = method;
-        List.Assigner.InputMethodFilter = method.Name;
+        Assigner.InputMethodFilter = method.Name;
     }
 
     public void Close()
     {
         Interface = null;
-        List.Assigner.Close();
+        Assigner.Close();
     }
 
 }

@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:services="clr-namespace:Soundboword.Services"
+             xmlns:soundboword="clr-namespace:Soundboword"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Controls.AssignedShortcuts"
-             x:DataType="services:ShortcutAssignmentContext">
+             x:DataType="soundboword:InputEditingContext">
     <Panel Name="Panel" Focusable="True" IsTabStop="False" KeyDown="InputElement_OnKeyDown" KeyUp="InputElement_OnKeyUp" TextInput="InputElement_OnTextInput">
         <Label IsVisible="{Binding !Assigner.Active.Count}">No shortcuts assigned</Label>
         <ItemsControl ItemsSource="{Binding Assigner.Active}">

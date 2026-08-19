@@ -27,7 +27,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public EphemeralKeyHandler(ShortcutAssignmentContext context)
+    public EphemeralKeyHandler(InputEditingContext context)
     {
         _assigner = context.Assigner;
         context.KeyHandler = this;

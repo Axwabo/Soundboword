@@ -33,7 +33,7 @@ public sealed partial class BoardView : UserControl
     private void InputElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         if (e.Source == sender)
-            Model?.Editor.Context.Close();
+            Model?.Editor.SoundContext.Close();
     }
 
     private void OnDragOver(object? sender, DragEventArgs e)

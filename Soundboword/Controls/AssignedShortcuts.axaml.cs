@@ -7,7 +7,7 @@ public sealed partial class AssignedShortcuts : UserControl
 
     public AssignedShortcuts() => InitializeComponent();
 
-    private ShortcutAssignmentContext? Context => DataContext as ShortcutAssignmentContext;
+    private InputEditingContext? Context => DataContext as InputEditingContext;
 
     private bool IsAssigning => Context?.List.Assigner.IsAssigning ?? false;
 
