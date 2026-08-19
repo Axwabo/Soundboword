@@ -19,17 +19,13 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         _ => KeyModifiers.None
     };
 
-    private readonly ShortcutAssigner _assigner;
-
     private Key _lastKey;
 
     private string _lastSymbol = "";
 
     private KeyModifiers _modifiers;
 
-    public EphemeralKeyHandler(ShortcutAssigner assigner) => _assigner = assigner;
-
-    public void OnPressed(KeyEventArgs eventArgs)
+    public void OnPressed(KeyEventArgs eventArgs, ShortcutAssigner assigner)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
@@ -48,27 +44,27 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         };
         if (!string.IsNullOrEmpty(symbol))
             _lastSymbol = symbol;
-        Update();
+        Update(assigner);
     }
 
-    public void OnReleased(KeyEventArgs eventArgs)
+    public void OnReleased(KeyEventArgs eventArgs, ShortcutAssigner assigner)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
         {
             _modifiers &= ~modifier;
-            Update();
+            Update(assigner);
         }
         else if (_lastKey == eventArgs.Key)
-            Update(true);
+            Update(assigner, true);
         else
-            Update();
+            Update(assigner);
     }
 
-    public void OnTextInput(TextInputEventArgs eventArgs)
+    public void OnTextInput(TextInputEventArgs eventArgs, ShortcutAssigner assigner)
     {
         _lastSymbol = _lastKey == Key.Space ? "Space" : eventArgs.Text?.ToUpper() ?? "";
-        Update();
+        Update(assigner);
     }
 
     private string Translate()
@@ -95,22 +91,22 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         }
     }
 
-    private void Update(bool finalize = false)
+    private void Update(ShortcutAssigner assigner, bool finalize = false)
     {
-        for (var i = 0; i < _assigner.Active.Count; i++)
+        for (var i = 0; i < assigner.Active.Count; i++)
         {
-            if (_assigner.Active[i].InputMethodName != NullShortcut.InputMethodName)
+            if (assigner.Active[i].InputMethodName != NullShortcut.InputMethodName)
                 continue;
             var friendlyName = Translate();
             if (string.IsNullOrEmpty(friendlyName))
-                _assigner.Active.RemoveAt(i);
+                assigner.Active.RemoveAt(i);
             else if (!finalize)
-                _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
+                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
             return;
         }
 
         // TODO: check finalize should probably never happen here
-        _assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
+        assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
     }
 
 }

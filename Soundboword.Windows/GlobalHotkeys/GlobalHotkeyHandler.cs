@@ -35,7 +35,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
         _assigner = list.Assigner;
     }
 
-    public void OnPressed(KeyEventArgs eventArgs)
+    public void OnPressed(KeyEventArgs eventArgs, ShortcutAssigner assigner)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
@@ -57,7 +57,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
         Update();
     }
 
-    public void OnReleased(KeyEventArgs eventArgs)
+    public void OnReleased(KeyEventArgs eventArgs, ShortcutAssigner assigner)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
@@ -71,7 +71,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
             Update();
     }
 
-    public void OnTextInput(TextInputEventArgs eventArgs)
+    public void OnTextInput(TextInputEventArgs eventArgs, ShortcutAssigner assigner)
     {
         _lastSymbol = _lastKey == Key.Space ? "Space" : eventArgs.Text?.ToUpper() ?? "";
         Update();
