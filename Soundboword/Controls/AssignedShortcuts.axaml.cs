@@ -7,14 +7,14 @@ public sealed partial class AssignedShortcuts : UserControl
 
     public AssignedShortcuts() => InitializeComponent();
 
-    private ShortcutList? List => DataContext as ShortcutList;
+    private ShortcutAssignmentContext? Context => DataContext as ShortcutAssignmentContext;
 
-    private bool IsAssigning => List?.Assigner.IsAssigning ?? false;
+    private bool IsAssigning => Context?.List.Assigner.IsAssigning ?? false;
 
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
-        List?.Assigner.PropertyChanged += AssignerOnPropertyChanged;
+        Context?.List.Assigner.PropertyChanged += AssignerOnPropertyChanged;
     }
 
     private void AssignerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -28,19 +28,19 @@ public sealed partial class AssignedShortcuts : UserControl
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (IsAssigning)
-            List?.KeyHandler?.OnPressed(e);
+            Context?.KeyHandler?.OnPressed(e);
     }
 
     private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
     {
         if (IsAssigning)
-            List?.KeyHandler?.OnReleased(e);
+            Context?.KeyHandler?.OnReleased(e);
     }
 
     private void InputElement_OnTextInput(object? sender, TextInputEventArgs e)
     {
         if (IsAssigning)
-            List?.KeyHandler?.OnTextInput(e);
+            Context?.KeyHandler?.OnTextInput(e);
     }
 
 }
