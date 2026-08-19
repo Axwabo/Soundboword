@@ -39,6 +39,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
             Key.Left => "Left Arrow",
             Key.Right => "Right Arrow",
             Key.Space => "Space",
+            Key.Enter => "Enter",
             // TODO: localization, cuz apparently this isn't localized :sob:
             _ => eventArgs.KeySymbol?.ToUpper()
         };
@@ -63,7 +64,12 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     public void OnTextInput(TextInputEventArgs eventArgs, ShortcutAssigner assigner)
     {
-        _lastSymbol = _lastKey == Key.Space ? "Space" : eventArgs.Text?.ToUpper() ?? "";
+        _lastSymbol = _lastKey switch
+        {
+            Key.Space => "Space",
+            Key.Enter => "Enter",
+            _ => eventArgs.Text?.ToUpper() ?? ""
+        };
         Update(assigner);
     }
 
