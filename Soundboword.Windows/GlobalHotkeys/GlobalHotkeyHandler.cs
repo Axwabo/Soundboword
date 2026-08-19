@@ -28,7 +28,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public GlobalHotkeyHandler(InputEditingContext context)
+    public GlobalHotkeyHandler(ShortcutAssignmentContext context)
     {
         _list = context.List;
         _assigner = context.Assigner;

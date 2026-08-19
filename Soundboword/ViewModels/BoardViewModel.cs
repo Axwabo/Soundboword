@@ -38,8 +38,8 @@ public sealed partial class BoardViewModel : PageModelBase
     [RelayCommand]
     public override void OnActivated()
     {
-        if (Editor.SoundContext.Model is { } model)
-            Editor.SoundContext.Open(model);
+        if (Editor.Context.Model is { } model)
+            Editor.Context.Open(model);
     }
 
 }
