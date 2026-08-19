@@ -28,11 +28,11 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public GlobalHotkeyHandler(ShortcutAssignmentContext context)
+    // TODO: circular dependency
+    public GlobalHotkeyHandler(ShortcutList list)
     {
-        _list = context.List;
-        _assigner = context.Assigner;
-        context.KeyHandler = this;
+        _list = list;
+        _assigner = list.Assigner;
     }
 
     public void OnPressed(KeyEventArgs eventArgs)

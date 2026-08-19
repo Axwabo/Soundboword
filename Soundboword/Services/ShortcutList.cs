@@ -13,9 +13,10 @@ public sealed class ShortcutList
 
     private readonly List<IShortcutRepository> _repositories;
 
-    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, ShortcutAssigner assigner, IEnumerable<IShortcutRepository> repositories)
+    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, ShortcutAssigner assigner, IEnumerable<IShortcutRepository> repositories, IAssignmentKeyHandler? keyHandler = null)
     {
         Assigner = assigner;
+        KeyHandler = keyHandler;
         _repositories = repositories.ToList();
         foreach (var repository in _repositories)
             _all.UnionWith(repository.All);
@@ -27,6 +28,8 @@ public sealed class ShortcutList
     }
 
     public ShortcutAssigner Assigner { get; }
+
+    public IAssignmentKeyHandler? KeyHandler { get; }
 
     public static event Action? ShortcutsChanged;
 

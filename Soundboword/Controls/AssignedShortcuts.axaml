@@ -5,7 +5,7 @@
              xmlns:services="clr-namespace:Soundboword.Services"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Controls.AssignedShortcuts"
-             x:DataType="services:ShortcutAssignmentContext">
+             x:DataType="services:ShortcutList">
     <Panel Name="Panel" Focusable="True" IsTabStop="False" KeyDown="InputElement_OnKeyDown" KeyUp="InputElement_OnKeyUp" TextInput="InputElement_OnTextInput">
         <Label IsVisible="{Binding !Assigner.Active.Count}">No shortcuts assigned</Label>
         <ItemsControl ItemsSource="{Binding Assigner.Active}">
