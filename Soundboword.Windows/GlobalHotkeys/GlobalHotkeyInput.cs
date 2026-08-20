@@ -30,10 +30,22 @@ public sealed class GlobalHotkeyInput : IInputMethod
             Loseterop.RegisterHotKey(_hWnd, id, (uint) gesture.KeyModifiers, (uint) KeyInterop.VirtualKeyFromKey(gesture.Key));
         }
 
-        // TODO: listen to shortcut changes
+        ShortcutList.ShortcutsChanged += ShortcutListOnShortcutsChanged;
     }
 
     public void Dispose() => Win32Properties.RemoveWndProcHookCallback(_topLevel, WndProc);
+
+    private void ShortcutListOnShortcutsChanged()
+    {
+        var skip = _repository.Gestures.ToHashSet();
+        foreach (var (key, value) in _gestures.ToList())
+        {
+            if (skip.Contains(value))
+                continue;
+            Loseterop.UnregisterHotKey(_hWnd, key);
+            _gestures.Remove(key);
+        }
+    }
 
     private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
