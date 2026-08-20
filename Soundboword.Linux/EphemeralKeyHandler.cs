@@ -25,7 +25,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public void OnPressed(KeyEventArgs eventArgs, ShortcutAssigner assigner)
+    public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
@@ -45,24 +45,24 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         };
         if (!string.IsNullOrEmpty(symbol))
             _lastSymbol = symbol;
-        Update(assigner);
+        Update(list.Assigner);
     }
 
-    public void OnReleased(KeyEventArgs eventArgs, ShortcutAssigner assigner)
+    public void OnReleased(KeyEventArgs eventArgs, ShortcutList list)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
         {
             _modifiers &= ~modifier;
-            Update(assigner);
+            Update(list.Assigner);
         }
         else if (_lastKey == eventArgs.Key)
-            Update(assigner, true);
+            Update(list.Assigner, true);
         else
-            Update(assigner);
+            Update(list.Assigner);
     }
 
-    public void OnTextInput(TextInputEventArgs eventArgs, ShortcutAssigner assigner)
+    public void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list)
     {
         _lastSymbol = _lastKey switch
         {
@@ -70,7 +70,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
             Key.Enter => "Enter",
             _ => eventArgs.Text?.ToUpper() ?? ""
         };
-        Update(assigner);
+        Update(list.Assigner);
     }
 
     private string Translate()

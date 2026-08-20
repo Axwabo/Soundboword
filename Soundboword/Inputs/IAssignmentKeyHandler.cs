@@ -5,10 +5,10 @@ namespace Soundboword.Inputs;
 public interface IAssignmentKeyHandler
 {
 
-    void OnPressed(KeyEventArgs eventArgs, ShortcutAssigner assigner);
+    void OnPressed(KeyEventArgs eventArgs, ShortcutList list);
 
-    void OnReleased(KeyEventArgs eventArgs, ShortcutAssigner assigner);
+    void OnReleased(KeyEventArgs eventArgs, ShortcutList list);
 
-    void OnTextInput(TextInputEventArgs eventArgs, ShortcutAssigner assigner);
+    void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list);
 
 }

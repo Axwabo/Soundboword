@@ -18,24 +18,13 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
         _ => KeyModifiers.None
     };
 
-    private readonly ShortcutAssigner _assigner;
-
-    private readonly ShortcutList _list;
-
     private Key _lastKey;
 
     private string _lastSymbol = "";
 
     private KeyModifiers _modifiers;
 
-    // TODO: circular dependency
-    public GlobalHotkeyHandler(ShortcutList list)
-    {
-        _list = list;
-        _assigner = list.Assigner;
-    }
-
-    public void OnPressed(KeyEventArgs eventArgs, ShortcutAssigner assigner)
+    public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
@@ -55,24 +44,24 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
         };
         if (!string.IsNullOrEmpty(symbol))
             _lastSymbol = symbol;
-        Update();
+        Update(list);
     }
 
-    public void OnReleased(KeyEventArgs eventArgs, ShortcutAssigner assigner)
+    public void OnReleased(KeyEventArgs eventArgs, ShortcutList list)
     {
         var modifier = GetModifier(eventArgs.Key);
         if (modifier != KeyModifiers.None)
         {
             _modifiers &= ~modifier;
-            Update();
+            Update(list);
         }
         else if (_lastKey == eventArgs.Key)
-            Update(true);
+            Update(list, true);
         else
-            Update();
+            Update(list);
     }
 
-    public void OnTextInput(TextInputEventArgs eventArgs, ShortcutAssigner assigner)
+    public void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list)
     {
         _lastSymbol = _lastKey switch
         {
@@ -80,7 +69,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
             Key.Enter => "Enter",
             _ => eventArgs.Text?.ToUpper() ?? ""
         };
-        Update();
+        Update(list);
     }
 
     private string Translate()
@@ -107,24 +96,25 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
         }
     }
 
-    private void Update(bool finalize = false)
+    private void Update(ShortcutList list, bool finalize = false)
     {
-        for (var i = 0; i < _assigner.Active.Count; i++)
+        var assigner = list.Assigner;
+        for (var i = 0; i < assigner.Active.Count; i++)
         {
-            if (_assigner.Active[i].InputMethodName != NullShortcut.InputMethodName)
+            if (assigner.Active[i].InputMethodName != NullShortcut.InputMethodName)
                 continue;
             var friendlyName = Translate();
             if (string.IsNullOrEmpty(friendlyName))
-                _assigner.Active.RemoveAt(i);
+                assigner.Active.RemoveAt(i);
             else if (!finalize)
-                _assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
+                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
             else
-                _list.Trigger(new KeyGesture(_lastKey, _modifiers), GlobalHotkeyInput.Name);
+                list.Trigger(new KeyGesture(_lastKey, _modifiers), GlobalHotkeyInput.Name);
             return;
         }
 
         // TODO: check finalize should probably never happen here
-        _assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
+        assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
     }
 
 }

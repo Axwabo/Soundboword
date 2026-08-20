@@ -28,19 +28,19 @@ public sealed partial class AssignedShortcuts : UserControl
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (IsAssigning)
-            List?.KeyHandler?.OnPressed(e, List.Assigner);
+            List?.KeyHandler?.OnPressed(e, List);
     }
 
     private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
     {
         if (IsAssigning)
-            List?.KeyHandler?.OnReleased(e, List.Assigner);
+            List?.KeyHandler?.OnReleased(e, List);
     }
 
     private void InputElement_OnTextInput(object? sender, TextInputEventArgs e)
     {
         if (IsAssigning)
-            List?.KeyHandler?.OnTextInput(e, List.Assigner);
+            List?.KeyHandler?.OnTextInput(e, List);
     }
 
 }
