@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.Text;
 using Avalonia.Input;
 using Soundboword.Inputs;
@@ -34,7 +33,6 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
     {
         _list = list;
         _assigner = list.Assigner;
-        _assigner.Active.CollectionChanged += ActiveOnCollectionChanged;
     }
 
     public void OnPressed(KeyEventArgs eventArgs, ShortcutAssigner assigner)
@@ -127,17 +125,6 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
         // TODO: check finalize should probably never happen here
         _assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
-    }
-
-    private void ActiveOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e is not {Action: NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Replace or NotifyCollectionChangedAction.Reset, OldItems: { } items})
-            return;
-        foreach (var old in items)
-        {
-            if (_assigner.Active.Contains(old))
-                continue;
-        }
     }
 
 }
