@@ -50,6 +50,10 @@
             <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
                 <Label Content="{Binding Context.Name}" FontWeight="Bold" />
                 <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton IsChecked="{Binding Context.List.Assigner.IsAssigning}">⚡</ToggleButton>
+                    <Button Command="{Binding RemoveShortcutCommand}">⚡</Button>
+                </StackPanel>
                 <controls:AssignedShortcuts DataContext="{Binding Context.List}" />
             </StackPanel>
         </Panel>
