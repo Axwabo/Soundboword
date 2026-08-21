@@ -49,7 +49,7 @@
             </TextBlock>
             <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
                 <Label Content="{Binding Context.Name}" FontWeight="Bold" />
-                <ComboBox ItemsSource="{Binding GlobalActions}" DisplayMemberBinding="{Binding Id}" />
+                <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
                 <controls:AssignedShortcuts DataContext="{Binding Context.List}" />
             </StackPanel>
         </Panel>

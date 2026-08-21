@@ -14,6 +14,7 @@ public sealed partial class InputsViewModel : PageModelBase
         _all = [];
         Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner(), []));
         GlobalActions.Add(ShortcutAction.StopAllSounds);
+        TargetAction = GlobalActions[0];
     }
 
     public InputsViewModel(UserData data, Lifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories, TabListToggles? toggles = null)
@@ -30,6 +31,7 @@ public sealed partial class InputsViewModel : PageModelBase
         foreach (var action in ShortcutAction.Global)
             if (action is not LinkToggleAction || toggles != null)
                 GlobalActions.Add(action);
+        TargetAction = GlobalActions[0];
     }
 
     public List<ShortcutAction> GlobalActions { get; } = [];
@@ -41,7 +43,7 @@ public sealed partial class InputsViewModel : PageModelBase
     public ObservableCollection<InputMethodInterface> Unavailable { get; } = [];
 
     [ObservableProperty]
-    public partial ShortcutAction? TargetAction { get; set; }
+    public partial ShortcutAction TargetAction { get; set; }
 
     [RelayCommand]
     public void Refresh()
@@ -62,7 +64,7 @@ public sealed partial class InputsViewModel : PageModelBase
     private void RemoveShortcut()
     {
         if (Context.Interface != null)
-            Context.List.Remove(ShortcutAction.StopAllSounds);
+            Context.List.Remove(TargetAction);
     }
 
     private void ContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -86,11 +88,11 @@ public sealed partial class InputsViewModel : PageModelBase
 
     private void UpdateShortcutList()
     {
-        if (TargetAction is not { } action || Context.Interface is not { } method)
+        if (Context.Interface is not { } method)
             return;
         var active = Context.List.Assigner.Active;
         active.Clear();
-        foreach (var shortcut in Context.List.For(method.Name, action))
+        foreach (var shortcut in Context.List.For(method.Name, TargetAction))
             active.Add(shortcut);
     }
 
