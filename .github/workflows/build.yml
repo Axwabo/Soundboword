@@ -33,11 +33,12 @@ jobs:
         
 #        TODO: bundle here?
       
+      - run: rm *.[dbg|pdb]
+        working-directory: ${{ env.OUT }}
+        shell: bash
+      
       - uses: actions/upload-artifact@v7.0.1
         with:
-          path: |
-            ${{ env.OUT }}/*.dll
-            ${{ env.OUT }}/Soundboword*
-            !${{ env.OUT }}/Soundboword*.pdb
+          path: ${{ env.OUT }}
           name: ${{ matrix.project }}
           if-no-files-found: error
