@@ -8,14 +8,14 @@ public sealed class GlobalHotkeyInput : IInputMethod
 
     public const string Name = "Global Hotkeys";
 
-    private readonly HashSet<int> _detected = [];
-
     private readonly Dictionary<int, Gesture> _gestures = [];
     private readonly IntPtr _hWnd;
     private readonly ShortcutList _list;
     private readonly GlobalHotkeyRepository _repository;
 
     private readonly TopLevel _topLevel;
+
+    private readonly HashSet<int> _toRemove = [];
 
     public GlobalHotkeyInput(TopLevel topLevel, ShortcutList list)
     {
@@ -40,34 +40,20 @@ public sealed class GlobalHotkeyInput : IInputMethod
 
     private void ShortcutListOnShortcutsChanged()
     {
-        var gestures = _repository.Gestures;
-        foreach (var gesture in gestures)
-        {
-            var id = gesture.GetHashCode();
-            if (!_gestures.TryAdd(id, gesture))
-                continue;
-            RegisterHotKey(id, gesture);
-            _detected.Add(id);
-        }
-
         foreach (var key in _gestures.Keys)
-        {
-            if (_detected.Contains(key))
-        }
-
-        _detected.UnionWith(_gestures.Keys);
-        foreach (var gesture in gestures)
+            _toRemove.Add(key);
+        foreach (var gesture in _repository.Gestures)
         {
             var id = gesture.GetHashCode();
-            _detected.Remove(id);
+            _toRemove.Remove(id);
             if (!_gestures.TryAdd(id, gesture))
                 RegisterHotKey(id, gesture);
         }
 
-        foreach (var i in _detected)
+        foreach (var i in _toRemove)
             if (_gestures.Remove(i))
                 Loseterop.UnregisterHotKey(_hWnd, i);
-        _detected.Clear();
+        _toRemove.Clear();
     }
 
     private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
