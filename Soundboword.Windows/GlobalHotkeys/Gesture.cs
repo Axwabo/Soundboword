@@ -7,5 +7,6 @@ public sealed record Gesture(
     [property: JsonConverter(typeof(JsonStringEnumConverter<Key>))]
     Key Key,
     [property: JsonConverter(typeof(JsonStringEnumConverter<KeyModifiers>))]
-    KeyModifiers Modifiers
+    KeyModifiers Modifiers,
+    string? Symbol
 );

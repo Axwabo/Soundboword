@@ -67,9 +67,9 @@ public sealed class ShortcutList
 
         if (Assigner.InputMethodFilter is { } filter && filter != inputMethod)
             return;
-        Assigner.IsAssigning = false;
         if (Assigner.Target is { } action)
             Assign(key, action);
+        Assigner.IsAssigning = false;
     }
 
     public void Assign<T>(T key, ShortcutAction action) where T : notnull
