@@ -8,5 +8,10 @@ public sealed record Gesture(
     Key Key,
     [property: JsonConverter(typeof(JsonStringEnumConverter<KeyModifiers>))]
     KeyModifiers Modifiers,
-    string? Symbol
-);
+    string FriendlyName
+)
+{
+
+    public override string ToString() => FriendlyName;
+
+}

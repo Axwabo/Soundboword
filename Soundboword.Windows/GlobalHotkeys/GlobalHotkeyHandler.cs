@@ -109,7 +109,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
             else if (!finalize)
                 assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
             else
-                list.Trigger(new Gesture(_lastKey, _modifiers, _lastSymbol), GlobalHotkeyInput.Name);
+                list.Trigger(new Gesture(_lastKey, _modifiers, friendlyName), GlobalHotkeyInput.Name);
             return;
         }
 
