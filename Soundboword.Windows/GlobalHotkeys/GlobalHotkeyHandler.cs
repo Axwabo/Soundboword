@@ -5,10 +5,12 @@ using Soundboword.Inputs;
 namespace Soundboword.Windows.GlobalHotkeys;
 
 [RegisterSingleton<IAssignmentKeyHandler>]
-public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
+public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
 {
 
     private static readonly Shortcut NullShortcut = new(GlobalHotkeyInput.Name, "Listening...", null!, true);
+
+    private readonly ILogger _logger;
 
     private Key _lastKey;
 
@@ -16,8 +18,11 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
+    public GlobalHotkeyHandler(ILoggerFactory factory) => _logger = factory.CreateLogger("GlobalHotkey");
+
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
+        LogPressed(eventArgs.Key);
         var modifier = eventArgs.Key.GetModifier();
         if (modifier != KeyModifiers.None)
             _modifiers |= modifier;
@@ -31,6 +36,7 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     public void OnReleased(KeyEventArgs eventArgs, ShortcutList list)
     {
+        LogReleased(eventArgs.Key);
         var modifier = eventArgs.Key.GetModifier();
         if (modifier == KeyModifiers.None)
         {
@@ -45,7 +51,13 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
     public void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list)
     {
         if (!_lastKey.HasTranslationOverride)
+        {
             _lastSymbol = eventArgs.Text?.ToUpper() ?? "";
+            LogText(eventArgs.Text);
+        }
+        else
+            LogSkipped();
+
         Update(list);
     }
 
@@ -100,5 +112,17 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
         assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
     }
+
+    [LoggerMessage(LogLevel.Debug, "TextInput: {Text}")]
+    private partial void LogText(string? text);
+
+    [LoggerMessage(LogLevel.Debug, "Key has a translation override")]
+    private partial void LogSkipped();
+
+    [LoggerMessage(LogLevel.Debug, "Pressed: {Key}")]
+    private partial void LogPressed(Key key);
+
+    [LoggerMessage(LogLevel.Debug, "Released: {Key}")]
+    private partial void LogReleased(Key key);
 
 }
