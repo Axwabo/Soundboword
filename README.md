@@ -142,10 +142,10 @@ The table below shows which nodes will be connected/disconnected.
 
 | Icon    | Name            | Output Node          | Input Node             |
 |---------|-----------------|----------------------|------------------------|
-| 🔊 → 🎧 | Hear Sounds     | Soundboword Playback | Physical Output        |
-| 🔊 → 📣 | Mic Sounds      | Soundboword Playback | Soundboword Microphone |
-| 🎤 → 📣 | Mic Passthrough | Physical Microphone  | Soundboword Microphone |
-| 🎤 → 🎧 | Hear Myself     | Physical Microphone  | Physical Output        |
+| 🔊 🠊 🎧 | Hear Sounds     | Soundboword Playback | Physical Output        |
+| 🔊 🠊 📣 | Mic Sounds      | Soundboword Playback | Soundboword Microphone |
+| 🎤 🠊 📣 | Mic Passthrough | Physical Microphone  | Soundboword Microphone |
+| 🎤 🠊 🎧 | Hear Myself     | Physical Microphone  | Physical Output        |
 
 You can assign shortcuts to each of these actions by configuring a device in the `🎛️ Inputs` tab.
 
