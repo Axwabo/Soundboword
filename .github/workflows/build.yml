@@ -36,8 +36,7 @@ jobs:
       - uses: actions/upload-artifact@v7.0.1
         with:
           path: |
-            ${{ env.OUT }}/*.dll
-            ${{ env.OUT }}/Soundboword*
-            !${{ env.OUT }}/Soundboword*.pdb
+            ${{ env.OUT }}/*
+            !${{ env.OUT }}/*.[dbg|pdb]
           name: ${{ matrix.project }}
           if-no-files-found: error
