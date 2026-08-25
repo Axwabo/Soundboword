@@ -2,7 +2,7 @@ using Soundboword.Inputs;
 
 namespace Soundboword.Windows.GlobalHotkeys;
 
-[RegisterSingleton<IInputFactory>]
+[RegisterSingleton<IInputFactory>(Duplicate = DuplicateStrategy.Append)]
 public sealed class GlobalHotkeyFactory : IInputFactory
 {
 
