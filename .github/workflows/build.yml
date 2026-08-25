@@ -33,7 +33,7 @@ jobs:
         
 #        TODO: bundle here?
       
-      - run: rm *.[dbg|pdb]
+      - run: rm *.dbg && rm *.pdb
         working-directory: ${{ env.OUT }}
         shell: bash
       
