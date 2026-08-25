@@ -75,12 +75,12 @@ Each time you press the trigger, a new sound instance will be played.
 You can specify the behavior for other sounds if you trigger a specific sound.
 The behavior will apply to all other playbacks.
 
-| Interction | Behavior                                                              |
-|------------|-----------------------------------------------------------------------|
-| Nothing    | Other sounds are not affected                                         |
-| Stop       | Stops the playbacks of other sounds                                   |
-| Pause      | Pauses other sounds, and resumes them when the triggered sound(s) end |
-| Mute       | Mutes other sounds while the triggered sound(s) are playing           |
+| Interaction | Behavior                                                              |
+|-------------|-----------------------------------------------------------------------|
+| Nothing     | Other sounds are not affected                                         |
+| Stop        | Stops the playbacks of other sounds                                   |
+| Pause       | Pauses other sounds, and resumes them when the triggered sound(s) end |
+| Mute        | Mutes other sounds while the triggered sound(s) are playing           |
 
 # Input Methods
 
@@ -166,5 +166,8 @@ which lets you assign a separate shortcut while being able to change individual 
 
 Global shortcuts work out of the box (see [this section](#global-shortcuts)).
 
-To use Soundboword as a microphone, try using something like [Voicemeeter Banana](https://vb-audio.com/Voicemeeter/banana.htm).
+To use Soundboword as a microphone, you can use [VB-CABLE](https://vb-audio.com/Cable/).
+Select `CABLE Output` in the `🎧 Outputs` view; you won't be able to hear sounds though.
+
+For more granular control and audio feedback, try [Voicemeeter Banana](https://vb-audio.com/Voicemeeter/banana.htm).
 Voicemeeter installation and configuration instructions will not be provided.
