@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 namespace Soundboword.Windows;
 
+[RegisterSingleton<IFileManagerOpener>]
 public sealed class ExplorerOpener : IFileManagerOpener
 {
 

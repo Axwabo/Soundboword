@@ -12,6 +12,7 @@ internal static class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AvaloniaAppBuilder.Create(services => services.AddSingleton<IFileManagerOpener, ExplorerOpener>());
+        => AvaloniaAppBuilder.Create(services => services
+            .AddSoundbowordWindows());
 
 }

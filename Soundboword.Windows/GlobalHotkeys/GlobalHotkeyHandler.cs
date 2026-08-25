@@ -24,11 +24,6 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public GlobalHotkeyHandler(ILoggerFactory factory)
-    {
-        factory.CreateLogger("GHH").LogDebug("Initialized");
-    }
-
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
         var modifier = GetModifier(eventArgs.Key);

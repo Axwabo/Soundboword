@@ -7,7 +7,7 @@ namespace Soundboword.Windows.GlobalHotkeys;
 public sealed class GlobalHotkeyRepository : ShortcutRepository<KeyGesture>
 {
 
-    public GlobalHotkeyRepository(UserData data, AudioManager audioManager, SoundList soundList, ILoggerFactory factory) : base(
+    public GlobalHotkeyRepository(UserData data, AudioManager audioManager, SoundList soundList) : base(
         data,
         audioManager,
         soundList,
@@ -16,7 +16,6 @@ public sealed class GlobalHotkeyRepository : ShortcutRepository<KeyGesture>
         SourceGenerationContext.Default.DictionaryStringKeyGesture
     )
     {
-        factory.CreateLogger("GHR").LogDebug("Initialized");
     }
 
     public HashSet<KeyGesture> Gestures
