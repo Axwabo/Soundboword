@@ -1,4 +1,3 @@
-using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Inputs;
 
 namespace Soundboword.Services;
@@ -7,20 +6,20 @@ namespace Soundboword.Services;
 public sealed class ShortcutList
 {
 
-    public static void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
+    internal static void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
 
     private readonly HashSet<Shortcut> _all = [];
 
     private readonly List<IShortcutRepository> _repositories;
 
-    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, ShortcutAssigner assigner, IEnumerable<IShortcutRepository> repositories, IAssignmentKeyHandler? keyHandler = null)
+    public ShortcutList(Lifetime lifetime, ShortcutAssigner assigner, IEnumerable<IShortcutRepository> repositories, IAssignmentKeyHandler? keyHandler = null)
     {
         Assigner = assigner;
         KeyHandler = keyHandler;
         _repositories = repositories.ToList();
         foreach (var repository in _repositories)
             _all.UnionWith(repository.All);
-        lifetime?.Exit += (_, _) =>
+        lifetime.Exit += () =>
         {
             foreach (var repository in _repositories)
                 repository.Commit();
