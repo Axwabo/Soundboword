@@ -10,14 +10,6 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private static readonly Shortcut NullShortcut = new(GlobalHotkeyInput.Name, "", null!, true);
 
-    private static KeyModifiers GetModifier(Key key) => key switch
-    {
-        Key.LeftCtrl or Key.RightCtrl => KeyModifiers.Control,
-        Key.LeftAlt or Key.RightAlt => KeyModifiers.Alt,
-        Key.LeftShift or Key.RightShift => KeyModifiers.Shift,
-        _ => KeyModifiers.None
-    };
-
     private Key _lastKey;
 
     private string _lastSymbol = "";
@@ -26,22 +18,12 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
-        var modifier = GetModifier(eventArgs.Key);
+        var modifier = eventArgs.Key.GetModifier();
         if (modifier != KeyModifiers.None)
             _modifiers |= modifier;
         else
             _lastKey = eventArgs.Key;
-        var symbol = eventArgs.Key switch
-        {
-            Key.Up => "Up Arrow",
-            Key.Down => "Down Arrow",
-            Key.Left => "Left Arrow",
-            Key.Right => "Right Arrow",
-            Key.Space => "Space",
-            Key.Enter => "Enter",
-            // TODO: localization, cuz apparently this isn't localized :sob:
-            _ => eventArgs.KeySymbol?.ToUpper()
-        };
+        var symbol = eventArgs.Translate();
         if (!string.IsNullOrEmpty(symbol))
             _lastSymbol = symbol;
         Update(list);
@@ -49,27 +31,29 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     public void OnReleased(KeyEventArgs eventArgs, ShortcutList list)
     {
-        var modifier = GetModifier(eventArgs.Key);
-        if (modifier != KeyModifiers.None)
+        var modifier = eventArgs.Key.GetModifier();
+        if (modifier == KeyModifiers.None)
         {
-            _modifiers &= ~modifier;
-            Update(list);
+            Update(list, _lastKey == eventArgs.Key);
+            return;
         }
-        else if (_lastKey == eventArgs.Key)
-            Update(list, true);
-        else
-            Update(list);
+
+        _modifiers &= ~modifier;
+        Update(list);
     }
 
     public void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list)
     {
-        _lastSymbol = _lastKey switch
-        {
-            Key.Space => "Space",
-            Key.Enter => "Enter",
-            _ => eventArgs.Text?.ToUpper() ?? ""
-        };
+        if (!_lastKey.HasTranslationOverride)
+            _lastSymbol = eventArgs.Text?.ToUpper() ?? "";
         Update(list);
+    }
+
+    public void ResetKeys()
+    {
+        _lastKey = 0;
+        _modifiers = 0;
+        _lastSymbol = "";
     }
 
     private string Translate()
@@ -106,15 +90,14 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
             var friendlyName = Translate();
             if (string.IsNullOrEmpty(friendlyName))
                 assigner.Active.RemoveAt(i);
-            else if (!finalize)
-                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
-            else
+            else if (finalize)
                 list.Trigger(new Gesture(_lastKey, _modifiers, friendlyName), GlobalHotkeyInput.Name);
+            else
+                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
             return;
         }
 
-        // TODO: check finalize should probably never happen here
-        assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
+        assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
     }
 
 }

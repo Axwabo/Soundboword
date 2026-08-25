@@ -73,6 +73,13 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         Update(list.Assigner);
     }
 
+    public void ResetKeys()
+    {
+        _lastKey = 0;
+        _modifiers = 0;
+        _lastSymbol = "";
+    }
+
     private string Translate()
     {
         var modifiers = _modifiers;
@@ -107,12 +114,11 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
             if (string.IsNullOrEmpty(friendlyName))
                 assigner.Active.RemoveAt(i);
             else if (!finalize)
-                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName, IsEphemeral = true};
+                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
             return;
         }
 
-        // TODO: check finalize should probably never happen here
-        assigner.Active.Add(NullShortcut with {FriendlyName = Translate(), IsEphemeral = !finalize});
+        assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
     }
 
 }
