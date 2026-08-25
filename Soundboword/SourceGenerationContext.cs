@@ -10,5 +10,4 @@ namespace Soundboword;
 [JsonSerializable(typeof(Dictionary<string, LaunchpadKey>))]
 [JsonSerializable(typeof(Preferences))]
 [JsonSerializable(typeof(LogPreferences))]
-[JsonConverter(typeof(JsonStringEnumConverter<LogLevel>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext;

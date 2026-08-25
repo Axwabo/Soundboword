@@ -98,8 +98,10 @@ public sealed class ShortcutList
         foreach (var repository in _repositories)
             repository.RemoveAll(action);
         var removed = _all.RemoveWhere(e => e.Action == action);
-        if (removed != 0)
-            NotifyShortcutsChanged();
+        if (removed == 0)
+            return;
+        Assigner.Active.Clear();
+        NotifyShortcutsChanged();
     }
 
     public T RequireRepository<T>() where T : IShortcutRepository => _repositories.OfType<T>().First();

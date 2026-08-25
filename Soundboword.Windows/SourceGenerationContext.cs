@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using Avalonia.Input;
+using Soundboword.Windows.GlobalHotkeys;
 
 namespace Soundboword.Windows;
 
-[JsonSerializable(typeof(Dictionary<string, KeyGesture>))]
+[JsonSerializable(typeof(Dictionary<string, Gesture>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext;

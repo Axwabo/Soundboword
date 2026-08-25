@@ -1,10 +1,9 @@
-using Avalonia.Input;
 using Soundboword.Inputs;
 
 namespace Soundboword.Windows.GlobalHotkeys;
 
 [RegisterSingleton<IShortcutRepository>(Duplicate = DuplicateStrategy.Append)]
-public sealed class GlobalHotkeyRepository : ShortcutRepository<KeyGesture>
+public sealed class GlobalHotkeyRepository : ShortcutRepository<Gesture>
 {
 
     public GlobalHotkeyRepository(UserData data, AudioManager audioManager, SoundList soundList) : base(
@@ -13,12 +12,12 @@ public sealed class GlobalHotkeyRepository : ShortcutRepository<KeyGesture>
         soundList,
         GlobalHotkeyInput.Name,
         gesture => gesture.ToString(),
-        SourceGenerationContext.Default.DictionaryStringKeyGesture
+        SourceGenerationContext.Default.DictionaryStringGesture
     )
     {
     }
 
-    public HashSet<KeyGesture> Gestures
+    public HashSet<Gesture> Gestures
     {
         get
         {

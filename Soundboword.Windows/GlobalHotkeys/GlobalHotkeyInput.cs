@@ -1,4 +1,3 @@
-using Avalonia.Input;
 using Avalonia.Win32.Input;
 using Soundboword.Inputs;
 
@@ -9,7 +8,7 @@ public sealed class GlobalHotkeyInput : IInputMethod
 
     public const string Name = "Global Hotkeys";
 
-    private readonly Dictionary<int, KeyGesture> _gestures = [];
+    private readonly Dictionary<int, Gesture> _gestures = [];
     private readonly IntPtr _hWnd;
     private readonly ShortcutList _list;
     private readonly GlobalHotkeyRepository _repository;
@@ -37,7 +36,7 @@ public sealed class GlobalHotkeyInput : IInputMethod
 
     public void Dispose() => Win32Properties.RemoveWndProcHookCallback(_topLevel, WndProc);
 
-    private void RegisterHotKey(int id, KeyGesture gesture) => Loseterop.RegisterHotKey(_hWnd, id, (uint) gesture.KeyModifiers, (uint) KeyInterop.VirtualKeyFromKey(gesture.Key));
+    private void RegisterHotKey(int id, Gesture gesture) => Loseterop.RegisterHotKey(_hWnd, id, (uint) gesture.Modifiers, (uint) KeyInterop.VirtualKeyFromKey(gesture.Key));
 
     private void ShortcutListOnShortcutsChanged()
     {

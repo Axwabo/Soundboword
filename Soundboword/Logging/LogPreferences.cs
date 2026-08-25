@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Soundboword.Settings;
 
 namespace Soundboword.Logging;
@@ -27,9 +28,11 @@ public sealed partial class LogPreferences : SettingsSection
     }
 
     [ObservableProperty]
+    [JsonConverter(typeof(JsonStringEnumConverter<LogLevel>))]
     public partial LogLevel FileLevel { get; set; } = LogLevel.Information;
 
     [ObservableProperty]
+    [JsonConverter(typeof(JsonStringEnumConverter<LogLevel>))]
     public partial LogLevel AppLevel { get; set; } = LogLevel.Warning;
 
     [ObservableProperty]

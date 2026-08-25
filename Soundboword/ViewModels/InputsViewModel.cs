@@ -12,7 +12,7 @@ public sealed partial class InputsViewModel : PageModelBase
     public InputsViewModel()
     {
         _all = [];
-        Context = new InputEditingContext(new ShortcutList(null, new ShortcutAssigner(), []));
+        Context = new InputEditingContext(new ShortcutList(new Lifetime(), new ShortcutAssigner(), []));
         GlobalActions.Add(ShortcutAction.StopAllSounds);
         TargetAction = GlobalActions[0];
     }
@@ -61,7 +61,7 @@ public sealed partial class InputsViewModel : PageModelBase
     }
 
     [RelayCommand]
-    private void RemoveShortcut()
+    private void RemoveShortcuts()
     {
         if (Context.Interface != null)
             Context.List.Remove(TargetAction);
@@ -82,18 +82,16 @@ public sealed partial class InputsViewModel : PageModelBase
 
     public override void OnActivated()
     {
-        if (Context.Interface is { } method)
-            Context.Open(method);
+        if (Context.Interface is not { } method)
+            return;
+        Context.Open(method);
+        Context.List.Assigner.Target = TargetAction;
     }
 
     private void UpdateShortcutList()
     {
-        if (Context.Interface is not { } method)
-            return;
-        var active = Context.List.Assigner.Active;
-        active.Clear();
-        foreach (var shortcut in Context.List.For(method.Name, TargetAction))
-            active.Add(shortcut);
+        if (Context.Interface is { } method)
+            Context.List.Assigner.Update(Context.List.For(method.Name, TargetAction));
     }
 
 }

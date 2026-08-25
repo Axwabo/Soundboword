@@ -52,7 +52,7 @@
                 <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton IsChecked="{Binding Context.List.Assigner.IsAssigning}" ToolTip.Tip="Add Shortcut">⚡</ToggleButton>
-                    <Button Command="{Binding RemoveShortcutCommand}" ToolTip.Tip="Remove Shortcuts">➖</Button>
+                    <Button Command="{Binding RemoveShortcutsCommand}" ToolTip.Tip="Remove Shortcuts">➖</Button>
                 </StackPanel>
                 <controls:AssignedShortcuts DataContext="{Binding Context.List}" />
             </StackPanel>
