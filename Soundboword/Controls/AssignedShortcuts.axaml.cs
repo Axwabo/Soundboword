@@ -19,10 +19,10 @@ public sealed partial class AssignedShortcuts : UserControl
 
     private void AssignerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (!IsEffectivelyVisible || sender is not ShortcutAssigner assigner || e.PropertyName != nameof(ShortcutAssigner.IsAssigning))
+        if (!IsEffectivelyVisible || sender is not ShortcutAssigner assigner || e.PropertyName != nameof(ShortcutAssigner.IsAssigning) || !assigner.IsAssigning)
             return;
-        if (assigner.IsAssigning)
-            Panel.Focus();
+        Panel.Focus();
+        List?.KeyHandler?.ResetKeys();
     }
 
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
@@ -41,6 +41,12 @@ public sealed partial class AssignedShortcuts : UserControl
     {
         if (IsAssigning)
             List?.KeyHandler?.OnTextInput(e, List);
+    }
+
+    private void Panel_OnLosingFocus(object? sender, FocusChangingEventArgs e)
+    {
+        if (IsAssigning)
+            e.TryCancel();
     }
 
 }
