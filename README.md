@@ -132,9 +132,9 @@ Global shortcuts require `xdg-desktop-portal` (see [this section](#global-shortc
 
 You can manage some node links using PipeWire.
 
-1. Go to the `🔌 PipeWire` tab, and launch the wizard to set up the Soundboword Microphone
+1. Go to the `🔌 PipeWire` tab, and launch the wizard to set up the `Soundboword Microphone`
 2. Select an audio device in the `🔌 PipeWire` tab that will be considered as your physical microphone
-3. You will be able to use this device in programs that capture microphone input
+3. You will be able to use the `Soundboword Microphone` in programs that capture microphone input
     - Some apps might require a restart to recognize the device (e.g. Discord)
 
 There are some toggles at the bottom right of the window.
