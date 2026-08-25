@@ -24,13 +24,20 @@ public sealed class GlobalShortcutsRepository : ShortcutRepository<string>
         return map;
     }
 
-    public GlobalShortcutsRepository([FromKeyedServices(IShortcutRepository.Key)] UserData data, GlobalShortcutsPortal portal, AudioManager audioManager, SoundList soundList) : base(
+    public GlobalShortcutsRepository(
+        [FromKeyedServices(IShortcutRepository.Key)]
+        UserData data,
+        GlobalShortcutsPortal portal,
+        AudioManager audioManager,
+        SoundList soundList
+    ) : base(
         data,
         audioManager,
         soundList,
         GlobalShortcutsInput.Name,
         e => e,
-        null)
+        null
+    )
     {
         if (portal.IsAvailable)
             _ = LoadMapAsync(portal, soundList);

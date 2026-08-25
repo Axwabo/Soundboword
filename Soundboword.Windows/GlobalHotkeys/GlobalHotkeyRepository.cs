@@ -7,11 +7,28 @@ namespace Soundboword.Windows.GlobalHotkeys;
 public sealed class GlobalHotkeyRepository : ShortcutRepository<KeyGesture>
 {
 
-    public GlobalHotkeyRepository(UserData data, AudioManager audioManager, SoundList soundList) : base(data, audioManager, soundList, GlobalHotkeyInput.Name, gesture => gesture.ToString(), SourceGenerationContext.Default.DictionaryStringKeyGesture)
+    public GlobalHotkeyRepository(UserData data, AudioManager audioManager, SoundList soundList, ILoggerFactory factory) : base(
+        data,
+        audioManager,
+        soundList,
+        GlobalHotkeyInput.Name,
+        gesture => gesture.ToString(),
+        SourceGenerationContext.Default.DictionaryStringKeyGesture
+    )
     {
+        factory.CreateLogger("GHR").LogDebug("Initialized");
     }
 
-    // TODO: allow same gestures and use shortcut as id?
-    public IEnumerable<KeyGesture> Gestures => Keys.Distinct();
+    public HashSet<KeyGesture> Gestures
+    {
+        get
+        {
+            field.Clear();
+            field.EnsureCapacity(Keys.Count);
+            foreach (var gesture in Keys)
+                field.Add(gesture);
+            return field;
+        }
+    } = [];
 
 }

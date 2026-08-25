@@ -10,13 +10,14 @@ public sealed class GlobalHotkeyFactory : IInputFactory
 
     private readonly TopLevel _topLevel;
 
-    public GlobalHotkeyFactory(TopLevel topLevel, ShortcutList list)
+    public GlobalHotkeyFactory(TopLevel topLevel, ShortcutList list, ILoggerFactory factory)
     {
         _topLevel = topLevel;
         _list = list;
+        factory.CreateLogger("GHF").LogDebug("Initialized factory");
     }
 
-    public string Name => "Global Hotkeys";
+    public string Name => GlobalHotkeyInput.Name;
 
     public bool IsAvailable => true;
 
