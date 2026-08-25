@@ -15,14 +15,20 @@ public sealed partial class AssignedShortcuts : UserControl
     {
         base.OnDataContextChanged(e);
         List?.Assigner.PropertyChanged += AssignerOnPropertyChanged;
+        if (IsAssigning)
+            StartAssigning();
     }
 
     private void AssignerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (!IsEffectivelyVisible || sender is not ShortcutAssigner assigner || e.PropertyName != nameof(ShortcutAssigner.IsAssigning) || !assigner.IsAssigning)
-            return;
+        if (IsEffectivelyVisible && sender is ShortcutAssigner assigner && e.PropertyName == nameof(ShortcutAssigner.IsAssigning) && assigner.IsAssigning)
+            StartAssigning();
+    }
+
+    private void StartAssigning()
+    {
         Panel.Focus();
-        List?.KeyHandler?.ResetKeys();
+        List?.KeyHandler?.ResetKeys(List);
     }
 
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)

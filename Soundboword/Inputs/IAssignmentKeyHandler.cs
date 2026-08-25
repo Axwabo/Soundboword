@@ -11,6 +11,6 @@ public interface IAssignmentKeyHandler
 
     void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list);
 
-    void ResetKeys();
+    void ResetKeys(ShortcutList list);
 
 }

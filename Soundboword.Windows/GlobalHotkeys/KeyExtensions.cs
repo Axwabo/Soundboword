@@ -43,6 +43,7 @@ public static class KeyExtensions
             Key.Right => "Right Arrow",
             Key.Space => "Space",
             Key.Enter => "Enter",
+            Key.Back => "Backspace",
             Key.Insert => "Insert",
             Key.Delete => "Delete",
             Key.Home => "Home",

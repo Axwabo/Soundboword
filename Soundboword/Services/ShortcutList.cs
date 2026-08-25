@@ -80,11 +80,7 @@ public sealed class ShortcutList
             if (repository is not ShortcutRepository<T> implementation || implementation.Assign(key, action, _all) is not { } shortcut)
                 continue;
             changed = true;
-            var index = Assigner.Active.FindInputMethodIndex(repository.InputMethodName);
-            if (index == -1)
-                Assigner.Active.Add(shortcut);
-            else
-                Assigner.Active[index] = shortcut;
+            Assigner.Active.ReplaceOrAdd(shortcut);
         }
 
         if (changed)

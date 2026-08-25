@@ -8,7 +8,7 @@ namespace Soundboword.Windows.GlobalHotkeys;
 public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 {
 
-    private static readonly Shortcut NullShortcut = new(GlobalHotkeyInput.Name, "", null!, true);
+    private static readonly Shortcut NullShortcut = new(GlobalHotkeyInput.Name, "Listening...", null!, true);
 
     private Key _lastKey;
 
@@ -49,11 +49,12 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
         Update(list);
     }
 
-    public void ResetKeys()
+    public void ResetKeys(ShortcutList list)
     {
         _lastKey = 0;
         _modifiers = 0;
         _lastSymbol = "";
+        list.Assigner.Active.ReplaceOrAdd(NullShortcut);
     }
 
     private string Translate()

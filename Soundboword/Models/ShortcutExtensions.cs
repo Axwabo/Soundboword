@@ -38,12 +38,17 @@ public static class ShortcutExtensions
     extension(ObservableCollection<Shortcut> shortcuts)
     {
 
-        public int FindInputMethodIndex(string inputMethodName)
+        public void ReplaceOrAdd(Shortcut shortcut)
         {
             for (var i = 0; i < shortcuts.Count; i++)
-                if (shortcuts[i].InputMethodName == inputMethodName)
-                    return i;
-            return -1;
+            {
+                if (shortcuts[i].InputMethodName != shortcut.InputMethodName)
+                    continue;
+                shortcuts[i] = shortcut;
+                return;
+            }
+
+            shortcuts.Add(shortcut);
         }
 
     }

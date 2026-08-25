@@ -9,7 +9,7 @@ namespace Soundboword.Linux;
 public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 {
 
-    private static readonly Shortcut NullShortcut = new("Dummy", "", null!, true);
+    private static readonly Shortcut NullShortcut = new("Dummy", "Listening...", null!, true);
 
     private static KeyModifiers GetModifier(Key key) => key switch
     {
@@ -40,7 +40,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
             Key.Right => "Right Arrow",
             Key.Space => "Space",
             Key.Enter => "Enter",
-            // TODO: localization, cuz apparently this isn't localized :sob:
+            Key.Back => "Backspace",
             _ => eventArgs.KeySymbol?.ToUpper()
         };
         if (!string.IsNullOrEmpty(symbol))
@@ -73,11 +73,21 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
         Update(list.Assigner);
     }
 
-    public void ResetKeys()
+    public void ResetKeys(ShortcutList list)
     {
         _lastKey = 0;
         _modifiers = 0;
         _lastSymbol = "";
+        var active = list.Assigner.Active;
+        for (var i = 0; i < active.Count; i++)
+        {
+            if (active[i].InputMethodName != NullShortcut.InputMethodName)
+                continue;
+            active[i] = NullShortcut;
+            return;
+        }
+
+        active.Add(NullShortcut);
     }
 
     private string Translate()
