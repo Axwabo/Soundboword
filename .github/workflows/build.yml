@@ -37,7 +37,6 @@ jobs:
         with:
           path: |
             ${{ env.OUT }}/*
-            !*.dbg
-            !*.pdb
+            !${{ env.OUT }}/*.[dbg|pdb]
           name: ${{ matrix.project }}
           if-no-files-found: error
