@@ -19,12 +19,13 @@ public sealed partial class InputsViewModel : PageModelBase
 
     public InputsViewModel(UserData data, Lifetime lifetime, InputEditingContext context, IEnumerable<IInputFactory> factories, TabListToggles? toggles = null)
     {
+        var initial = !data.Exists(File, true);
         var prefs = data.Load(File, () => [], SourceGenerationContext.Default.IEnumerableString).ToHashSet();
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
         Context = context;
         Refresh();
         foreach (var input in Available)
-            if (prefs.Remove(input.Name))
+            if (initial || prefs.Remove(input.Name))
                 input.SetActivated(true);
         lifetime.Exit += () => data.Save(File, _all.Where(e => e.Activated).Select(e => e.Name).Union(prefs), SourceGenerationContext.Default.IEnumerableString);
         context.PropertyChanged += ContextOnPropertyChanged;
