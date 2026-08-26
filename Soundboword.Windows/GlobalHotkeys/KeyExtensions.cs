@@ -35,7 +35,7 @@ public static class KeyExtensions
     extension(KeyEventArgs eventArgs)
     {
 
-        public string? Translate() => eventArgs.Key switch
+        public string Translate() => eventArgs.Key switch
         {
             Key.Up => "Up Arrow",
             Key.Down => "Down Arrow",
@@ -62,8 +62,8 @@ public static class KeyExtensions
             Key.NumPad6 => "Numpad 6",
             Key.NumPad7 => "Numpad 7",
             Key.NumPad9 => "Numpad 9",
-            // TODO
-            _ => eventArgs.KeySymbol?.ToUpper()
+            // TODO: might be missing some keys
+            var key => eventArgs.KeySymbol?.ToUpper() ?? key.ToString()
         };
 
     }
