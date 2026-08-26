@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CliWrap" />
+
         <PackageReference Include="Tmds.DBus.Generator" PrivateAssets="all" />
     </ItemGroup>
 
