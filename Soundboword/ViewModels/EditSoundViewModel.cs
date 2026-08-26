@@ -14,7 +14,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         Context = new SoundEditingContext(new FilePicker());
         _audioManager = new AudioManager(new SoundFlowDeviceManager());
-        Shortcuts = new ShortcutList(null, new ShortcutAssigner(), []);
+        Shortcuts = new ShortcutList(new Lifetime(), new ShortcutAssigner(), []);
     }
 
     public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts, IAssignmentKeyHandler? keyHandler = null)

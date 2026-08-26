@@ -15,7 +15,7 @@ public sealed partial class InputMethodInterface : ObservableObject
 
     public InputMethodInterface()
     {
-        var list = new ShortcutList(null, new ShortcutAssigner(), []);
+        var list = new ShortcutList(new Lifetime(), new ShortcutAssigner(), []);
         _inputFactory = new LaunchpadInputFactory(list, new SoundFlowDeviceManager());
         _context = new InputEditingContext(list);
     }
