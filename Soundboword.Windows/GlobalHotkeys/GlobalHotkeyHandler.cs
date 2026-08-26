@@ -113,16 +113,16 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
         assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
     }
 
-    [LoggerMessage(LogLevel.Debug, "TextInput: {Text}")]
+    [LoggerMessage(LogLevel.Information, "TextInput: {Text}")]
     private partial void LogText(string? text);
 
-    [LoggerMessage(LogLevel.Debug, "Key has a translation override")]
+    [LoggerMessage(LogLevel.Information, "Key has a translation override")]
     private partial void LogSkipped();
 
-    [LoggerMessage(LogLevel.Debug, "Pressed: {Key}")]
+    [LoggerMessage(LogLevel.Information, "Pressed: {Key}")]
     private partial void LogPressed(Key key);
 
-    [LoggerMessage(LogLevel.Debug, "Released: {Key}")]
+    [LoggerMessage(LogLevel.Information, "Released: {Key}")]
     private partial void LogReleased(Key key);
 
 }
