@@ -5,12 +5,10 @@ using Soundboword.Inputs;
 namespace Soundboword.Windows.GlobalHotkeys;
 
 [RegisterSingleton<IAssignmentKeyHandler>]
-public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
+public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 {
 
     private static readonly Shortcut NullShortcut = new(GlobalHotkeyInput.Name, "Listening...", null!, true);
-
-    private readonly ILogger _logger;
 
     private Key _lastKey;
 
@@ -18,11 +16,8 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public GlobalHotkeyHandler(ILoggerFactory factory) => _logger = factory.CreateLogger("GlobalHotkey");
-
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
-        LogPressed(eventArgs.Key, eventArgs.KeySymbol);
         var modifier = eventArgs.Key.GetModifier();
         if (modifier != KeyModifiers.None)
             _modifiers |= modifier;
@@ -36,7 +31,6 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     public void OnReleased(KeyEventArgs eventArgs, ShortcutList list)
     {
-        LogReleased(eventArgs.Key);
         var modifier = eventArgs.Key.GetModifier();
         if (modifier == KeyModifiers.None)
         {
@@ -51,13 +45,7 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
     public void OnTextInput(TextInputEventArgs eventArgs, ShortcutList list)
     {
         if (!_lastKey.HasTranslationOverride)
-        {
             _lastSymbol = eventArgs.Text?.ToUpper() ?? "";
-            LogText(eventArgs.Text);
-        }
-        else
-            LogSkipped();
-
         Update(list);
     }
 
@@ -105,24 +93,12 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
                 assigner.Active[i] = NullShortcut;
             else if (finalize)
                 list.Trigger(new Gesture(_lastKey, _modifiers, friendlyName), GlobalHotkeyInput.Name);
-            // else
-            // assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
+            else
+                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
             return;
         }
 
         assigner.Active.Add(NullShortcut with {FriendlyName = Translate()});
     }
-
-    [LoggerMessage(LogLevel.Information, "TextInput: {Text}")]
-    private partial void LogText(string? text);
-
-    [LoggerMessage(LogLevel.Information, "Key has a translation override")]
-    private partial void LogSkipped();
-
-    [LoggerMessage(LogLevel.Information, "Pressed: {Key} with text: {Text}")]
-    private partial void LogPressed(Key key, string? text);
-
-    [LoggerMessage(LogLevel.Information, "Released: {Key}")]
-    private partial void LogReleased(Key key);
 
 }
