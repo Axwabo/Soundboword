@@ -23,7 +23,7 @@
 
         <PackageVersion Include="Tmds.DBus.Generator" Version="0.94.1" />
 
-        <PackageVersion Include="YoutubeExplode.Converter" Version="6.6.0" />
+        <PackageVersion Include="YoutubeExplode.Converter" Version="6.6.2" />
     </ItemGroup>
 
 </Project>
