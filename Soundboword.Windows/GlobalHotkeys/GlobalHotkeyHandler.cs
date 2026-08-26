@@ -22,7 +22,7 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
-        LogPressed(eventArgs.Key);
+        LogPressed(eventArgs.Key, eventArgs.KeySymbol);
         var modifier = eventArgs.Key.GetModifier();
         if (modifier != KeyModifiers.None)
             _modifiers |= modifier;
@@ -102,11 +102,11 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
                 continue;
             var friendlyName = Translate();
             if (string.IsNullOrEmpty(friendlyName))
-                assigner.Active.RemoveAt(i);
+                assigner.Active[i] = NullShortcut;
             else if (finalize)
                 list.Trigger(new Gesture(_lastKey, _modifiers, friendlyName), GlobalHotkeyInput.Name);
-            else
-                assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
+            // else
+            // assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
             return;
         }
 
@@ -119,8 +119,8 @@ public sealed partial class GlobalHotkeyHandler : IAssignmentKeyHandler
     [LoggerMessage(LogLevel.Information, "Key has a translation override")]
     private partial void LogSkipped();
 
-    [LoggerMessage(LogLevel.Information, "Pressed: {Key}")]
-    private partial void LogPressed(Key key);
+    [LoggerMessage(LogLevel.Information, "Pressed: {Key} with text: {Text}")]
+    private partial void LogPressed(Key key, string? text);
 
     [LoggerMessage(LogLevel.Information, "Released: {Key}")]
     private partial void LogReleased(Key key);
