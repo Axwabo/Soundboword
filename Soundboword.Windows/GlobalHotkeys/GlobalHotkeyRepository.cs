@@ -6,7 +6,12 @@ namespace Soundboword.Windows.GlobalHotkeys;
 public sealed class GlobalHotkeyRepository : ShortcutRepository<Gesture>
 {
 
-    public GlobalHotkeyRepository(UserData data, AudioManager audioManager, SoundList soundList) : base(
+    public GlobalHotkeyRepository(
+        [FromKeyedServices(IShortcutRepository.Key)]
+        UserData data,
+        AudioManager audioManager,
+        SoundList soundList
+    ) : base(
         data,
         audioManager,
         soundList,
