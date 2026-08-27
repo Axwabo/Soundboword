@@ -62,7 +62,7 @@ public sealed partial class SoundList
                 Mode = sound.Mode,
                 Interaction = sound.Interaction,
                 List = this
-            };
+            }.UpdateDuration();
             Sounds.Add(soundViewModel);
             if (File.Exists(soundViewModel.Path))
                 continue;
@@ -116,7 +116,7 @@ public sealed partial class SoundList
         List = this,
         Mode = _preferences.DefaultTriggerMode,
         Interaction = _preferences.DefaultInteraction
-    });
+    }.UpdateDuration());
 
     public void Delete(SoundViewModel sound)
     {
@@ -186,7 +186,7 @@ public sealed partial class SoundList
                     continue;
                 restored++;
                 sound.Path = newPath;
-                sound.UpdatePlaybackState(SoundState.Stopped);
+                sound.UpdateDuration().UpdatePlaybackState(SoundState.Stopped);
                 LogRestored(sound.Name, oldPath, newPath);
                 break;
             }

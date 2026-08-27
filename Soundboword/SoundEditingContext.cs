@@ -72,6 +72,8 @@ public sealed partial class SoundEditingContext : ObservableObject
 
     public bool IsNotFound => Model?.IsNotFound ?? false;
 
+    public string? Information => Model?.Information;
+
     public void Open(SoundViewModel model)
     {
         Close();
