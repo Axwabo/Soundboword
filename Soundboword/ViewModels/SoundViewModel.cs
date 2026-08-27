@@ -41,7 +41,6 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
     public partial SoundState PlaybackState { get; private set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Information))]
     public partial TimeSpan? Duration { get; set; }
 
     public bool AnyPlaybacks => PlaybackState is SoundState.Playing or SoundState.Paused;
@@ -63,7 +62,11 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
         }
     }
 
-    public string Information => IsNotFound ? "File not found!" : Duration == null ? "Cannot estimate duration" : $"Duration: {Duration.Value:hh':'mm':'ss}";
+    public string Information => IsNotFound || Duration == null
+        ? "File not found!"
+        : Duration == TimeSpan.MinValue
+            ? "Cannot estimate duration"
+            : $"Duration: {Duration.Value:hh':'mm':'ss}";
 
     [RelayCommand]
     private void Trigger() => List.AudioManager.Trigger(this);
@@ -94,9 +97,12 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
 
     public SoundViewModel UpdateDuration()
     {
-        Duration = File.Exists(Path) && SoundMetadataReader.Read(Path, ReadOptions) is {IsSuccess: true, Value.Duration: var duration} // TODO: error handling probably
-            ? duration
-            : null;
+        Duration = !File.Exists(Path)
+            ? null
+            : SoundMetadataReader.Read(Path, ReadOptions) is {IsSuccess: true, Value.Duration: var duration}
+                ? duration
+                : TimeSpan.MinValue;
+        OnPropertyChanged(nameof(Information));
         return this;
     }
 
