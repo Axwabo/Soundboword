@@ -54,9 +54,9 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public TabListToggles? Toggles { get; }
 
-    public GridLength? TogglesRowHeight => Toggles == null ? ZeroLength : GridLength.Star;
+    public GridLength? TogglesRowHeight => Toggles == null ? ZeroLength : null;
 
-    public GridLength? TogglesRowMinHeight => Toggles == null ? ZeroLength : new GridLength(160, GridUnitType.Pixel);
+    public GridLength? TogglesRowMinHeight => Toggles == null ? ZeroLength : null;
 
     [ObservableProperty]
     public partial bool ShowBottomBar { get; private set; }
