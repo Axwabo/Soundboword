@@ -6,8 +6,6 @@ namespace Soundboword.ViewModels;
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
 
-    private static readonly GridLength ZeroLength = new GridLength(0, GridUnitType.Pixel);
-
     public MainWindowViewModel() : this(new BoardViewModel(),
         new DevicesViewModel(new SoundFlowDeviceManager(), new DeviceSwitchHandler()),
         new PlaybacksViewModel(),
@@ -53,10 +51,6 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public ShortcutAssigner ShortcutAssigner { get; }
 
     public TabListToggles? Toggles { get; }
-
-    public GridLength? TogglesRowHeight => Toggles == null ? ZeroLength : null;
-
-    public GridLength? TogglesRowMinHeight => Toggles == null ? ZeroLength : null;
 
     [ObservableProperty]
     public partial bool ShowBottomBar { get; private set; }
