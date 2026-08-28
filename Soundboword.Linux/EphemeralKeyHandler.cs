@@ -125,7 +125,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
                 continue;
             var friendlyName = Translate();
             if (string.IsNullOrEmpty(friendlyName))
-                assigner.Active.RemoveAt(i);
+                assigner.Active[i] = NullShortcut;
             else if (!finalize)
                 assigner.Active[i] = NullShortcut with {FriendlyName = friendlyName};
             return;
