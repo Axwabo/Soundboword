@@ -21,7 +21,7 @@
             <Grid ColumnDefinitions="Auto,*">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="8*" />
-                    <RowDefinition Height="*" MinHeight="160" />
+                    <RowDefinition Height="{Binding TogglesRowHeight, FallbackValue=*}" MinHeight="{Binding TogglesRowMinHeight, FallbackValue=160}" />
                 </Grid.RowDefinitions>
                 <TabStrip ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}">
                     <TabStrip.ItemsPanel>
