@@ -56,7 +56,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     public GridLength? TogglesRowHeight => Toggles == null ? ZeroLength : GridLength.Star;
 
-    public GridLength? TogglesRowMinHeight => Toggles == null ? ZeroLength : GridLength.Parse("160");
+    public GridLength? TogglesRowMinHeight => Toggles == null ? ZeroLength : new GridLength(160, GridUnitType.Pixel);
 
     [ObservableProperty]
     public partial bool ShowBottomBar { get; private set; }
