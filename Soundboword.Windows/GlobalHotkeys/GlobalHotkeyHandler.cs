@@ -16,6 +16,8 @@ public sealed class GlobalHotkeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
+    public string InputMethodName => GlobalHotkeyInput.Name;
+
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
         var modifier = eventArgs.Key.GetModifier();

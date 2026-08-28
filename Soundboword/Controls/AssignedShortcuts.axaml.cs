@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Input;
+using Soundboword.Inputs;
 
 namespace Soundboword.Controls;
 
@@ -11,42 +13,56 @@ public sealed partial class AssignedShortcuts : UserControl
 
     private bool IsAssigning => List?.Assigner.IsAssigning ?? false;
 
+    [MemberNotNullWhen(true, nameof(List))]
+    private bool TryGetHandler([NotNullWhen(true)] out IAssignmentKeyHandler? handler)
+    {
+        if (List is {Assigner: {IsAssigning: true, InputMethodFilter: var filter}, KeyHandler: { } keyHandler} && (filter == null || filter == keyHandler.InputMethodName))
+        {
+            handler = keyHandler;
+            return true;
+        }
+
+        handler = null;
+        return false;
+    }
+
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
         List?.Assigner.PropertyChanged += AssignerOnPropertyChanged;
-        if (IsAssigning)
-            StartAssigning();
+        StartAssigning();
     }
 
     private void AssignerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (IsEffectivelyVisible && sender is ShortcutAssigner assigner && e.PropertyName == nameof(ShortcutAssigner.IsAssigning) && assigner.IsAssigning)
+        if (IsEffectivelyVisible && sender is ShortcutAssigner && e.PropertyName == nameof(ShortcutAssigner.IsAssigning))
             StartAssigning();
     }
 
     private void StartAssigning()
     {
+        if (!TryGetHandler(out var handler))
+            return;
         Panel.Focus();
-        List?.KeyHandler?.ResetKeys(List);
+        handler.ResetKeys(List);
     }
 
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (IsAssigning)
-            List?.KeyHandler?.OnPressed(e, List);
+        if (TryGetHandler(out var handler))
+            handler.OnPressed(e, List);
     }
 
     private void InputElement_OnKeyUp(object? sender, KeyEventArgs e)
     {
-        if (IsAssigning)
-            List?.KeyHandler?.OnReleased(e, List);
+        if (TryGetHandler(out var handler))
+            handler.OnReleased(e, List);
     }
 
     private void InputElement_OnTextInput(object? sender, TextInputEventArgs e)
     {
-        if (IsAssigning)
-            List?.KeyHandler?.OnTextInput(e, List);
+        if (TryGetHandler(out var handler))
+            handler.OnTextInput(e, List);
     }
 
     private void Panel_OnLosingFocus(object? sender, FocusChangingEventArgs e)

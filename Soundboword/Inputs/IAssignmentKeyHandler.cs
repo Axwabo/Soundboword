@@ -5,6 +5,8 @@ namespace Soundboword.Inputs;
 public interface IAssignmentKeyHandler
 {
 
+    string InputMethodName { get; }
+
     void OnPressed(KeyEventArgs eventArgs, ShortcutList list);
 
     void OnReleased(KeyEventArgs eventArgs, ShortcutList list);
