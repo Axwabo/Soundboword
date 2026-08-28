@@ -11,8 +11,6 @@ public sealed partial class ShortcutAssigner : ObservableObject
 
     public string? InputMethodFilter { get; set; }
 
-    public List<string> EnabledInputMethods { get; } = [];
-
     public ObservableCollection<Shortcut> Active { get; } = [];
 
     public void Close()
@@ -21,16 +19,13 @@ public sealed partial class ShortcutAssigner : ObservableObject
         IsAssigning = false;
         Target = null;
         InputMethodFilter = null;
-        EnabledInputMethods.Clear();
     }
 
-    public void Update(IEnumerable<Shortcut> list, IEnumerable<string> enabledInputMethods)
+    public void Update(IEnumerable<Shortcut> list)
     {
         Active.Clear();
         foreach (var shortcut in list)
             Active.Add(shortcut);
-        EnabledInputMethods.Clear();
-        EnabledInputMethods.AddRange(enabledInputMethods);
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

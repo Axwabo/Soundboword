@@ -46,8 +46,6 @@ public sealed partial class InputsViewModel : PageModelBase
     [ObservableProperty]
     public partial ShortcutAction TargetAction { get; set; }
 
-    public IEnumerable<string> Enabled => Available.Where(e => e.Activated).Select(e => e.Name);
-
     [RelayCommand]
     public void Refresh()
     {
@@ -94,7 +92,7 @@ public sealed partial class InputsViewModel : PageModelBase
     private void UpdateShortcutList()
     {
         if (Context.Interface is { } method)
-            Context.List.Assigner.Update(Context.List.For(method.Name, TargetAction), Enabled);
+            Context.List.Assigner.Update(Context.List.For(method.Name, TargetAction));
     }
 
 }
