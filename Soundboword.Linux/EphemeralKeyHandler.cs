@@ -25,7 +25,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public string InputMethodName => "Dummy";
+    public string InputMethodName => NullShortcut.InputMethodName;
 
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
