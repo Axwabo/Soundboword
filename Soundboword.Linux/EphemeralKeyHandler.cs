@@ -2,6 +2,7 @@
 using System.Text;
 using Avalonia.Input;
 using Soundboword.Inputs;
+using Soundboword.Linux.Shortcuts;
 
 namespace Soundboword.Linux;
 
@@ -25,7 +26,7 @@ public sealed class EphemeralKeyHandler : IAssignmentKeyHandler
 
     private KeyModifiers _modifiers;
 
-    public string InputMethodName => NullShortcut.InputMethodName;
+    public string InputMethodName => GlobalShortcutsInput.Name;
 
     public void OnPressed(KeyEventArgs eventArgs, ShortcutList list)
     {
