@@ -13,6 +13,8 @@ public sealed partial class ShortcutAssigner : ObservableObject
 
     public ObservableCollection<Shortcut> Active { get; } = [];
 
+    public HashSet<string> EnabledInputMethods { get; } = [];
+
     public void Close()
     {
         Active.Clear();

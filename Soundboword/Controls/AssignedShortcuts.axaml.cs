@@ -7,6 +7,8 @@ namespace Soundboword.Controls;
 public sealed partial class AssignedShortcuts : UserControl
 {
 
+    private static bool IsActive(string? filter, HashSet<string> enabled, string method) => filter != null ? method == filter : enabled.Contains(method);
+
     public AssignedShortcuts() => InitializeComponent();
 
     private ShortcutList? List => DataContext as ShortcutList;
@@ -16,7 +18,8 @@ public sealed partial class AssignedShortcuts : UserControl
     [MemberNotNullWhen(true, nameof(List))]
     private bool TryGetHandler([NotNullWhen(true)] out IAssignmentKeyHandler? handler)
     {
-        if (List is {Assigner: {IsAssigning: true, InputMethodFilter: var filter}, KeyHandler: { } keyHandler} && (filter == null || filter == keyHandler.InputMethodName))
+        if (List is {Assigner: {IsAssigning: true, InputMethodFilter: var filter, EnabledInputMethods: var enabled}, KeyHandler: { } keyHandler}
+            && IsActive(filter, enabled, keyHandler.InputMethodName))
         {
             handler = keyHandler;
             return true;

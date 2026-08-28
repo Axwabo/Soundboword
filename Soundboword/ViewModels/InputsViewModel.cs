@@ -24,6 +24,8 @@ public sealed partial class InputsViewModel : PageModelBase
         _all = factories.Select(e => new InputMethodInterface(e, context)).ToList();
         Context = context;
         Refresh();
+        foreach (var method in _all)
+            method.PropertyChanged += MethodOnPropertyChanged;
         foreach (var input in Available)
             if (initial || prefs.Remove(input.Name))
                 input.SetActivated(true);
@@ -72,6 +74,17 @@ public sealed partial class InputsViewModel : PageModelBase
     {
         if (e.PropertyName == nameof(InputEditingContext.Interface))
             UpdateShortcutList();
+    }
+
+    private void MethodOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not InputMethodInterface method || e.PropertyName != nameof(InputMethodInterface.Activated))
+            return;
+        var set = Context.List.Assigner.EnabledInputMethods;
+        if (method.Activated)
+            set.Add(method.Name);
+        else
+            set.Remove(method.Name);
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
