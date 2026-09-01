@@ -1,9 +1,10 @@
+using Avalonia.Input;
 using Avalonia.Win32.Input;
 using Soundboword.Inputs;
 
 namespace Soundboword.Windows.GlobalHotkeys;
 
-public sealed class GlobalHotkeyInput : IInputMethod
+public sealed partial class GlobalHotkeyInput : IInputMethod
 {
 
     public const string Name = "Global Hotkeys";
@@ -11,14 +12,16 @@ public sealed class GlobalHotkeyInput : IInputMethod
     private readonly Dictionary<int, Gesture> _gestures = [];
     private readonly IntPtr _hWnd;
     private readonly ShortcutList _list;
+    private readonly ILogger _logger;
     private readonly GlobalHotkeyRepository _repository;
 
     private readonly TopLevel _topLevel;
 
     private readonly HashSet<int> _toRemove = [];
 
-    public GlobalHotkeyInput(TopLevel topLevel, ShortcutList list)
+    public GlobalHotkeyInput(TopLevel topLevel, ShortcutList list, ILoggerFactory factory)
     {
+        _logger = factory.CreateLogger("GHI");
         _topLevel = topLevel;
         _hWnd = topLevel.TryGetPlatformHandle()!.Handle;
         _list = list;
@@ -36,7 +39,18 @@ public sealed class GlobalHotkeyInput : IInputMethod
 
     public void Dispose() => Win32Properties.RemoveWndProcHookCallback(_topLevel, WndProc);
 
-    private void RegisterHotKey(int id, Gesture gesture) => Loseterop.RegisterHotKey(_hWnd, id, (uint) gesture.Modifiers, (uint) KeyInterop.VirtualKeyFromKey(gesture.Key));
+    private void RegisterHotKey(int id, Gesture gesture)
+    {
+        var vkey = (uint) KeyInterop.VirtualKeyFromKey(gesture.Key);
+        LogRegister(id, gesture.Modifiers, gesture.Key, vkey);
+        Loseterop.RegisterHotKey(_hWnd, id, (uint) gesture.Modifiers, vkey);
+    }
+
+    [LoggerMessage(LogLevel.Debug, "Registering hotkey {Id}: {Modifiers} {Key} (Virtual: {VKey})")]
+    private partial void LogRegister(int id, KeyModifiers modifiers, Key key, uint vkey);
+
+    [LoggerMessage(LogLevel.Debug, "Unregistering hotkey {Id}")]
+    private partial void LogUnregister(int id);
 
     private void ShortcutListOnShortcutsChanged()
     {
@@ -52,7 +66,11 @@ public sealed class GlobalHotkeyInput : IInputMethod
 
         foreach (var i in _toRemove)
             if (_gestures.Remove(i))
+            {
+                LogUnregister(i);
                 Loseterop.UnregisterHotKey(_hWnd, i);
+            }
+
         _toRemove.Clear();
     }
 
