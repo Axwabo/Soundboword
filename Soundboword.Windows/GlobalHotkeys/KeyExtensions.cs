@@ -53,10 +53,12 @@ public static class KeyExtensions
     extension(KeyEventArgs eventArgs)
     {
 
-        public string Translate()
-            => Translations.TryGetValue(eventArgs.Key, out var translation)
-                ? translation
-                : eventArgs.KeySymbol?.ToUpper() ?? eventArgs.Key.ToString();
+        public string? Translate() => eventArgs.Key switch
+        {
+            Key.LeftCtrl or Key.RightCtrl or Key.LeftAlt or Key.RightAlt or Key.LeftShift or Key.RightShift => null,
+            var key when Translations.TryGetValue(key, out var translation) => translation,
+            var key => eventArgs.KeySymbol?.ToUpper() ?? key.ToString()
+        };
 
     }
 
