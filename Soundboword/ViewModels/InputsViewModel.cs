@@ -104,8 +104,10 @@ public sealed partial class InputsViewModel : PageModelBase
 
     private void UpdateShortcutList()
     {
-        if (Context.Interface is { } method)
-            Context.List.Assigner.Update(Context.List.For(method.Name, TargetAction));
+        if (Context.Interface is not { } method)
+            return;
+        Context.List.Assigner.Update(Context.List.For(method.Name, TargetAction));
+        Context.List.Assigner.Target = TargetAction;
     }
 
 }
