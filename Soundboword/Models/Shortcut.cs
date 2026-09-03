@@ -1,3 +1,3 @@
 namespace Soundboword.Models;
 
-public sealed record Shortcut(string InputMethodName, string FriendlyName, ShortcutAction Action);
+public sealed record Shortcut(string InputMethodName, string FriendlyName, ShortcutAction Action, bool IsEphemeral = false);

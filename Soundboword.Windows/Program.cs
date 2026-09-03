@@ -1,6 +1,4 @@
-﻿using Soundboword.Windows.Services;
-
-namespace Soundboword.Windows;
+﻿namespace Soundboword.Windows;
 
 internal static class Program
 {
@@ -14,6 +12,6 @@ internal static class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AvaloniaAppBuilder.Create(services => services.AddSingleton<IFileManagerOpener, ExplorerOpener>());
+        => AvaloniaAppBuilder.Create(services => services.AddSoundbowordWindows());
 
 }

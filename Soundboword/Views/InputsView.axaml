@@ -49,12 +49,12 @@
             </TextBlock>
             <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
                 <Label Content="{Binding Context.Name}" FontWeight="Bold" />
-                <Label FontWeight="Normal">Stop All Sounds</Label>
-                <ToggleButton IsChecked="{Binding Assigner.IsAssigning}">Add Shortcut</ToggleButton>
-                <Button Command="{Binding RemoveShortcutCommand}">Remove Shortcut</Button>
-                <Border Padding="3" Background="#22ffaa00" IsVisible="{Binding !!StopAllShortcut}">
-                    <Label Content="{Binding StopAllShortcut}" FontSize="18" MinHeight="30" VerticalContentAlignment="Center" />
-                </Border>
+                <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton IsChecked="{Binding Context.List.Assigner.IsAssigning}" ToolTip.Tip="Add Shortcut">⚡</ToggleButton>
+                    <Button Command="{Binding RemoveShortcutsCommand}" ToolTip.Tip="Remove Shortcuts">➖</Button>
+                </StackPanel>
+                <controls:AssignedShortcuts DataContext="{Binding Context.List}" />
             </StackPanel>
         </Panel>
     </Grid>

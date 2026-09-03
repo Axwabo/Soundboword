@@ -60,6 +60,8 @@ public sealed partial class UserData
         }
     }
 
+    public bool Exists(string name, bool json) => File.Exists(FullPath(name, json));
+
     public T Load<T>(string name, Func<T> fallback, JsonTypeInfo<T>? typeInfo) where T : notnull
     {
         if (typeInfo == null)

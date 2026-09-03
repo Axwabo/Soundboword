@@ -1,5 +1,5 @@
 using Avalonia.Input.Platform;
-using Avalonia.Threading;
+using Soundboword.Inputs;
 
 namespace Soundboword.ViewModels;
 
@@ -14,18 +14,18 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     {
         Context = new SoundEditingContext(new FilePicker());
         _audioManager = new AudioManager(new SoundFlowDeviceManager());
-        Shortcuts = new ShortcutList(null, new ShortcutAssigner());
+        Shortcuts = new ShortcutList(new Lifetime(), new ShortcutAssigner(), []);
     }
 
-    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts)
+    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts, IAssignmentKeyHandler? keyHandler = null)
     {
         _topLevel = topLevel;
         _audioManager = audioManager;
         Opener = opener;
         Shortcuts = shortcuts;
         Context = context;
+        KeyHandler = keyHandler;
         Context.PropertyChanged += ContextOnPropertyChanged;
-        ShortcutList.ShortcutsChanged += ShortcutsOnShortcutsChanged;
     }
 
     public IFileManagerOpener? Opener { get; }
@@ -34,7 +34,9 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 
     public SoundEditingContext Context { get; }
 
-    public ObservableCollection<Shortcut> Active { get; } = [];
+    public IAssignmentKeyHandler? KeyHandler { get; }
+
+    public ObservableCollection<Shortcut> Active => Shortcuts.Assigner.Active;
 
     [RelayCommand]
     private void Stop()
@@ -101,13 +103,11 @@ public sealed partial class EditSoundViewModel : ViewModelBase
             UpdateActiveShortcuts();
     }
 
-    private void ShortcutsOnShortcutsChanged() => Dispatcher.UIThread.Post(UpdateActiveShortcuts);
-
     private void UpdateActiveShortcuts()
     {
-        Active.Clear();
         if (Context.Model is not { } model)
             return;
+        Active.Clear();
         foreach (var shortcut in Shortcuts.ForSound(model))
             Active.Add(shortcut);
     }

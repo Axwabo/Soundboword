@@ -1,7 +1,8 @@
 using System.Diagnostics;
 
-namespace Soundboword.Windows.Services;
+namespace Soundboword.Windows;
 
+[RegisterSingleton<IFileManagerOpener>]
 public sealed class ExplorerOpener : IFileManagerOpener
 {
 

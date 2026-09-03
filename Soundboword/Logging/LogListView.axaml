@@ -6,6 +6,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Logging.LogListView"
              x:DataType="logging:LogListViewModel">
+    <UserControl.Resources>
+        <Thickness x:Key="ListBoxItemPadding">0</Thickness>
+    </UserControl.Resources>
     <StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="3">
             <Button Command="{Binding ClearCommand}">Clear In-App Logs</Button>

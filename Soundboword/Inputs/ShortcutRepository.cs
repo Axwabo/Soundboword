@@ -24,6 +24,8 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         InitializeMap(_map, soundList);
     }
 
+    protected Dictionary<T, HashSet<Shortcut>>.KeyCollection Keys => _shortcuts.Keys;
+
     public string InputMethodName { get; }
 
     public IEnumerable<Shortcut> All => _shortcuts.SelectMany(e => e.Value);
@@ -50,20 +52,20 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         var changed = false;
         foreach (var sound in soundList.Sounds)
             if (dictionary.TryGetValue(sound.Id, out var key))
-                changed |= Assign(key, new TriggerSoundAction(sound), null);
+                changed |= Assign(key, new TriggerSoundAction(sound), null) is not null;
         foreach (var action in ShortcutAction.Global)
             if (dictionary.TryGetValue(action.Id, out var stopAllKey))
-                changed |= Assign(stopAllKey, action, null);
+                changed |= Assign(stopAllKey, action, null) is not null;
         if (changed && notifyChanged)
             ShortcutList.NotifyShortcutsChanged();
     }
 
-    public bool Assign(T key, ShortcutAction action, HashSet<Shortcut>? all)
+    public Shortcut? Assign(T key, ShortcutAction action, HashSet<Shortcut>? all)
     {
         if (all != null && _map.TryGetValue(action.Id, out var assigned))
         {
             if (EqualityComparer<T>.Default.Equals(key, assigned))
-                return false;
+                return null;
             Unbind(assigned, action, all);
         }
 
@@ -72,7 +74,7 @@ public abstract class ShortcutRepository<T> : IShortcutRepository where T : notn
         _map[action.Id] = key;
         var shortcut = new Shortcut(InputMethodName, _toFriendlyName(key), action);
         all?.Add(shortcut);
-        return set.Add(shortcut);
+        return set.Add(shortcut) ? shortcut : null;
     }
 
     public virtual void Trigger(T key)

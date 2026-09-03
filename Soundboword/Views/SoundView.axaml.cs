@@ -1,11 +1,16 @@
+using Avalonia.Input;
+
 namespace Soundboword.Views;
 
-public partial class SoundView : UserControl
+public sealed partial class SoundView : UserControl
 {
 
-    public SoundView()
+    public SoundView() => InitializeComponent();
+
+    private void InputElement_OnGettingFocus(object? sender, FocusChangingEventArgs e)
     {
-        InitializeComponent();
+        if (e.NavigationMethod == NavigationMethod.Pointer)
+            e.TryCancel();
     }
 
 }

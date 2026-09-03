@@ -42,7 +42,7 @@
         <Panel Grid.Row="3" Grid.Column="0" Classes="hide">
             <Grid RowDefinitions="Auto,*">
                 <Label>Stream to download:</Label>
-                <ListBox Grid.Row="1" IsVisible="{Binding !IsLoadingStreams}" ItemsSource="{Binding Streams}" SelectedItem="{Binding SelectedStream}" Background="Transparent">
+                <ListBox Grid.Row="1" IsVisible="{Binding !IsLoading}" ItemsSource="{Binding Streams}" SelectedItem="{Binding SelectedStream}" Background="Transparent">
                     <ListBox.Resources>
                         <Thickness x:Key="ListBoxItemPadding">5</Thickness>
                     </ListBox.Resources>
@@ -52,7 +52,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Rectangle Grid.Row="1" Classes="loading" IsVisible="{Binding IsLoadingStreams}" MinHeight="60" />
+                <Rectangle Grid.Row="1" Classes="loading" IsVisible="{Binding IsLoading}" MinHeight="60" />
             </Grid>
         </Panel>
         <StackPanel Grid.Row="4" Grid.Column="0" Classes="hide" Orientation="Horizontal" Spacing="10">

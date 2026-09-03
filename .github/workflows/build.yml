@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  
+  build:
+    
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            project: Linux
+          - os: windows-latest
+            project: Windows
+        
+    runs-on: ${{ matrix.os }}
+
+    env: 
+      OUT: ${{ github.workspace }}/Out
+    
+    steps:
+      
+      - uses: actions/checkout@v7.0.1
+      
+      - run: dotnet publish -o ${{ env.OUT }}
+        working-directory: Soundboword.${{ matrix.project }}
+        
+#        TODO: bundle here?
+      
+      - run: rm -f *.dbg; rm -f *.pdb
+        working-directory: ${{ env.OUT }}
+        shell: bash
+      
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          path: ${{ env.OUT }}
+          name: ${{ matrix.project }}
+          if-no-files-found: error

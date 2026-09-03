@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Linux.PipeWire.LinkTogglesView"
              x:DataType="pipeWire:LinkTogglesViewModel">
-    <StackPanel IsEnabled="{Binding !SwitchHandler.IsSwitching}">
+    <StackPanel IsEnabled="{Binding !SwitchHandler.IsSwitching}" Spacing="0">
         <pipeWire:NodeLinkToggle DataContext="{Binding Manager.HearSounds}" Text="🔊 -&gt; 🎧" ToolTip.Tip="Hear Sounds (Sounds to Output Device)" />
         <pipeWire:NodeLinkToggle DataContext="{Binding Manager.MicSounds}" Text="🔊 -&gt; 📣" ToolTip.Tip="Mic Sounds (Sounds to Virtual Microphone)" />
         <pipeWire:NodeLinkToggle DataContext="{Binding Manager.MicPassthrough}" Text="🎤 -&gt; 📣" ToolTip.Tip="Mic Passthrough (Physical Microphone to Virtual Microphone)" />

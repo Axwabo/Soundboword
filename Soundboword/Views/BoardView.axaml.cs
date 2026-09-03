@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
 
@@ -25,6 +26,9 @@ public sealed partial class BoardView : UserControl
     public BoardView() => InitializeComponent();
 
     private BoardViewModel? Model => DataContext as BoardViewModel;
+
+    [MemberNotNullWhen(true, nameof(Model))]
+    private bool IsAssigning => Model?.Editor.Shortcuts.Assigner.IsAssigning ?? false;
 
     private void InputElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {

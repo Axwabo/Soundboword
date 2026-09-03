@@ -18,7 +18,6 @@ public sealed partial class InputEditingContext : ObservableObject
     {
         Close();
         Interface = method;
-        List.Assigner.Target = ShortcutAction.StopAllSounds;
         List.Assigner.InputMethodFilter = method.Name;
     }
 

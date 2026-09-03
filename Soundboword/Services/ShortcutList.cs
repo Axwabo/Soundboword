@@ -1,4 +1,3 @@
-using Avalonia.Controls.ApplicationLifetimes;
 using Soundboword.Inputs;
 
 namespace Soundboword.Services;
@@ -7,19 +6,20 @@ namespace Soundboword.Services;
 public sealed class ShortcutList
 {
 
-    public static void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
+    internal static void NotifyShortcutsChanged() => ShortcutsChanged?.Invoke();
 
     private readonly HashSet<Shortcut> _all = [];
 
     private readonly List<IShortcutRepository> _repositories;
 
-    public ShortcutList(IClassicDesktopStyleApplicationLifetime? lifetime, ShortcutAssigner assigner, params IEnumerable<IShortcutRepository> repositories)
+    public ShortcutList(Lifetime lifetime, ShortcutAssigner assigner, IEnumerable<IShortcutRepository> repositories, IAssignmentKeyHandler? keyHandler = null)
     {
         Assigner = assigner;
+        KeyHandler = keyHandler;
         _repositories = repositories.ToList();
         foreach (var repository in _repositories)
             _all.UnionWith(repository.All);
-        lifetime?.Exit += (_, _) =>
+        lifetime.Exit += () =>
         {
             foreach (var repository in _repositories)
                 repository.Commit();
@@ -28,21 +28,23 @@ public sealed class ShortcutList
 
     public ShortcutAssigner Assigner { get; }
 
+    public IAssignmentKeyHandler? KeyHandler { get; }
+
     public static event Action? ShortcutsChanged;
+
+    public IEnumerable<Shortcut> For(string inputMethod, ShortcutAction action)
+    {
+        foreach (var repository in _repositories)
+            if (repository.InputMethodName == inputMethod)
+                foreach (var shortcut in repository.GetAll(action))
+                    yield return shortcut;
+    }
 
     public IEnumerable<Shortcut> ForSound(SoundViewModel sound)
     {
         foreach (var repository in _repositories)
         foreach (var shortcut in repository.GetAll(new TriggerSoundAction(sound)))
             yield return shortcut;
-    }
-
-    public Shortcut? ForStopAll(string inputMethod)
-    {
-        foreach (var repository in _repositories)
-            if (repository.InputMethodName == inputMethod)
-                return repository.GetAll(ShortcutAction.StopAllSounds).FirstOrDefault();
-        return null;
     }
 
     public IEnumerable<Shortcut> ForRepository(string name)
@@ -65,17 +67,22 @@ public sealed class ShortcutList
 
         if (Assigner.InputMethodFilter is { } filter && filter != inputMethod)
             return;
-        Assigner.IsAssigning = false;
         if (Assigner.Target is { } action)
             Assign(key, action);
+        Assigner.IsAssigning = false;
     }
 
     public void Assign<T>(T key, ShortcutAction action) where T : notnull
     {
         var changed = false;
         foreach (var repository in _repositories)
-            if (repository is ShortcutRepository<T> implementation)
-                changed |= implementation.Assign(key, action, _all);
+        {
+            if (repository is not ShortcutRepository<T> implementation || implementation.Assign(key, action, _all) is not { } shortcut)
+                continue;
+            changed = true;
+            Assigner.Active.ReplaceOrAdd(shortcut);
+        }
+
         if (changed)
             NotifyShortcutsChanged();
     }
@@ -87,8 +94,12 @@ public sealed class ShortcutList
         foreach (var repository in _repositories)
             repository.RemoveAll(action);
         var removed = _all.RemoveWhere(e => e.Action == action);
-        if (removed != 0)
-            NotifyShortcutsChanged();
+        if (removed == 0)
+            return;
+        Assigner.Active.Clear();
+        NotifyShortcutsChanged();
     }
+
+    public T RequireRepository<T>() where T : IShortcutRepository => _repositories.OfType<T>().First();
 
 }
