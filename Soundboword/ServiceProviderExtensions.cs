@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls.Templates;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Soundboword.Editor;
 using Soundboword.Logging;
 using Soundboword.Settings;
 using Soundboword.Settings.General;
@@ -55,6 +56,8 @@ public static class ServiceProviderExtensions
             .AddViewLocator<LogView, LogViewModel>()
             .AddViewLocator<LogListView, LogListViewModel>()
             .AddViewLocator<LogPreferencesView, LogPreferences>();
+
+        internal IServiceCollection AddEditor() => collection.AddScoped<EditorWindowViewModel>();
 
         internal IServiceCollection AddYouTube() => collection.AddScoped<AddFromYouTubeViewModel>()
             .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()

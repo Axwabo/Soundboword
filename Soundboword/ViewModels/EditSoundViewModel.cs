@@ -1,4 +1,5 @@
 using Avalonia.Input.Platform;
+using Soundboword.Editor;
 using Soundboword.Inputs;
 
 namespace Soundboword.ViewModels;
@@ -7,7 +8,7 @@ public sealed partial class EditSoundViewModel : ViewModelBase
 {
 
     private readonly AudioManager _audioManager;
-
+    private readonly EditorList? _editors;
     private readonly TopLevel? _topLevel;
 
     public EditSoundViewModel()
@@ -17,10 +18,11 @@ public sealed partial class EditSoundViewModel : ViewModelBase
         Shortcuts = new ShortcutList(new Lifetime(), new ShortcutAssigner(), []);
     }
 
-    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts, IAssignmentKeyHandler? keyHandler = null)
+    public EditSoundViewModel(TopLevel topLevel, IFileManagerOpener opener, SoundEditingContext context, AudioManager audioManager, ShortcutList shortcuts, EditorList editors, IAssignmentKeyHandler? keyHandler = null)
     {
         _topLevel = topLevel;
         _audioManager = audioManager;
+        _editors = editors;
         Opener = opener;
         Shortcuts = shortcuts;
         Context = context;
@@ -55,7 +57,8 @@ public sealed partial class EditSoundViewModel : ViewModelBase
     [RelayCommand]
     private void OpenEditor()
     {
-        // TODO
+        if (Context.Model is { } model)
+            _editors?.Open(model);
     }
 
     [RelayCommand]

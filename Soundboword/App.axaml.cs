@@ -18,6 +18,7 @@ public sealed class App : Application
     {
         Services.AddUserData(IShortcutRepository.Key)
             .AddViews()
+            .AddEditor()
             .AddYouTube()
             .AddLogging(builder => builder.AddAvalonia().AddFile());
 

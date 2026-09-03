@@ -2,9 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:editor="clr-namespace:Soundboword.Editor"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Soundboword.Editor.EditorWindow"
-        Title="EditorWindow">
-    Welcome to Avalonia!
+        x:DataType="editor:EditorWindowViewModel"
+        Title="{Binding Content.Context.Sound.Name, StringFormat=Editor - \{0\}}">
+    <Design.DataContext>
+        <editor:EditorWindowViewModel/>
+    </Design.DataContext>
+    <UserControl Content="{Binding Content}"/>
 </Window>
 
