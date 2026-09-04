@@ -55,8 +55,8 @@
             </TextBlock>
             <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
                 <Label Content="{Binding Context.Name}" Classes="bold" />
-                <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Spacing="3" Orientation="Horizontal">
+                    <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
                     <ToggleButton IsChecked="{Binding Context.List.Assigner.IsAssigning}" ToolTip.Tip="Add Shortcut">⚡</ToggleButton>
                     <Button Command="{Binding RemoveShortcutsCommand}" ToolTip.Tip="Remove Shortcuts">➖</Button>
                 </StackPanel>
