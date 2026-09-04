@@ -21,19 +21,19 @@ public sealed class EditorContext
 
     public double Start
     {
-        get => Edits.Start.GetValueOrDefault().TotalSeconds;
+        get => Edits.Start.TotalSeconds;
         set => Edits.Start = TimeSpan.FromSeconds(value);
     }
 
     public double LoopStart
     {
-        get => Edits.LoopStart.GetValueOrDefault().TotalSeconds;
+        get => Edits.LoopStart.TotalSeconds;
         set => Edits.LoopStart = TimeSpan.FromSeconds(value);
     }
 
     public double LoopEnd
     {
-        get => Edits.LoopEnd.GetValueOrDefault().TotalSeconds;
+        get => Edits.LoopEnd.TotalSeconds;
         set => Edits.LoopEnd = TimeSpan.FromSeconds(value);
     }
 

@@ -134,10 +134,10 @@ public sealed class SoundFlowDeviceManager : IDisposable
         _playback!.MasterMixer.AddComponent(player);
         player.Volume = sound.Volume;
         player.IsLooping = sound.Loop;
-        if (sound.Edits is {Start: { } start})
+        if (sound.Edits is {HasStart: true, Start: var start})
             player.Seek(start);
-        if (sound.Edits is {LoopStart: { } loopStart, LoopEnd: var loopEnd})
-            player.SetLoopPoints(loopStart, loopEnd);
+        if (sound.Edits is {HasLoopStart: true, LoopStart: var loopStart, HasLoopEnd: var hasLoopEnd, LoopEnd: var loopEnd})
+            player.SetLoopPoints(loopStart, hasLoopEnd ? loopEnd : null);
         return new SoundPlayback(provider, player, sound.Name);
     }
 

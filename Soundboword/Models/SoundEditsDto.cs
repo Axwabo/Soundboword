@@ -6,7 +6,7 @@ public sealed record SoundEditsDto(
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     TimeSpan? Start,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    TimeSpan? End,
+    TimeSpan? End, // TODO: provider does not support it
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     TimeSpan? LoopStart,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -16,14 +16,18 @@ public sealed record SoundEditsDto(
 
     public static implicit operator SoundEditsDto?(SoundEdits? edits) => edits == null
         ? null
-        : new SoundEditsDto(edits.Start, edits.End, edits.LoopStart, edits.LoopEnd);
+        : new SoundEditsDto(
+            edits.HasStart ? edits.Start : null,
+            null,
+            edits.HasLoopStart ? edits.LoopStart : null,
+            edits.HasLoopEnd ? edits.LoopEnd : null
+        );
 
     public SoundEdits ToModel() => new()
     {
-        Start = Start,
-        End = End,
-        LoopStart = LoopStart,
-        LoopEnd = LoopEnd
+        Start = Start.GetValueOrDefault(),
+        LoopStart = LoopStart.GetValueOrDefault(),
+        LoopEnd = LoopEnd.GetValueOrDefault()
     };
 
 }
