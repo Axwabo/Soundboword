@@ -41,7 +41,7 @@
                     <Button Grid.Row="1" Grid.Column="3" Classes="icon" Command="{Binding RevealCommand}" ToolTip.Tip="Show in File Manager" IsEnabled="{Binding !!Opener}">📂</Button>
                     <Button Grid.Row="1" Grid.Column="4" Classes="icon" Command="{Binding DeleteCommand}" ToolTip.Tip="Delete Sound">🗑️</Button>
                 </Grid>
-                <TextBlock TextWrapping="Wrap" MaxWidth="300" Text="{Binding Context.Information}"
+                <TextBlock TextWrapping="Wrap" Text="{Binding Context.Information}"
                            FontWeight="{Binding Context.IsNotFound, Converter={StaticResource FileInfoWeight}}"
                            Foreground="{Binding Context.IsNotFound, Converter={StaticResource FileInfoColor}}" />
                 <Label>Trigger Mode:</Label>

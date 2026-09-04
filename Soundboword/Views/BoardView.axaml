@@ -10,7 +10,11 @@
         <viewModels:BoardViewModel />
     </Design.DataContext>
     <Panel DragDrop.AllowDrop="True" DragDrop.DragOver="OnDragOver" DragDrop.DragLeave="OnDragLeave" DragDrop.Drop="OnDrop">
-        <Grid ColumnDefinitions="*,306" RowDefinitions="Auto,*" ColumnSpacing="3" RowSpacing="5">
+        <Grid RowDefinitions="Auto,*" ColumnSpacing="3" RowSpacing="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="{StaticResource SidebarColumn}" MaxWidth="{StaticResource SidebarColumn}" />
+            </Grid.ColumnDefinitions>
             <WrapPanel Orientation="Horizontal" ItemSpacing="3" LineSpacing="3">
                 <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>
                 <Button Command="{Binding List.AddCommand}">Add Sounds</Button>

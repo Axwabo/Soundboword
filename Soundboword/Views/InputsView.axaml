@@ -19,19 +19,25 @@
         </viewModels:InputsViewModel>
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="Label">
+        <Style Selector="Label.bold">
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Styles>
-    <Grid ColumnDefinitions="*,Auto,*,200" RowDefinitions="Auto,Auto,*" RowSpacing="5" ColumnSpacing="5">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="5" ColumnSpacing="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="{StaticResource SidebarColumn}" MaxWidth="{StaticResource SidebarColumn}" />
+        </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Label>Available Input Devices</Label>
+            <Label Classes="bold">Available Input Devices</Label>
             <Button Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh Devices">🔄</Button>
         </StackPanel>
         <Rectangle Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" Width="1" Fill="DimGray" />
-        <Label Grid.Row="0" Grid.Column="2">Unavailable Devices</Label>
+        <Label Grid.Row="0" Grid.Column="2" Classes="bold">Unavailable Devices</Label>
         <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Available}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="models:InputMethodInterface">
@@ -48,7 +54,7 @@
                 Configure a device
             </TextBlock>
             <StackPanel IsVisible="{Binding !!Context.Interface}" Margin="3">
-                <Label Content="{Binding Context.Name}" FontWeight="Bold" />
+                <Label Content="{Binding Context.Name}" Classes="bold" />
                 <ComboBox ItemsSource="{Binding GlobalActions}" SelectedItem="{Binding TargetAction}" DisplayMemberBinding="{Binding Id}" />
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton IsChecked="{Binding Context.List.Assigner.IsAssigning}" ToolTip.Tip="Add Shortcut">⚡</ToggleButton>
