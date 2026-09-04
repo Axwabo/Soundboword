@@ -5,7 +5,7 @@ namespace Soundboword.Editor;
 public sealed partial class EditorWindow : DisposableWindow
 {
 
-    public static EditorWindow Show(EditorList list,IServiceProvider provider, SoundViewModel sound)
+    public static EditorWindow Show(EditorList list, IServiceProvider provider, SoundViewModel sound)
     {
         var window = new EditorWindow
         {
@@ -23,6 +23,13 @@ public sealed partial class EditorWindow : DisposableWindow
 
     public EditorWindow() => InitializeComponent();
 
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (DataContext is EditorWindowViewModel {Content: var content})
+            content.CloseRequested += Close;
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         base.OnClosed(e);
@@ -32,4 +39,3 @@ public sealed partial class EditorWindow : DisposableWindow
     }
 
 }
-

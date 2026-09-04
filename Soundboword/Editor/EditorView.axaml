@@ -27,9 +27,9 @@
             <Label Grid.Row="2" Grid.Column="2" Content="{Binding Context.Edits.LoopEnd}" />
         </Grid>
         <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
-            <Button>Save &amp; Exit</Button>
-            <Button HotKey="Ctrl + S">Save</Button>
-            <Button>Discard</Button>
+            <Button Command="{Binding SaveAndExitCommand}">Save &amp; Exit</Button>
+            <Button Command="{Binding SaveCommand}" HotKey="Ctrl + S">Save</Button>
+            <Button Command="{Binding ExitCommand}">Discard</Button>
         </StackPanel>
     </StackPanel>
 </UserControl>
