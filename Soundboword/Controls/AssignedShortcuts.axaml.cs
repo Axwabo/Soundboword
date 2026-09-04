@@ -46,8 +46,8 @@ public sealed partial class AssignedShortcuts : UserControl
     {
         if (!TryGetHandler(out var handler))
             return;
-        Panel.Focus();
         handler.ResetKeys(List);
+        Dispatcher.Post(() => Panel.Focus());
     }
 
     private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
