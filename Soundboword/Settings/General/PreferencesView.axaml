@@ -11,12 +11,14 @@
     <Design.DataContext>
         <general:Preferences />
     </Design.DataContext>
-    <StackPanel>
+    <StackPanel Spacing="5">
         <Label Classes="title">General</Label>
         <Label>Default Trigger Mode:</Label>
         <ComboBox SelectedItem="{Binding Path=DefaultTriggerMode}" ItemsSource="{x:Static converters:TriggerModeConverter.PlaybackModes}"
                   DisplayMemberBinding="{Binding Converter={StaticResource PlaybackMode}}" />
         <Label>Default Sound Interaction:</Label>
         <ComboBox SelectedItem="{Binding Path=DefaultInteraction}" ItemsSource="{x:Static models:InteractionExtensions.Interactions}" />
+        <CheckBox IsChecked="{Binding ConfigOnTrigger}" ToolTip.Tip="If enabled, opens the sound configuration when the 🔊 icon is clicked.
+This does not apply when a shortcut triggers a sound.">Configure Sound On Trigger Click</CheckBox>
     </StackPanel>
 </UserControl>

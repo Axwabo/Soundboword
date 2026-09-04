@@ -29,7 +29,6 @@ public sealed partial class SoundList
     private readonly UserData _data;
     private readonly FilePicker _filePicker;
     private readonly ILogger _logger;
-    private readonly Preferences _preferences;
 
     public SoundList()
     {
@@ -37,7 +36,7 @@ public sealed partial class SoundList
         AudioManager = new AudioManager(new SoundFlowDeviceManager(_data, new Lifetime()));
         _filePicker = new FilePicker();
         _logger = NullLogger.Instance;
-        _preferences = new Preferences();
+        Prefs = new Preferences();
         Editor = new SoundEditingContext(_filePicker);
     }
 
@@ -46,7 +45,7 @@ public sealed partial class SoundList
         _data = data;
         _filePicker = filePicker;
         _logger = loggerFactory.CreateLogger("Sounds");
-        _preferences = settingsManager.Require<Preferences>();
+        Prefs = settingsManager.Require<Preferences>();
         Editor = editor;
         AudioManager = audioManager;
         var notFound = 0;
@@ -79,6 +78,8 @@ public sealed partial class SoundList
             LogNotFound(notFound);
         lifetime.Exit += SaveSounds;
     }
+
+    public Preferences Prefs { get; }
 
     public AudioManager AudioManager { get; }
 
@@ -115,8 +116,8 @@ public sealed partial class SoundList
         Path = path,
         Name = name,
         List = this,
-        Mode = _preferences.DefaultTriggerMode,
-        Interaction = _preferences.DefaultInteraction
+        Mode = Prefs.DefaultTriggerMode,
+        Interaction = Prefs.DefaultInteraction
     }.UpdateDuration());
 
     public void Delete(SoundViewModel sound)

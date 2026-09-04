@@ -72,7 +72,12 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
             : $"Duration: {Duration.Value:hh':'mm':'ss}";
 
     [RelayCommand]
-    private void Trigger() => List.AudioManager.Trigger(this);
+    private void Trigger()
+    {
+        List.AudioManager.Trigger(this);
+        if (List.Prefs.ConfigOnTrigger)
+            List.Editor.Open(this);
+    }
 
     [RelayCommand]
     private void Stop() => List.AudioManager.StopAll(this);
