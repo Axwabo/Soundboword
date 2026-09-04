@@ -18,10 +18,10 @@
     </Window.Resources>
     <Grid RowDefinitions="*,Auto">
         <Panel>
-            <Grid ColumnDefinitions="Auto,*">
+            <Grid ColumnDefinitions="Auto,*" Name="ContentGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="8*" />
-                    <RowDefinition Height="{Binding TogglesRowHeight}" MinHeight="{Binding TogglesRowMinHeight}" />
+                    <RowDefinition Height="*" MinHeight="160" />
                 </Grid.RowDefinitions>
                 <TabStrip ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}">
                     <TabStrip.ItemsPanel>
