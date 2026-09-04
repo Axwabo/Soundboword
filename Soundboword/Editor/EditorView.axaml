@@ -6,5 +6,30 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Soundboword.Editor.EditorView"
              x:DataType="editor:EditorContentViewModel">
-    Welcome to Avalonia!
+    <Design.DataContext>
+        <editor:EditorContentViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Label">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Orientation="Vertical" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,200,100" ColumnSpacing="5">
+            <CheckBox IsChecked="{Binding Context.Edits.HasStart}">Start Time</CheckBox>
+            <Slider Grid.Row="0" Grid.Column="1" Value="{Binding Context.Start}" Maximum="{Binding Context.Max}" />
+            <Label Grid.Row="0" Grid.Column="2" Content="{Binding Context.Edits.Start}" />
+            <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Context.Edits.HasLoopStart}">Loop Start</CheckBox>
+            <Slider Grid.Row="1" Grid.Column="1" Value="{Binding Context.LoopStart}" Maximum="{Binding Context.Max}" />
+            <Label Grid.Row="1" Grid.Column="2" Content="{Binding Context.Edits.LoopStart}" />
+            <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding Context.Edits.HasLoopEnd}">Loop End</CheckBox>
+            <Slider Grid.Row="2" Grid.Column="1" Value="{Binding Context.LoopEnd}" Maximum="{Binding Context.Max}" />
+            <Label Grid.Row="2" Grid.Column="2" Content="{Binding Context.Edits.LoopEnd}" />
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+            <Button>Save &amp; Exit</Button>
+            <Button HotKey="Ctrl + S">Save</Button>
+            <Button>Discard</Button>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

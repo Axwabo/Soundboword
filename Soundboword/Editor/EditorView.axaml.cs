@@ -1,11 +1,8 @@
 namespace Soundboword.Editor;
 
-public partial class EditorView : UserControl
+public sealed partial class EditorView : UserControl
 {
 
-    public EditorView()
-    {
-        InitializeComponent();
-    }
+    public EditorView() => InitializeComponent();
 
 }
