@@ -13,9 +13,22 @@ public sealed class EditorContext
         Duration = TimeSpan.FromSeconds(5)
     };
 
-    public SoundViewModel Sound { get; set; } = Sample;
+    public SoundViewModel Sound
+    {
+        get;
+        set
+        {
+            field = value;
+            if (value.Edits != null)
+                Edits = value.Edits;
+        }
+    } = Sample;
 
-    public SoundEdits Edits { get; } = new();
+    public SoundEdits Edits
+    {
+        get => field ??= new SoundEdits();
+        private set;
+    }
 
     public double Max => Sound.Duration.GetValueOrDefault().TotalSeconds;
 
