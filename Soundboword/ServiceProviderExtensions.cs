@@ -57,7 +57,8 @@ public static class ServiceProviderExtensions
             .AddViewLocator<LogListView, LogListViewModel>()
             .AddViewLocator<LogPreferencesView, LogPreferences>();
 
-        internal IServiceCollection AddEditor() => collection.AddScoped<EditorWindowViewModel>();
+        internal IServiceCollection AddEditor() => collection.AddScoped<EditorWindowViewModel>()
+            .AddScopedView<EditorView, EditorContentViewModel>();
 
         internal IServiceCollection AddYouTube() => collection.AddScoped<AddFromYouTubeViewModel>()
             .AddScopedView<YouTubeSearchView, YouTubeSearchViewModel>()

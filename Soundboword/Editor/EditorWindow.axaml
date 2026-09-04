@@ -3,13 +3,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:editor="clr-namespace:Soundboword.Editor"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        Width="600" Height="400"
         x:Class="Soundboword.Editor.EditorWindow"
         x:DataType="editor:EditorWindowViewModel"
         Title="{Binding Content.Context.Sound.Name, StringFormat=Editor - \{0\}}">
     <Design.DataContext>
-        <editor:EditorWindowViewModel/>
+        <editor:EditorWindowViewModel />
     </Design.DataContext>
-    <UserControl Content="{Binding Content}"/>
+    <UserControl Content="{Binding Content}" />
 </Window>
-

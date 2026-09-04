@@ -68,6 +68,8 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
+    public TimeSpan? Duration => Model?.Duration;
+
     public bool CanRelink => Model?.CanRelink ?? false;
 
     public bool IsNotFound => Model?.IsNotFound ?? false;
