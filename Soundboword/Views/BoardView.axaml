@@ -13,7 +13,7 @@
         <Grid RowDefinitions="Auto,*" ColumnSpacing="3" RowSpacing="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="{StaticResource SidebarColumn}" MaxWidth="{StaticResource SidebarColumn}" />
+                <ColumnDefinition Width="306" MaxWidth="306" />
             </Grid.ColumnDefinitions>
             <WrapPanel Orientation="Horizontal" ItemSpacing="3" LineSpacing="3">
                 <Button Command="{Binding StopAllCommand}">Stop All Sounds</Button>

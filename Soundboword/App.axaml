@@ -35,8 +35,6 @@
         <converters:BoolFontWeightConverter x:Key="FileInfoWeight" True="SemiBold" False="Normal" />
         <converters:BoolBrushConverter x:Key="ShortcutBackground" True="#22ffaa00" False="#2233ff00" />
 
-        <GridLength x:Key="SidebarColumn">306</GridLength>
-
         <SolidColorBrush x:Key="Playing" Color="#1100ff00" />
         <SolidColorBrush x:Key="Paused" Color="#11ffff00" />
         <SolidColorBrush x:Key="Error" Color="#11ff0000" />

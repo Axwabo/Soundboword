@@ -30,7 +30,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
-            <ColumnDefinition Width="{StaticResource SidebarColumn}" MaxWidth="{StaticResource SidebarColumn}" />
+            <ColumnDefinition Width="306" MaxWidth="306" />
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal">
             <Label Classes="bold">Available Input Devices</Label>
