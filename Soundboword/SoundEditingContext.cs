@@ -68,8 +68,6 @@ public sealed partial class SoundEditingContext : ObservableObject
         }
     }
 
-    public TimeSpan? Duration => Model?.Duration;
-
     public bool CanRelink => Model?.CanRelink ?? false;
 
     public bool IsNotFound => Model?.IsNotFound ?? false;
@@ -82,6 +80,7 @@ public sealed partial class SoundEditingContext : ObservableObject
         _assigner?.Target = new TriggerSoundAction(model);
         Model = model;
         Model.PropertyChanged += ModelOnPropertyChanged;
+        OnPropertyChanged(nameof(Information));
     }
 
     public void Close()
