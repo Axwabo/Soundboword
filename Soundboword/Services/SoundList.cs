@@ -61,6 +61,7 @@ public sealed partial class SoundList
                 Volume = sound.Volume,
                 Mode = sound.Mode,
                 Interaction = sound.Interaction,
+                Edits = sound.Edits?.ToModel(),
                 List = this
             }.UpdateDuration();
             Sounds.Add(soundViewModel);
@@ -126,7 +127,7 @@ public sealed partial class SoundList
 
     public void SaveSounds() => _data.Save(
         FileName,
-        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume, e.Interaction)),
+        Sounds.Select(e => new SoundDto(e.Id, e.Name, e.Path, e.Mode, e.Loop, e.Volume, e.Interaction, e.Edits)),
         SourceGenerationContext.Default.IEnumerableSoundDto
     );
 

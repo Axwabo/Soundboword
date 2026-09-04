@@ -37,6 +37,9 @@ public sealed partial class SoundViewModel : ViewModelBase, IPlaybackSuspender
     public partial OtherSoundInteraction Interaction { get; set; }
 
     [ObservableProperty]
+    public partial SoundEdits? Edits { get; set; }
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AnyPlaybacks), nameof(CanTrigger), nameof(CanRelink), nameof(IsNotFound))]
     public partial SoundState PlaybackState { get; private set; }
 

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Soundboword.Models;
 
 public sealed record SoundDto(
@@ -7,5 +9,7 @@ public sealed record SoundDto(
     TriggerMode Mode,
     bool Loop,
     float Volume = 1,
-    OtherSoundInteraction Interaction = OtherSoundInteraction.Nothing
+    OtherSoundInteraction Interaction = OtherSoundInteraction.Nothing,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    SoundEditsDto? Edits = null
 );
