@@ -12,7 +12,7 @@ zipArchive.CreateEntryFromFile($"../{readme}", readme);
 
 foreach (var file in Directory.EnumerateFiles("."))
     if (Path.GetExtension(file) is not ("dbg" or "pdb"))
-        zipArchive.CreateEntryFromFile(file, $"bin/{Path.GetFileNameWithoutExtension(file)}");
+        zipArchive.CreateEntryFromFile(file, $"bin/{Path.GetFileName(file)}");
 
 foreach (var file in Directory.EnumerateFiles($"../{licenses}"))
-    zipArchive.CreateEntryFromFile(file, $"{licenses}/{Path.GetFileNameWithoutExtension(file)}");
+    zipArchive.CreateEntryFromFile(file, $"{licenses}/{Path.GetFileName(file)}");
