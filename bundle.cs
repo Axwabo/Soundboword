@@ -13,7 +13,7 @@ zipArchive.CreateEntryFromFile($"../{readme}", readme);
 
 foreach (var file in Directory.EnumerateFiles("."))
 {
-    if (Path.GetExtension(file) is ".dbg" or ".pdb")
+    if (Path.GetExtension(file) is ".dbg" or ".pdb" or ".zip")
         continue;
     var name = Path.GetFileName(file);
     if (name.StartsWith($"{project}.{args[1]}"))
