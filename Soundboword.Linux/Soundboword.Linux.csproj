@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="CliWrap" />
 
         <PackageReference Include="Tmds.DBus.Generator" PrivateAssets="all" />
