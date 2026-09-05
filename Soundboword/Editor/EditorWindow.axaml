@@ -7,7 +7,7 @@
         Width="600" Height="400"
         x:Class="Soundboword.Editor.EditorWindow"
         x:DataType="editor:EditorWindowViewModel"
-        Icon="Assets/edit.png"
+        Icon="/Assets/edit.png"
         Title="{Binding Content.Context.Sound.Name, StringFormat=Editor - \{0\}}">
     <Design.DataContext>
         <editor:EditorWindowViewModel />

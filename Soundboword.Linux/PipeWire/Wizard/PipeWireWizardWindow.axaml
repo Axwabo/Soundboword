@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
         x:Class="Soundboword.Linux.PipeWire.Wizard.PipeWireWizardWindow"
         x:DataType="wizard:PipeWireWizardWindowViewModel"
-        Icon="Assets/PipeWire.png"
+        Icon="/Assets/PipeWire.png"
         Title="PipeWire Wizard"
         Width="600" Height="300"
         Padding="5">
