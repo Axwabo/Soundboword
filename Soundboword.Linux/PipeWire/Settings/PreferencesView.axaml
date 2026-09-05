@@ -10,5 +10,6 @@
         <!-- ReSharper disable once Xaml.StyleClassNotFound -->
         <Label Classes="title">PipeWire</Label>
         <CheckBox IsChecked="{Binding AutoMicSounds}">Auto-connect Sounds to Virtual Mic</CheckBox>
+        <CheckBox IsChecked="{Binding AutoPassthrough}">Auto-connect Physical Microphone to Virtual Mic</CheckBox>
     </StackPanel>
 </UserControl>

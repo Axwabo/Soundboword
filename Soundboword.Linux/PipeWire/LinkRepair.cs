@@ -30,7 +30,9 @@ public sealed class LinkRepair : DeviceSwitchHandler
             _everRefreshed
                 ? _nodeManager.MicSounds?.IsLinked
                 : _preferences.AutoMicSounds,
-            _nodeManager.MicPassthrough?.IsLinked,
+            _everRefreshed
+                ? _nodeManager.MicPassthrough?.IsLinked
+                : _preferences.AutoPassthrough,
             _nodeManager.HearMyself?.IsLinked
         );
         if (output != _nodeManager.OutputNode && hearMyself is {IsLinked: true})

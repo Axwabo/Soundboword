@@ -15,11 +15,15 @@ public sealed partial class PipeWirePreferences : SettingsSection
     {
         var dto = Load(() => SettingsDto.Default, SourceGenerationContext.Default.SettingsDto);
         AutoMicSounds = dto.AutoMicSounds;
+        AutoPassthrough = dto.AutoPassthrough;
     }
 
     [ObservableProperty]
     public partial bool AutoMicSounds { get; set; }
 
-    public override void Save() => Save(new SettingsDto(AutoMicSounds), SourceGenerationContext.Default.SettingsDto);
+    [ObservableProperty]
+    public partial bool AutoPassthrough { get; set; }
+
+    public override void Save() => Save(new SettingsDto(AutoMicSounds, AutoPassthrough), SourceGenerationContext.Default.SettingsDto);
 
 }
