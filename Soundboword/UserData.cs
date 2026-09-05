@@ -18,10 +18,10 @@ public sealed partial class UserData
         _logger = loggerFactory?.CreateLogger("User Data") ?? NullLogger.Instance;
     }
 
-    public UserData(string folder, ILoggerFactory loggerFactory)
+    public UserData(string folder, ILoggerFactory? loggerFactory = null)
     {
         Folder = Path.Combine(Root, folder);
-        _logger = loggerFactory.CreateLogger($"{folder} Data");
+        _logger = loggerFactory?.CreateLogger($"{folder} Data") ?? NullLogger.Instance;
     }
 
     public string Folder { get; }

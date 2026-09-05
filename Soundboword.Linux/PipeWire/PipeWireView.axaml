@@ -22,7 +22,7 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding LaunchWizardCommand}">Launch Wizard</Button>
-                    <Button Command="{Binding RefreshLinksCommand}">Refresh Links</Button>
+                    <Button Command="{Binding RefreshLinksCommand}">Refresh Objects</Button>
                 </StackPanel>
                 <TextBlock IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNull}}" Foreground="Red" FontWeight="Bold" Text="The Soundboword Microphone could not be found!&#10;Launch the wizard to set it up." />
                 <StackPanel IsVisible="{Binding NodeManager.MicNode, Converter={x:Static ObjectConverters.IsNotNull}}">

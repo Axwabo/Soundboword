@@ -1,3 +1,5 @@
+using Soundboword.Linux.PipeWire.Settings;
+
 namespace Soundboword.Linux.PipeWire;
 
 [RegisterSingleton(Registration = RegistrationStrategy.Self)]
@@ -5,16 +7,23 @@ public sealed partial class NodeManager : ObservableObject
 {
 
     private const string Stream = "Stream/Output/Audio";
+    private const string FileName = "micorphone";
 
     private static readonly Comparison<PipeWirePort> PortComparison = (a, b) => a.PortId.CompareTo(b.PortId);
 
     private readonly PipeWireCli _cli;
+    private readonly UserData _data;
     private readonly SoundFlowDeviceManager _outputManager;
 
-    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager)
+    private bool _isRefreshing;
+
+    private string? _sourceName;
+
+    public NodeManager(PipeWireCli cli, SoundFlowDeviceManager outputManager, [FromKeyedServices(PipeWirePreferences.Key)] UserData data)
     {
         _cli = cli;
         _outputManager = outputManager;
+        _data = data;
     }
 
     public ObservableCollection<PipeWireNode> Sources { get; } = [];
@@ -47,6 +56,9 @@ public sealed partial class NodeManager : ObservableObject
 
     public async Task RefreshAsync(bool? hearSounds, bool? micSounds, bool? micPassthrough, bool? hearMyself)
     {
+        _isRefreshing = true;
+        var preferred = _data.Load(FileName);
+        _sourceName = PhysicalMicrophone?.Description;
         Sources.Clear();
         Ports.Clear();
         Links.Clear();
@@ -54,12 +66,20 @@ public sealed partial class NodeManager : ObservableObject
         await Task.Delay(100);
         RefreshObjects(await PipeWireCli.ListObjectsAsync());
         Ports.Sort(PortComparison);
-        PhysicalMicrophone ??= Sources.Count == 0 ? null : Sources[0];
+        PhysicalMicrophone = Sources.Count == 0
+            ? null
+            : GetSource(_sourceName) ?? GetSource(preferred) ?? Sources[0];
         (HearSounds, var linkHearSounds) = NodeLinkManager.Create(PlaybackNode, OutputNode, Ports, Links, hearSounds);
         (MicSounds, var linkMicSounds) = NodeLinkManager.Create(PlaybackNode, MicNode, Ports, Links, micSounds);
         var (linkMicPassthrough, linkHearMyself) = UpdatePhysicalMic(micPassthrough, hearMyself);
         await Task.WhenAll(linkHearSounds, linkMicSounds, linkMicPassthrough, linkHearMyself);
+        _isRefreshing = false;
     }
+
+    private PipeWireNode? GetSource(string? preferred)
+        => preferred == null
+            ? null
+            : Sources.FirstOrDefault(e => e.Description == preferred);
 
     public (Task, Task) UpdatePhysicalMic(bool? micPassthrough, bool? hearMyself)
     {
@@ -107,8 +127,11 @@ public sealed partial class NodeManager : ObservableObject
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.PropertyName == nameof(PhysicalMicrophone))
-            _outputManager.InvokeMicrophoneSwitched();
+        if (e.PropertyName != nameof(PhysicalMicrophone))
+            return;
+        _outputManager.InvokeMicrophoneSwitched();
+        if (!_isRefreshing && PhysicalMicrophone is {Description: { } name})
+            _data.Save(FileName, name);
     }
 
 }
