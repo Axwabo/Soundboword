@@ -4,6 +4,7 @@
         <OutputType>WinExe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+        <TargetName>Soundboword</TargetName>
     </PropertyGroup>
 
     <ItemGroup>

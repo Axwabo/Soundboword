@@ -6,6 +6,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <TargetName>Soundboword</TargetName>
     </PropertyGroup>
 
     <ItemGroup>
