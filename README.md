@@ -106,6 +106,9 @@ The behavior will apply to all other playbacks.
 | Pause       | Pauses other sounds, and resumes them when the triggered sound(s) end |
 | Mute        | Mutes other sounds while the triggered sound(s) are playing           |
 
+> [!NOTE]
+> The `Mute` interaction is not fully implemented. Subsequently triggered sounds will not be muted yet.
+
 ## Editor
 
 > [!NOTE]
@@ -115,10 +118,10 @@ Click the ✏️ icon when configuring a sound. This will open up a simple windo
 
 For now, you can only set the following properties with sliders:
 
-| Property   | Effect                                                                                      |
-|------------|---------------------------------------------------------------------------------------------|
-| Start Time | The time at which point the sound initially starts                                          |
-| Loop Start | Jumps here when reaching the loop end[^2]                                                   |
+| Property   | Effect                                                                                        |
+|------------|-----------------------------------------------------------------------------------------------|
+| Start Time | The time at which point the sound initially starts                                            |
+| Loop Start | Jumps here when reaching the loop end[^2]                                                     |
 | Loop End   | Upon reaching this point, jumps to the beginning of the sound (or to the `Loop Start` marker) |
 
 [^2]: Only applies when looping is enabled
@@ -189,7 +192,7 @@ You can manage some node links using PipeWire.
 1. Go to the `🔌 PipeWire` tab, and launch the wizard to set up the `Soundboword Microphone`
 2. Select an audio device in the `🔌 PipeWire` tab that will be considered as your physical microphone
 3. You will be able to use the `Soundboword Microphone` in programs that capture microphone input
-    - Some apps might require a restart to recognize the device (e.g. Discord)
+    - Some apps might require a restart to recognize the device
 
 There are some toggles at the bottom right of the window.
 The table below shows which nodes will be connected/disconnected.
