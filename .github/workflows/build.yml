@@ -16,13 +16,17 @@ jobs:
         include:
           - os: ubuntu-latest
             project: Linux
+            zip: linux
+
           - os: windows-latest
             project: Windows
+            zip: slopdows
         
     runs-on: ${{ matrix.os }}
 
     env: 
       OUT: ${{ github.workspace }}/Out
+      ZIP: ${{ github.workspace }}/Soundboword-${{ matrix.zip }}-x64.zip
     
     steps:
       
@@ -31,14 +35,28 @@ jobs:
       - run: dotnet publish -o ${{ env.OUT }}
         working-directory: Soundboword.${{ matrix.project }}
         
-#        TODO: bundle here?
-      
-      - run: rm -f *.dbg; rm -f *.pdb
+      - run: dotnet run ../bundle.cs -- Soundboword-${{ env.ZIP }}
         working-directory: ${{ env.OUT }}
-        shell: bash
       
       - uses: actions/upload-artifact@v7.0.1
         with:
-          path: ${{ env.OUT }}
+          path: ${{ env.ZIP }}
           name: ${{ matrix.project }}
           if-no-files-found: error
+          
+  release:
+    
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      - uses: actions/download-artifact@v8.0.1
+        with:
+          path: .
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v3.0.2
+        with:
+          files: '*'

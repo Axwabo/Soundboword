@@ -24,6 +24,8 @@ functionality will be limited (no shortcuts).
 # Installation
 
 1. Download the archive for your OS from the [releases page](https://github.com/Axwabo/Soundboword/releases)
+    - Linux: `Soundboword-linux-x64.zip`
+    - Windows: `Soundboword-slopdows-x64.zip`
 2. Extract the archive into a directory of your choosing
 3. Run the application
     - Linux: `bin/Soundboword`
@@ -34,7 +36,10 @@ functionality will be limited (no shortcuts).
 
 # Usage
 
-Click the `Add Sound` button to add a sound.
+> [!IMPORTANT]
+> Only `mp3` and `wav` files are supported.
+
+Click the `Add Sounds` button to add a sound (or multiple sounds).
 
 Press 🔊 to play the sound.
 
@@ -44,7 +49,26 @@ Click 🟦 to stop the sound.
 
 Click ⚡ to assign a shortcut using any of the active [input methods](#input-methods)
 
-[//]: # (TODO: sound setup guide)
+## Sound Management
+
+You can add sounds either by clicking `Add Sounds` or by using drag-and-drop into the board.
+
+Click `Rescan` if you've mounted a drive that a not found was located on.
+
+Click `Relink All` to locate not found sounds in different directories.
+The filename must match for a sound to be located.
+
+The `Add From YouTube` button opens a new window that lets you download audio from YouTube.
+
+1. Type a search query or paste a YouTube link
+2. Select a stream to download
+3. Choose a format
+4. Click `Download`
+5. The sound will be cached, and it will be added (name = video title)
+
+> [!TIP]
+> You can click `Download` while streams are still loading.
+> The highest quality stream will be selected in this case.
 
 ## Trigger Modes
 
