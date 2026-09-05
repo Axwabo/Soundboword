@@ -36,7 +36,7 @@ jobs:
       - run: dotnet publish -o ${{ env.OUT }}
         working-directory: Soundboword.${{ matrix.project }}
         
-      - run: dotnet run ../bundle.cs -- Soundboword-${{ env.ZIP }}
+      - run: dotnet run ../bundle.cs -p ImportDirectoryBuildProps=false -- Soundboword-${{ env.ZIP }}
         working-directory: ${{ env.OUT }}
       
       - uses: actions/upload-artifact@v7.0.1
