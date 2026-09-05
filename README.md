@@ -82,6 +82,31 @@ The behavior will apply to all other playbacks.
 | Pause       | Pauses other sounds, and resumes them when the triggered sound(s) end |
 | Mute        | Mutes other sounds while the triggered sound(s) are playing           |
 
+## Editor
+
+> [!NOTE]
+> An improved editor (with waveform rendering) will be implemented later.
+
+Click the ✏️ icon when configuring a sound. This will open up a simple window.
+
+For now, you can only set the following properties with sliders:
+
+| Property   | Effect                                                                                      |
+|------------|---------------------------------------------------------------------------------------------|
+| Start Time | The time at which point the sound initially starts                                          |
+| Loop Start | Jumps here when reaching the loop end[^2]                                                   |
+| Loop End   | Upon reaching this point, jumps to the beginning of the sound (or to the `Loop Start` marker) |
+
+[^2]: Only applies when looping is enabled
+
+> [!NOTE]
+> `Loop End` requires the `Loop Start` property to be specified.
+
+> [!TIP]
+> You can move the slider by 10 milliseconds by pressing the left or right arrow key.
+> Hold shift to move it by a second.
+
+
 # Input Methods
 
 These are basically shortcuts, allowing you to trigger a sound or an action using any of the available devices.
@@ -93,7 +118,7 @@ You can set shortcuts for global actions (e.g. `Stop All Sounds`) as follows:
 1. Click the ⚙️ next to a device
 2. Select an action
 3. Press the ⚡ button
-4. Use an input method to assign a shortcut
+4. Use the selected input method to assign a shortcut
 
 ## Global Shortcuts
 
@@ -112,6 +137,11 @@ Modifier keys are not required, it's best to have at least one.
 
 On Linux, you need the `xdg-desktop-portal` to be able to assign global shortcuts.
 The portal requires at least one modifier key (i.e. `Ctrl` `Alt` `Shift` `Meta`) per shortcut.
+
+> [!NOTE]
+> When removing an XDG Global Shortcut, the shortcut will only be unassigned in memory,
+> so it will "reappear" after restarting Soundboword.
+> Visit your System Settings to remove such a global shortcut.
 
 > [!NOTE]
 > The portal will **not** prompt the user for subsequent requests to bind the same action.
