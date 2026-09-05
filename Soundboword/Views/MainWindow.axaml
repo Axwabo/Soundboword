@@ -8,7 +8,7 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
         x:Class="Soundboword.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/Soundboword.png"
         Title="Soundboword">
     <Design.DataContext>
         <vm:MainWindowViewModel />
