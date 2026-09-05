@@ -7,7 +7,7 @@ public sealed partial class NodeManager : ObservableObject
 {
 
     private const string Stream = "Stream/Output/Audio";
-    private const string FileName = "micorphone";
+    private const string FileName = "microphone";
 
     private static readonly Comparison<PipeWirePort> PortComparison = (a, b) => a.PortId.CompareTo(b.PortId);
 
