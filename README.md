@@ -131,7 +131,7 @@ For now, you can only set the following properties with sliders:
 
 > [!TIP]
 > You can move the slider by 10 milliseconds by pressing the left or right arrow key.
-> Hold shift to move it by a second.
+> Use PageUp or PageDown move it by a second.
 
 
 # Input Methods
