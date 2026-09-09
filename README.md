@@ -60,6 +60,9 @@ The filename must match for a sound to be located.
 
 The `Add From YouTube` button opens a new window that lets you download audio from YouTube.
 
+> [!IMPORTANT]
+> [FFmpeg](https://ffmpeg.org) must be installed on your system to use the YouTube downloader.
+
 1. Type a search query or paste a YouTube link
 2. Select a stream to download
 3. Choose a format
