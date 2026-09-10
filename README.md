@@ -5,6 +5,8 @@ Are you tired of other soundboard apps limiting the amount of sounds you can use
 Meet Soundboword, which is a desktop app that solves this issue.
 You can add as many sounds as you'd like!
 
+<img width="1442" height="786" alt="Demo screenshot" src="https://github.com/user-attachments/assets/52542936-e7e7-438e-a667-681388dc7140" />
+
 # Multi-platform
 
 Linux[^1] receives primary support.
